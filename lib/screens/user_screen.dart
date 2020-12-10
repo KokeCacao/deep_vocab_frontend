@@ -1,12 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/models/user_model.dart';
+import 'package:deep_vocab/utils/image_widget.dart';
+import 'package:deep_vocab/utils/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:uuid/uuid.dart';
 
 class UserScreen extends StatefulWidget {
-  static const String routeName = '/user_screen';
-
   @override
   State<StatefulWidget> createState() {
     return _UserScreenState();
@@ -16,9 +18,12 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   final double _avatarRadius = 40;
   final double _borderRadius = 4;
-  int _maxXp = 100;
+  final int _maxXp = 100;
   int _xp = 10;
   int _level = 19;
+  String _avatarUrl = "http://via.placeholder.com/350x150";
+  String _userName = "Koke_Cacao";
+  var _uuid = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +47,10 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                 ),
                 Expanded(
-                    flex: _maxXp,
-                    child: Container(
-                      color: Colors.black12,
-                    )),
+                  flex: _maxXp,
+                  child: Container(
+                    color: Colors.black12,
+                  )),
               ],
             ),
           ),
@@ -63,22 +68,14 @@ class _UserScreenState extends State<UserScreen> {
             Padding(
               padding: EdgeInsets.all(5),
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(_borderRadius)),
-                child: Image.network(
-                  "https://i0.hdslb.com/bfs/bangumi/image/c40250d272fdb22a57bd8d58a13c0ac9ba0640e1.jpg@450w_600h.webp",
-                  fit: BoxFit.cover,
-                  height: 2 * _avatarRadius,
-                  width: 2 * _avatarRadius,
-                ),
-//              CircleAvatar(
-//                  radius: _avatarRadius,
-//                  backgroundColor: Colors.black, // boarder color
-//                  child: CircleAvatar(
-//                    radius: _avatarRadius - 8,
-//                    backgroundImage: null, // TODO: add image
-//                    backgroundColor: Colors.white70,
-//                  ))
-              ),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(_borderRadius)),
+                  child: ImageWidget(
+                    fit: BoxFit.cover,
+                    height: 2 * _avatarRadius,
+                    width: 2 * _avatarRadius,
+                    imageUrl: _avatarUrl,
+                  )),
             ),
             Expanded(
               child: Padding(
@@ -89,14 +86,14 @@ class _UserScreenState extends State<UserScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        "Koke_Cacao",
+                        _userName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
                         ),
                       ),
                     ),
-                    Text("UID: 0000000"),
+                    Text("UID: ${_uuid.toString().split('-')[0]}"),
                     _xpBar,
                   ],
                 ),
@@ -105,10 +102,25 @@ class _UserScreenState extends State<UserScreen> {
 //            Padding(
 //              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
 //              child:
-              Icon(Icons.keyboard_arrow_right, size: _avatarRadius),
+            Icon(Icons.keyboard_arrow_right, size: _avatarRadius),
 //            )
           ],
         ));
+
+    Widget _provider = ProviderWidget<UserModel>(
+      model: UserModel(), // to pass data so that we can call `UserModel` in builder directly
+      child: Container(), // to give the builder its child
+      builder: (context, oldModel, child) {
+        print("[DEBUG] Starting output");
+        print("[DEBUG] I got my username from old model ${oldModel.userName}");
+        if (UserModel.user_model != null)
+        print("[DEBUG] I got my username from user model ${UserModel.user_model.userName}");
+        return child; // TODO: testing
+      },
+      onInitState: (model) {
+        model.fetch(); // UserModel.fetch() on initState of Provider
+      },
+    );
 
     Widget _avatarCard = FlatButton(
       onPressed: () {},
@@ -118,6 +130,7 @@ class _UserScreenState extends State<UserScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _provider,
             _avatarInfo,
             Padding(
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -160,15 +173,20 @@ class _UserScreenState extends State<UserScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(icon),
-                    Text(textFront),
+                    Text("  $textFront"),
                   ],
                 ),
                 Row(
-                  children: [Text(
-                    "${textBack}",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                    Icon(Icons.keyboard_arrow_right, color: Colors.black54,)],
+                  children: [
+                    Text(
+                      "${textBack}",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Colors.black54,
+                    )
+                  ],
                 )
               ],
             ),
@@ -186,6 +204,8 @@ class _UserScreenState extends State<UserScreen> {
     }
 
     return ListView(
+      physics: BouncingScrollPhysics(),
+      shrinkWrap: true,
       children: [
         _buildSeparator(),
         _avatarCard,

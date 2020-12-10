@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LearningScreen extends StatefulWidget {
-  static const String routeName = '/learning_screen';
-
   bool random = false;
 
   @override
@@ -94,6 +92,8 @@ class _LearningScreenState extends State<LearningScreen>
   Widget _buildList() {
     return Flexible(
         child: ListView.builder(
+      physics: BouncingScrollPhysics(),
+      shrinkWrap: true,
       itemCount: 100,
       itemBuilder: (context, i) => _buildVocab(),
     ));

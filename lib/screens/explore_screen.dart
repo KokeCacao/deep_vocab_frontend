@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExploreScreen extends StatefulWidget {
-  static const String routeName = '/explore_screen';
 
   @override
   State<StatefulWidget> createState() {

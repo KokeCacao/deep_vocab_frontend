@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:deep_vocab/utils/route_table.dart';
 import 'package:deep_vocab/screens/explore_screen.dart';
 import 'package:deep_vocab/screen_templates/learning_screen.dart';
 import 'package:deep_vocab/screens/stats_screen.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+/*
+  learn more about shortcuts: https://medium.com/flutter-community/flutter-ide-shortcuts-for-faster-development-2ef45c51085b
+ */
 void main() {
   runApp(MyApp());
 
@@ -37,21 +41,9 @@ class MyApp extends StatelessWidget {
             alignedDropdown: false,
             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           )),
-//            home: TabsScreen(),
-      initialRoute: NavigationScreen.routeName,
-      routes: {
-        /***
-         * align with _pages variable in tabs_screen
-         * default pageIndex is 0
-         */
-        NavigationScreen.routeName: (context) => NavigationScreen(),
-        LearningScreen.routeName: (context) => NavigationScreen(pageIndex: 0),
-        ExploreScreen.routeName: (context) => NavigationScreen(pageIndex: 1),
-        StatsScreen.routeName: (context) => NavigationScreen(pageIndex: 2),
-        UserScreen.routeName: (context) => NavigationScreen(pageIndex: 3),
-      },
+      home: NavigationScreen(),
+      onGenerateRoute: RouteTable.onGenerateRoute,
       onUnknownRoute: (_) {
-        Stream.periodic(period)
         throw Exception("UnknownRoute");
       },
     );
