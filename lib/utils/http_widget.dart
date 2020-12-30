@@ -7,22 +7,25 @@ class HttpWidget extends Object {
 //  }
   static Dio _dio;
 
-  static Dio get getDio {
+  static Dio get dio {
     if (_dio == null) createDio();
     return _dio;
   }
 
-  static void createDio() { // the library we are using
+  static void createDio() {
+    // the library we are using
     _dio = Dio(BaseOptions(
         connectTimeout: 10000,
         receiveTimeout: 10000,
         sendTimeout: 10000,
-        baseUrl: "", // TODO: baseUrl
+        baseUrl: "http://10.0.2.2:5000", // TODO: baseUrl, 10.0.2.2 for android emulator, see https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
         responseType: ResponseType.json));
   }
 
-  static Future<void> get(
-    String path, {
+  static Future<void> post({
+    String path,
+    String protocol,
+    data,
     Map<String, dynamic> queryParameters,
     Options options,
     CancelToken cancelToken,
@@ -31,33 +34,52 @@ class HttpWidget extends Object {
     void Function(dynamic response) onFail,
     void Function(dynamic response) onFinished,
   }) {
-    getDio
-        .get(path,
-            queryParameters: queryParameters,
-            options: options,
-            cancelToken: cancelToken,
-            onReceiveProgress: onReceiveProgress)
-        .then((response) {
+    void processResponse(response) {
       switch (response.statusCode) {
         case 200:
           {
             if (onSuccess != null) onSuccess(response);
-            print("[DEBUG] internet connect successful");
             break;
           }
         default: // fail
           if (onFail != null) onFail(response);
-          print("[DEBUG] internet connect failed");
           break;
       }
       if (onFinished != null) onFinished(response);
-      print("[DEBUG] internet connect finished");
-    });
+    }
+
+    switch (protocol) {
+      case "GET":
+        assert(data == null);
+        dio
+            .get(path,
+                queryParameters: queryParameters,
+                options: options,
+                cancelToken: cancelToken,
+                onReceiveProgress: onReceiveProgress)
+            .then(processResponse);
+        break;
+      case "POST":
+        assert(data != null);
+        dio
+            .post(path,
+                data: data,
+                queryParameters: queryParameters,
+                options: options,
+                cancelToken: cancelToken,
+                onReceiveProgress: onReceiveProgress)
+            .then(processResponse);
+        break;
+      default:
+        throw new Exception("The protocol ${protocol} is not supported.");
+        break;
+    }
+
     return Future.value();
   }
 
-  static Future<void> fakeGet( // for testing purpose only
-    String path, {
+  static Future<void> fakeGet({
+    String path,
     Map<String, dynamic> queryParameters,
     Options options,
     CancelToken cancelToken,
@@ -75,8 +97,9 @@ class HttpWidget extends Object {
             if (onSuccess != null) onSuccess(response);
             break;
           }
-        default: // fail
+        default:
           if (onFail != null) onFail(response);
+          throw new Exception("This should not be allowed in fakeGet since the point of fakeGet is to generate successful responses.");
           break;
       }
       if (onFinished != null) onFinished(response);

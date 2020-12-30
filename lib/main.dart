@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:deep_vocab/utils/graphql_init.dart';
 import 'package:deep_vocab/utils/route_table.dart';
 import 'package:deep_vocab/screens/explore_screen.dart';
 import 'package:deep_vocab/screen_templates/learning_screen.dart';
@@ -8,6 +9,7 @@ import 'package:deep_vocab/screen_templates/navigation_screen.dart';
 import 'package:deep_vocab/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
 /*
@@ -28,8 +30,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Deep Vocab',
+    return GraphQLInit(
+        child: MaterialApp(
+      title: "Deep Vocab",
+      debugShowCheckedModeBanner: false, // disable debug banner
       theme: ThemeData(
           primarySwatch: Colors.blueGrey,
           visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -46,6 +50,6 @@ class MyApp extends StatelessWidget {
       onUnknownRoute: (_) {
         throw Exception("UnknownRoute");
       },
-    );
+    ));
   }
 }

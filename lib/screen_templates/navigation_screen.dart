@@ -11,7 +11,7 @@ import '../screens/stats_screen.dart';
 class NavigationScreen extends StatefulWidget {
   int pageIndex;
 
-  NavigationScreen({this.pageIndex = 3}); // TODO: temporary value. should be 0
+  NavigationScreen({this.pageIndex = 0}); // TODO: temporary value. should be 0
 
   @override
   State<StatefulWidget> createState() {
@@ -63,35 +63,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
             Icons.book,
             color: Colors.black54,
           ),
-          title: Text(
-            Constants.NAVIGATION_LEARNING_LABEL,
-          )),
+          label: Constants.NAVIGATION_LEARNING_LABEL),
       BottomNavigationBarItem(
-          icon: Icon(
-            Icons.explore,
-            color: Colors.black54,
-          ),
-          title: Text(
-            Constants.NAVIGATION_EXPLORE_LABEL,
-          )),
+        icon: Icon(
+          Icons.explore,
+          color: Colors.black54,
+        ),
+        label: Constants.NAVIGATION_EXPLORE_LABEL,
+      ),
       BottomNavigationBarItem(
           icon: Icon(
             Icons.pie_chart,
             color: Colors.black54,
           ),
-          title: Text(
-            Constants.NAVIGATION_STATS_LABEL,
-          )),
+          label: Constants.NAVIGATION_STATS_LABEL),
       BottomNavigationBarItem(
           icon: Icon(
             Icons.account_circle,
             color: Colors.black54,
           ),
-          title: Text(
-            Constants.NAVIGATION_USER_LABEL,
-          )),
+          label: Constants.NAVIGATION_USER_LABEL),
     ];
 
+    // by extension BottomNavigationBarItemBadge
+    // see https://github.com/westdabestdb/bottom_navigation_badge/issues/8
     _navItem = _badger.setBadge(_navItem, "1", 0);
 
     // TODO: try AnnotatedRegion<SystemUiOverlayStyle>

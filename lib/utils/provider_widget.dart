@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 class ProviderWidget<T extends ChangeNotifier> extends StatefulWidget {
   final T model;
-  final Widget Function(BuildContext context, T oldModel, Widget child) builder;
+  final Widget Function(BuildContext context, T model, Widget child) builder;
   final Widget child;
   final void Function(T t)
       onInitState; // used to fire data fetching from the server
