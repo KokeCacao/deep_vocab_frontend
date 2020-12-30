@@ -23,17 +23,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^4.0.0
-  auto_size_text: ^2.1.0
-  badges: ^1.1.1
-  bottom_navigation_badge: ^1.0.3
+  provider: ^4.0.0 # provider
+  auto_size_text: ^2.1.0 # text
+  badges: ^1.1.1 # badge
+  bottom_navigation_badge: ^1.0.3 # navigation
   intl: ^0.15.8
-  dio: 3.0.10 #latest version
+  dio: 3.0.10 # http
   http: ^0.12.0+2
   cached_network_image: ^2.3.1
-  uuid: 2.2.2
-  graphql_flutter: ^3.0.0
-  flutter_screenutil: ^4.0.2+1
+  uuid: 2.2.2 # for uuid
+  graphql: ^3.1.0 # for http
+  flutter_screenutil: ^4.0.2+1 # for resizing screen
+  hive: ^1.4.4+1 # for hive database
+  hive_flutter: ^0.3.1 # for hive database
+#  path_provider: ^1.6.24 # for hive database
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -43,6 +46,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator: ^0.8.2 # for hive database
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

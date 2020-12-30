@@ -9,7 +9,6 @@ import 'package:deep_vocab/widgets/setting_tab.dart';
 import 'package:deep_vocab/widgets/xp_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class UserScreen extends StatelessWidget {

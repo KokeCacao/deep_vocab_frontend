@@ -11,7 +11,7 @@ import '../screens/stats_screen.dart';
 class NavigationScreen extends StatefulWidget {
   int pageIndex;
 
-  NavigationScreen({this.pageIndex = 0}); // TODO: temporary value. should be 0
+  NavigationScreen({this.pageIndex = 3}); // TODO: temporary value. should be 0
 
   @override
   State<StatefulWidget> createState() {

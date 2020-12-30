@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,11 +32,11 @@ class HttpWidget extends Object {
     Options options,
     CancelToken cancelToken,
     ProgressCallback onReceiveProgress,
-    void Function(dynamic response) onSuccess,
-    void Function(dynamic response) onFail,
-    void Function(dynamic response) onFinished,
+    void Function(Response<Map> response) onSuccess,
+    void Function(Response<Map> response) onFail,
+    void Function(Response<Map> response) onFinished,
   }) {
-    void processResponse(response) {
+    FutureOr<dynamic> processResponse(response) {
       switch (response.statusCode) {
         case 200:
           {
