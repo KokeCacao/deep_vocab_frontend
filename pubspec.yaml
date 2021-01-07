@@ -37,6 +37,8 @@ dependencies:
   hive: ^1.4.4+1 # for hive database
   hive_flutter: ^0.3.1 # for hive database
 #  path_provider: ^1.6.24 # for hive database
+  crypto: ^2.1.5 # for encryption
+  pull_to_refresh: ^1.6.3 # for slider refresh
 
 
   # The following adds the Cupertino Icons font to your application.

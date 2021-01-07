@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deep_vocab/models/settings_model.dart';
 import 'package:deep_vocab/models/user_model.dart';
-import 'package:deep_vocab/utils/graphql_init.dart';
+import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/route_table.dart';
 import 'package:deep_vocab/screen_templates/navigation_screen.dart';
+import 'package:deep_vocab/view_models/auth_view_model.dart';
+import 'package:deep_vocab/view_models/settings_view_model.dart';
+import 'package:deep_vocab/view_models/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 /*
   learn more about shortcuts: https://medium.com/flutter-community/flutter-ide-shortcuts-for-faster-development-2ef45c51085b
@@ -24,19 +28,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<dynamic> init() async {
-    // final Directory documentDirectory = await getApplicationDocumentsDirectory();
-    // Hive.init(documentDirectory.path);
-    await Hive.initFlutter();
-
-    // run flutter-generate to generate models
-    // registering generated model
-    Hive.registerAdapter(UserModelAdapter());
-    Hive.registerAdapter(SettingsModelAdapter());
-
-    // open box
-    Box<dynamic> userBox = await Hive.openBox<UserModel>("user");
-    Box<dynamic> settingsBox = await Hive.openBox<SettingsModel>("settings");
+  Future<HiveBox> init() async {
+    HiveBox hiveBox = HiveBox();
+    await hiveBox.init(); // because can't await constructor
 
     // TODO: don't know how it works, but it is showed here https://www.bilibili.com/video/BV1qE411i7Pw
     if (Platform.isAndroid) {
@@ -47,46 +41,68 @@ class _MyAppState extends State<MyApp> {
     }
 
     // extra wait
-    Future<dynamic> future = Future.delayed(Duration(seconds: 0));
-    return future;
+    await Future.delayed(Duration(seconds: 0));
+    return Future.value(hiveBox);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLInit(
-        child: MaterialApp(
-      title: "Deep Vocab",
-      debugShowCheckedModeBanner: false, // disable debug banner
-      theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonTheme: ButtonThemeData(
-            minWidth: 0,
-            height: 0,
-            textTheme: ButtonTextTheme.normal,
-            layoutBehavior: ButtonBarLayoutBehavior.padded,
-            alignedDropdown: false,
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-          )),
-      home: FutureBuilder(
-        future: init(),
+    return FutureBuilder( // future builder here to separate pages
+        future: init(), // init has to run before MultiProvider because Hive.openBox is async
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState != ConnectionState.done)
-            return Scaffold(body: Center(child: AutoSizeText("Deep Vocab")),
+          if (snapshot.connectionState != ConnectionState.done) {
+            print("[Init] initializing");
+            return MaterialApp(
+              home: Scaffold(
+                body: Center(child: AutoSizeText("Deep Vocab")),
+              ),
             );
-          return NavigationScreen();
-        },
-      ),
-      onGenerateRoute: RouteTable.onGenerateRoute,
-      onUnknownRoute: (_) {
-        throw Exception("UnknownRoute");
-      },
-    ));
+          }
+          HiveBox hiveBox = snapshot.data;
+          return MultiProvider(
+            providers: [
+              Provider<HiveBox>.value(value: hiveBox),
+              ChangeNotifierProvider<AuthViewModel>(
+                create: (ctx) =>
+                    AuthViewModel(box: HiveBox.getBox(HiveBox.SINGLETON_BOX)),
+                lazy: false, // initiate AuthViewModel when start
+              ),
+              ChangeNotifierProvider<UserViewModel>(
+                create: (ctx) =>
+                    UserViewModel(box: HiveBox.getBox(HiveBox.SINGLETON_BOX)),
+                lazy: true, // UserViewModel should initialize after AuthViewModel
+              ),
+              ChangeNotifierProvider<SettingsViewModel>(
+                create: (ctx) => SettingsViewModel(),
+              ),
+            ],
+            child: MaterialApp(
+              title: "Deep Vocab",
+              debugShowCheckedModeBanner: false, // disable debug banner
+              theme: ThemeData(
+                  primarySwatch: Colors.blueGrey,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                  buttonTheme: ButtonThemeData(
+                    minWidth: 0,
+                    height: 0,
+                    textTheme: ButtonTextTheme.normal,
+                    layoutBehavior: ButtonBarLayoutBehavior.padded,
+                    alignedDropdown: false,
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                  )),
+              home: NavigationScreen(),
+              onGenerateRoute: RouteTable.onGenerateRoute,
+              onUnknownRoute: (_) {
+                throw Exception("UnknownRoute");
+              },
+            ),
+          );
+        });
   }
 
   @override
   void dispose() {
-    Hive.close();
+    Hive.close(); // tmp for testing
     super.dispose();
   }
 }

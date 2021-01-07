@@ -1,6 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/widgets/vocab_list.dart';
+import 'package:deep_vocab/widgets/vocab_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class LearningScreen extends StatefulWidget {
   bool random = false;
@@ -90,98 +93,7 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   Widget _buildList() {
-    return Flexible(
-        child: ListView.builder(
-      physics: BouncingScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 100,
-      itemBuilder: (context, i) => _buildVocab(),
-    ));
-  }
-
-  Widget _buildVocab() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.symmetric(
-          horizontal: BorderSide(
-            width: 0,
-          ),
-          vertical: BorderSide(
-            width: 0,
-          ),
-        ),
-      ),
-      height: 40,
-      width: double.infinity,
-      child: Row(
-        children: [
-          IntrinsicWidth(
-            child: Row(
-              children: [
-                Checkbox(
-                  value: false,
-                  onChanged: (bool) {},
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                Expanded(
-                    child: AutoSizeText(
-                  "grandiloquent",
-                  minFontSize: 10,
-                  overflow: TextOverflow.fade,
-                  maxLines: 2,
-                )),
-                Expanded(
-                    child: AutoSizeText(
-                  "辞藻浮夸的; 夸大",
-                  minFontSize: 10,
-                  overflow: TextOverflow.fade,
-                  maxLines: 2,
-                ))
-              ],
-            ),
-          ),
-          IntrinsicWidth(
-            child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Colors.red,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Colors.blue,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Colors.green,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 2),
-                  height: double.infinity,
-                  width: 10,
-                  color: Colors.black38,
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+    return Flexible(child: VocabList());
   }
 
   TabController _tabController;

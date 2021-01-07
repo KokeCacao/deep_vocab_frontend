@@ -1,4 +1,5 @@
 import 'package:deep_vocab/screen_templates/navigation_screen.dart';
+import 'package:deep_vocab/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class RouteTable extends Object {
@@ -20,14 +21,17 @@ class RouteTable extends Object {
               return NavigationScreen(pageIndex: 2);
             case '/user_screen':
               return NavigationScreen(pageIndex: 3);
+            case '/login_screen':
+              return LoginScreen();
             default:
               throw UnimplementedError(
                   "[Debug] No route widget detected for route $route");
           }
         },
-        title: null,
-        fullscreenDialog: null,
-        maintainState: null,
-        settings: null);
+        // title: null,
+        // fullscreenDialog: null,
+        // maintainState: null,
+        // settings: null
+    );
   }
 }

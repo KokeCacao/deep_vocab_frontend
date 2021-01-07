@@ -1,27 +1,25 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/utils/provider_widget.dart';
 import 'package:deep_vocab/widgets/avatar_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AvatarCard extends StatelessWidget {
 
-  final Widget provider; // not sure if it works as a final
-  final AvatarInfo avatarInfo;
+  final Widget avatarInfo;
+  final VoidCallback onPressed;
 
-  AvatarCard({this.provider, this.avatarInfo});
+  AvatarCard({this.avatarInfo, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            provider,
             avatarInfo,
             Padding(
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),

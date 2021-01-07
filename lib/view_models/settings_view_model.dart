@@ -2,7 +2,7 @@ import 'package:deep_vocab/models/settings_model.dart';
 import 'package:deep_vocab/utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';
 
-class SettingsVideModel extends ChangeNotifier {
+class SettingsViewModel extends ChangeNotifier {
   SettingsModel _settingsModel;
 
   get settingsModel {
