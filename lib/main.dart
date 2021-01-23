@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/models/settings_model.dart';
-import 'package:deep_vocab/models/user_model.dart';
+import 'package:deep_vocab/models/hive_models/settings_model.dart';
+import 'package:deep_vocab/models/hive_models/user_model.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/route_table.dart';
-import 'package:deep_vocab/screen_templates/navigation_screen.dart';
+import 'package:deep_vocab/screens/navigation_screen.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:deep_vocab/view_models/settings_view_model.dart';
 import 'package:deep_vocab/view_models/user_view_model.dart';

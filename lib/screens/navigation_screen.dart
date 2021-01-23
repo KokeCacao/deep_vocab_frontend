@@ -1,17 +1,17 @@
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 import 'package:deep_vocab/utils/constants.dart';
-import 'package:deep_vocab/screen_templates/learning_screen.dart';
+import 'package:deep_vocab/screens/learning_screen.dart';
 import 'package:deep_vocab/screens/user_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/explore_screen.dart';
-import '../screens/stats_screen.dart';
+import 'explore_screen.dart';
+import 'stats_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   int pageIndex;
 
-  NavigationScreen({this.pageIndex = 3}); // TODO: temporary value. should be 0
+  NavigationScreen({this.pageIndex = 0}); // TODO: temporary value. should be 0
 
   @override
   State<StatefulWidget> createState() {

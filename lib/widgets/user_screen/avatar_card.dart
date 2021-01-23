@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/widgets/avatar_info.dart';
+import 'package:deep_vocab/widgets/user_screen/avatar_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

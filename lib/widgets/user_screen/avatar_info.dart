@@ -1,5 +1,5 @@
-import 'package:deep_vocab/utils/image_widget.dart';
-import 'package:deep_vocab/widgets/xp_bar.dart';
+import 'package:deep_vocab/widgets/image_widget.dart';
+import 'package:deep_vocab/widgets/user_screen/xp_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

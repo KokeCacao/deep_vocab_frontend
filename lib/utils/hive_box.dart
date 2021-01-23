@@ -1,5 +1,5 @@
-import 'package:deep_vocab/models/settings_model.dart';
-import 'package:deep_vocab/models/user_model.dart';
+import 'package:deep_vocab/models/hive_models/settings_model.dart';
+import 'package:deep_vocab/models/hive_models/user_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -9,12 +9,12 @@ class HiveBox {
   static const String REQUEST_BOX = "request"; // used to store current request
 
   // indexes in singleton
-  static const String USER_SINGLETON_INDEX = "user";
+  static const String USER_SINGLETON_INDEX = "user"; // store UserViewModel: uuid, userName, avatarUrl, level, xp...
   static const String SETTING_SINGLETON_INDEX = "settings";
-  static const String USER_SINGLETON_UUID = "uuid";
-  static const String USER_SINGLETON_ACCESS_TOKEN = "accessToken";
-  static const String USER_SINGLETON_REFRESH_TOKEN = "refreshToken";
-  static const String USER_SINGLETON_WX_TOKEN = "wxToken";
+  static const String USER_SINGLETON_UUID = "uuid"; // one of AuthViewModel
+  static const String USER_SINGLETON_ACCESS_TOKEN = "accessToken"; // one of AuthViewModel
+  static const String USER_SINGLETON_REFRESH_TOKEN = "refreshToken"; // one of AuthViewModel
+  static const String USER_SINGLETON_WX_TOKEN = "wxToken"; // one of AuthViewModel
 
   Future init() async {
     // final Directory documentDirectory = await getApplicationDocumentsDirectory();

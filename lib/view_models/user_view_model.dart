@@ -1,4 +1,4 @@
-import 'package:deep_vocab/models/user_model.dart';
+import 'package:deep_vocab/models/hive_models/user_model.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';

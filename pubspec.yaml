@@ -36,9 +36,14 @@ dependencies:
   flutter_screenutil: ^4.0.2+1 # for resizing screen
   hive: ^1.4.4+1 # for hive database
   hive_flutter: ^0.3.1 # for hive database
-#  path_provider: ^1.6.24 # for hive database
+  path_provider: ^1.6.24 # for RESTFUL download
   crypto: ^2.1.5 # for encryption
   pull_to_refresh: ^1.6.3 # for slider refresh
+  google_nav_bar: ^3.2.0 # for top tab bar
+  fsearch: ^1.0.1 # for search bar
+  sliding_up_panel: ^1.0.2 # for sliding up panel
+  moor_flutter: ^3.1.0 # for sqlite database
+  json_annotation: ^3.1.1 # for sqlite database and json serialization
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -48,8 +53,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  hive_generator: ^0.8.2 # for hive database
   build_runner:
+  hive_generator: ^0.8.2 # for hive database code generation
+  moor_generator: ^3.4.1 # for moor database code generation
+  json_serializable: ^3.5.1 # for json code generation
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

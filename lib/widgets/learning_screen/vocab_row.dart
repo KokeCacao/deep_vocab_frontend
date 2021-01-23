@@ -1,89 +1,59 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/widgets/toast.dart';
+import 'package:deep_vocab/screens/vocab_dialog.dart';
+import 'package:deep_vocab/widgets/separator.dart';
+import 'package:deep_vocab/widgets/vocab_dialog/bookmark_shape.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VocabRow extends StatefulWidget {
-  VocabRow({this.hide = false, this.cross = false, this.checkBox = false});
   bool hide;
   bool cross;
   bool checkBox;
+
+  final void Function(bool value) onSelect;
+  final void Function(bool value) onHide;
+  final String vocab;
+  final String translation;
+  final bool bookMarked;
+
+  VocabRow(
+      {this.hide = true,
+      this.cross = false,
+      this.checkBox = false,
+      this.onSelect,
+      this.onHide,
+      @required this.vocab,
+      @required this.translation,
+      this.bookMarked = false});
 
   @override
   State<StatefulWidget> createState() {
     return VocabRowState();
   }
+
+  VocabRow copyWith(
+      {bool hide,
+      bool cross,
+      bool checkBox,
+      void Function(bool value) onSelect,
+      String vocab,
+      String translation,
+      bool bookMarked}) {
+    return VocabRow(
+      vocab: vocab ?? this.vocab,
+      translation: translation ?? this.translation,
+      hide: hide ?? this.hide,
+      cross: cross ?? this.cross,
+      checkBox: checkBox ?? this.checkBox,
+      onSelect: onSelect ?? this.onSelect,
+      bookMarked: bookMarked ?? this.bookMarked,
+    );
+  }
 }
 
 class VocabRowState extends State<VocabRow> {
-  void switchHide() {
-    widget.hide = !widget.hide;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
-    Future _showVocabDialog() {
-      return showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(8.0))),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AutoSizeText(
-                      "grandiloquent",
-                      maxFontSize: 64,
-                      minFontSize: 32,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              height: 50,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              height: 50,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              height: 50,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              height: 50,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -96,26 +66,17 @@ class VocabRowState extends State<VocabRow> {
       width: double.infinity,
       child: Row(
         children: [
-          // GestureDetector(
-          //   behavior: HitTestBehavior.opaque,
-          //   onVerticalDragUpdate: (_) { // must have: so that one event can move between boxes
-          //     // block behavior of [ListView]
-          //     if (widget.checkBox != true || widget.cross != true) {
-          //       print("gesture detected!");
-          //       widget.checkBox = true;
-          //       widget.cross = true;
-          //       setState(() {});
-          //     }
-          //   },
-          //   child:
           DragTarget(onWillAccept: (_) {
+            // TODO: 长按全选, 双击反选 (选择时右下角提示此信息以及选中数量/总共)
             widget.checkBox = !widget.checkBox;
+            if (widget.onSelect != null) widget.onSelect(widget.checkBox);
             setState(() {});
             return false;
           }, builder: (ctx, candidateData, rejectedData) {
             return Draggable(
                 axis: Axis.vertical,
-                feedback: Container(),
+                feedback: SizedBox
+                    .shrink(), // See: https://stackoverflow.com/questions/53455358/how-to-present-an-empty-view-in-flutter
                 child: IntrinsicWidth(
                   child: Row(
                     children: [
@@ -123,6 +84,8 @@ class VocabRowState extends State<VocabRow> {
                         value: widget.checkBox,
                         onChanged: (bool) {
                           widget.checkBox = bool;
+                          if (widget.onSelect != null)
+                            widget.onSelect(widget.checkBox);
                           setState(() {});
                         },
                       )
@@ -137,30 +100,44 @@ class VocabRowState extends State<VocabRow> {
               children: [
                 Expanded(
                     child: GestureDetector(
-                  onTap: _showVocabDialog,
-                  child: AutoSizeText("grandiloquent",
+                  onTap: () => VocabDialog.showVocabDialog(
+                      vocab: widget.vocab, context: context),
+                  child: AutoSizeText(widget.vocab,
                       minFontSize: 12,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
                       style: TextStyle(
                           decoration: widget.cross
                               ? TextDecoration.lineThrough
-                              : TextDecoration.none)),
+                              : TextDecoration.none,
+                          color:
+                              widget.cross ? Colors.black38 : Colors.black87)),
                 )),
                 Expanded(
                     child: GestureDetector(
-                  onTap: switchHide,
+                  onTap: () {
+                    widget.hide = !widget.hide;
+                    if (widget.onHide != null) widget.onHide(widget.hide);
+                    setState(() {});
+                  },
                   child: IndexedStack(
                     alignment: AlignmentDirectional.center,
                     index: widget.hide ? 1 : 0,
                     children: [
                       AutoSizeText(
-                        "辞藻浮夸的; 夸大",
+                        widget.translation,
                         minFontSize: 12,
                         overflow: TextOverflow.fade,
                         maxLines: 2,
+                        style: TextStyle(
+                            decoration: widget.cross
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                            color:
+                                widget.cross ? Colors.black38 : Colors.black87),
                       ),
                       Padding(
+                        // black cover of the word
                         padding: EdgeInsets.only(top: 8, bottom: 8, right: 4),
                         child: Container(
                           decoration: BoxDecoration(
@@ -199,11 +176,23 @@ class VocabRowState extends State<VocabRow> {
                     backgroundColor: Colors.blueGrey,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 2),
-                  height: double.infinity,
-                  width: 10,
-                  color: Colors.black38,
+                Separator(
+                  axis: Axis.vertical,
+                  color: Colors.transparent,
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: BookmarkShape(
+                    height: 20, // half of vocab row
+                    width: 8,
+                    borderRadius: 0,
+                    color: widget.bookMarked
+                        ? Colors.red[700]
+                        : Colors.transparent,
+                    borderColor: widget.bookMarked
+                        ? Colors.red[900]
+                        : Colors.transparent,
+                  ),
                 )
               ],
             ),

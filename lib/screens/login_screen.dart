@@ -1,11 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:deep_vocab/view_models/user_view_model.dart';
 import 'package:deep_vocab/widgets/separator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,6 +26,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _passwordVisible;
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     void submit() async {
@@ -136,7 +141,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                       TextFormField(
-                        decoration: InputDecoration(labelText: "Password"),
+                        obscureText: !_passwordVisible,
+                        decoration: InputDecoration(
+                            labelText: "Password",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                _passwordVisible = !_passwordVisible;
+                                setState(() {
+                                });
+                              },
+                            )),
                         textInputAction: TextInputAction.done,
                         focusNode: widget._passwordNode,
                         validator: (value) {

@@ -1,4 +1,4 @@
-import 'package:deep_vocab/screen_templates/navigation_screen.dart';
+import 'package:deep_vocab/screens/navigation_screen.dart';
 import 'package:deep_vocab/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 

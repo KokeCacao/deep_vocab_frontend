@@ -1,15 +1,14 @@
-import 'package:deep_vocab/models/user_model.dart';
+import 'package:deep_vocab/models/hive_models/user_model.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:deep_vocab/view_models/user_view_model.dart';
-import 'package:deep_vocab/widgets/avatar_card.dart';
-import 'package:deep_vocab/widgets/avatar_info.dart';
+import 'package:deep_vocab/widgets/user_screen/avatar_card.dart';
+import 'package:deep_vocab/widgets/user_screen/avatar_info.dart';
 import 'package:deep_vocab/widgets/separator.dart';
-import 'package:deep_vocab/widgets/setting_tab.dart';
-import 'package:deep_vocab/widgets/xp_bar.dart';
+import 'package:deep_vocab/widgets/user_screen/setting_tab.dart';
+import 'package:deep_vocab/widgets/user_screen/xp_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class UserScreen extends StatelessWidget {
   final int _maxXp = 100;
@@ -62,6 +61,7 @@ class UserScreen extends StatelessWidget {
         ),
         Separator(),
         SettingTab(
+          // TODO: 开启/关闭 词表单词标记
             textFront: "学习设置",
             icon: Icons.settings,
             textBack: "",
