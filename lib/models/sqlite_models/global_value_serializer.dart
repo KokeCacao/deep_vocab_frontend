@@ -1,7 +1,7 @@
 import 'package:deep_vocab/models/sub_models/comment_model.dart';
 import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
 import 'package:deep_vocab/models/vocab_model.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 class GlobalValueSerializer extends ValueSerializer {
   @Deprecated("Don't use this serializer on DAO, use models instead.")

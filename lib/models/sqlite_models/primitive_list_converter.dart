@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 class StringListConverter extends TypeConverter<List<String>, String> {
   const StringListConverter();

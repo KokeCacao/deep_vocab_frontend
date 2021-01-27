@@ -1,5 +1,5 @@
 import 'package:deep_vocab/models/sqlite_models/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'vocab_sqlite_dao.g.dart';
 
@@ -15,15 +15,15 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
 
   /// get VocabData through stream
   Stream<List<VocabSqliteTableData>> watchAllVocabs() => select(vocabSqliteTable).watch();
-  // TODO: support onConflict: DoUpdate((_) => companion)
+  Future upsertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => into(vocabSqliteTable).insert(vocabSqliteTableData, onConflict: DoUpdate((_) => vocabSqliteTableData));
   Future insertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => into(vocabSqliteTable).insert(vocabSqliteTableData);
-  Future updateVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => update(vocabSqliteTable).replace(vocabSqliteTableData);
+  Future deleteVocabWith(Insertable<VocabSqliteTableData> vocabSqliteTableData) => update(vocabSqliteTable).replace(vocabSqliteTableData);
   Future deleteVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => delete(vocabSqliteTable).delete(vocabSqliteTableData);
 
   /// TO GET USER VOCAB DATA ///
-  // TODO: support onConflict: DoUpdate((_) => companion)
+  Future upsertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => into(userVocabSqliteTable).insert(userVocabSqliteTableData, onConflict: DoUpdate((_) => userVocabSqliteTableData));
   Future insertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => into(userVocabSqliteTable).insert(userVocabSqliteTableData);
-  Future updateUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => update(userVocabSqliteTable).replace(userVocabSqliteTableData);
+  Future deleteUserVocabWith(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => update(userVocabSqliteTable).replace(userVocabSqliteTableData);
   Future deleteUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => delete(userVocabSqliteTable).delete(userVocabSqliteTableData);
 
   /// TO GET BOTH ///

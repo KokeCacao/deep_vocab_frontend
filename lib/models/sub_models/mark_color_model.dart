@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:deep_vocab/models/sqlite_models/primitive_list_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'mark_color_model.g.dart';
 

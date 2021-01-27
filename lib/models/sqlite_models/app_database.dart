@@ -1,16 +1,32 @@
+import 'dart:io';
+
 import 'package:deep_vocab/models/sub_models/comment_model.dart';
 import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
 import 'package:deep_vocab/models/sqlite_models/global_value_serializer.dart';
 import 'package:deep_vocab/models/sqlite_models/primitive_list_converter.dart';
 import 'package:deep_vocab/models/sqlite_models/vocab_sqlite_dao.dart';
 import 'package:deep_vocab/models/vocab_model.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/ffi.dart';
+import 'package:moor/moor.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
+LazyDatabase _openConnection() {
+  // the LazyDatabase util lets us find the right location for the file async.
+  return LazyDatabase(() async {
+    // put the database file, called db.sqlite here, into the documents folder
+    // for your app.
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    return VmDatabase(file);
+  });
+}
+
 @UseMoor(tables: [VocabSqliteTable, UserVocabSqliteTable], daos: [VocabSqliteDao])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite', logStatements: true));
+  AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -75,7 +91,6 @@ class ValueOrAbsent<T> {
 
   ValueOrAbsent(this.value);
   Value<T> call() {
-    if (value == null) print("\n\n\nabsent\n\n\n");
     return value == null ? Value.absent() : Value<T>(value);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:deep_vocab/models/sqlite_models/primitive_list_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'dart:convert';
 
 part 'comment_model.g.dart';

@@ -11,7 +11,7 @@ import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common/src/exception.dart' show SqfliteDatabaseException; // for SqfliteDatabaseException
 
@@ -46,8 +46,8 @@ class VocabListViewModel {
 
       // must insertUserVocab before insertVocab
       try {
-        await _dao.insertUserVocab(userVocabSqliteTableData);
-        await _dao.insertVocab(vocabSqliteTableData);
+        await _dao.upsertUserVocab(userVocabSqliteTableData);
+        await _dao.upsertVocab(vocabSqliteTableData);
       } on SqfliteDatabaseException catch (e) {
         print("[VocabListViewModel] Warning: ${e.message}");
       }
@@ -184,7 +184,7 @@ class VocabListViewModel {
     bool pinMark,
     bool addedMark,
   }) {
-    return _dao.updateUserVocab(UserVocabSqliteTableCompanion(
+    return _dao.upsertUserVocab(UserVocabSqliteTableCompanion(
       vocabId: ValueOrAbsent(vocabId)(),
       nthWord: ValueOrAbsent(nthWord)(),
       nthAppear: ValueOrAbsent(nthAppear)(),
