@@ -8,8 +8,10 @@ part of 'vocab_model.dart';
 
 VocabModel _$VocabModelFromJson(Map<String, dynamic> json) {
   return VocabModel(
-    id: json['id'] as String,
-    edition: json['edition'] as int,
+    vocabId: json['vocabId'] as String,
+    edition: json['edition'] == null
+        ? null
+        : DateTime.parse(json['edition'] as String),
     listId: json['listId'] as int,
     vocab: json['vocab'] as String,
     type: _$enumDecodeNullable(_$VocabTypeEnumMap, json['type']),
@@ -39,14 +41,15 @@ VocabModel _$VocabModelFromJson(Map<String, dynamic> json) {
     bookMarked: json['bookMarked'] as bool,
     questionMark: json['questionMark'] as bool,
     starMark: json['starMark'] as bool,
-    expoMark: json['expoMark'] as bool,
+    pinMark: json['pinMark'] as bool,
+    addedMark: json['addedMark'] as bool,
   );
 }
 
 Map<String, dynamic> _$VocabModelToJson(VocabModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'edition': instance.edition,
+      'vocabId': instance.vocabId,
+      'edition': instance.edition?.toIso8601String(),
       'listId': instance.listId,
       'vocab': instance.vocab,
       'type': _$VocabTypeEnumMap[instance.type],
@@ -66,7 +69,8 @@ Map<String, dynamic> _$VocabModelToJson(VocabModel instance) =>
       'bookMarked': instance.bookMarked,
       'questionMark': instance.questionMark,
       'starMark': instance.starMark,
-      'expoMark': instance.expoMark,
+      'pinMark': instance.pinMark,
+      'addedMark': instance.addedMark,
     };
 
 T _$enumDecode<T>(

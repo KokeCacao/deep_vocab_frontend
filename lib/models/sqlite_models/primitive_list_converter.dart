@@ -9,8 +9,9 @@ class StringListConverter extends TypeConverter<List<String>, String> {
     if (fromDb == null) {
       return null;
     }
-    assert((json.decode(fromDb) as List<String>).isNotEmpty);
-    return json.decode(fromDb) as List<String>;
+    // see: https://github.com/flutter/flutter/issues/18979
+    assert((json.decode(fromDb).cast<String>()).isNotEmpty);
+    return json.decode(fromDb).cast<String>();
   }
 
   @override
@@ -31,8 +32,9 @@ class IntegerListConverter extends TypeConverter<List<int>, String> {
     if (fromDb == null) {
       return null;
     }
-    assert((json.decode(fromDb) as List<int>).isNotEmpty);
-    return json.decode(fromDb) as List<int>;
+    // see: https://github.com/flutter/flutter/issues/18979
+    assert((json.decode(fromDb).cast<int>()).isNotEmpty);
+    return json.decode(fromDb).cast<int>();
   }
 
   @override

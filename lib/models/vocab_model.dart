@@ -11,10 +11,10 @@ part 'vocab_model.g.dart';
 
 @JsonSerializable()
 class VocabModel {
-  String id;
+  String vocabId;
 
   // above are fetched from database
-  int edition;
+  DateTime edition;
   int listId;
   String vocab;
   VocabType type;
@@ -36,10 +36,11 @@ class VocabModel {
   bool bookMarked = false;
   bool questionMark = false;
   bool starMark = false;
-  bool expoMark = false;
+  bool pinMark = false;
+  bool addedMark = false;
 
   VocabModel({
-    @required this.id,
+    @required this.vocabId,
     @required this.edition,
     @required this.listId,
     @required this.vocab,
@@ -53,14 +54,15 @@ class VocabModel {
     this.confusingWordId,
     this.memTips,
     this.exampleSentences,
-    this.nthWord,
-    this.nthAppear,
+    this.nthWord = 0,
+    this.nthAppear = 0,
     this.markColors,
     this.editedMeaning,
-    this.bookMarked,
-    this.questionMark,
-    this.starMark,
-    this.expoMark,
+    this.bookMarked = false,
+    this.questionMark = false,
+    this.starMark = false,
+    this.pinMark = false,
+    this.addedMark = false,
   });
 
   factory VocabModel.fromJson(Map<String, dynamic> json) => _$VocabModelFromJson(json);
@@ -68,12 +70,12 @@ class VocabModel {
   factory VocabModel.fromJsonString(String s) => VocabModel.fromJson(json.decode(s));
   String toJsonString() => json.encode(toJson());
 
-  factory VocabModel.fromSqlite(VocabSqliteTableData vocab, UserVocabSqliteTableData user) {
-    assert(vocab.id == vocab.userVocabSqliteTableId); // TODO: enforce such constraint
-    assert(vocab.userVocabSqliteTableId == user.id);
+  factory VocabModel.fromSqlite(VocabSqliteTableData vocab, UserVocabSqliteTableData userVocab) {
+    assert(vocab.vocabId == vocab.userVocabSqliteTableVocabId); // TODO: enforce such constraint
+    assert(vocab.userVocabSqliteTableVocabId == userVocab.vocabId);
     return VocabModel(
       // TODO: check nullable
-      id: vocab.id,
+      vocabId: vocab.vocabId,
       edition: vocab.edition,
       listId: vocab.listId,
       vocab: vocab.vocab,
@@ -87,24 +89,25 @@ class VocabModel {
       confusingWordId: vocab.confusingWordId,
       memTips: vocab.memTips,
       exampleSentences: vocab.exampleSentences,
-      nthWord: user.nthWord,
-      nthAppear: user.nthAppear,
-      markColors: user.markColors,
-      editedMeaning: user.editedMeaning,
-      bookMarked: user.bookMarked,
-      questionMark: user.questionMark,
-      starMark: user.starMark,
-      expoMark: user.expoMark,
+      nthWord: userVocab.nthWord,
+      nthAppear: userVocab.nthAppear,
+      markColors: userVocab.markColors,
+      editedMeaning: userVocab.editedMeaning,
+      bookMarked: userVocab.bookMarked,
+      questionMark: userVocab.questionMark,
+      starMark: userVocab.starMark,
+      pinMark: userVocab.pinMark,
+      addedMark: userVocab.addedMark,
     );
   }
 
-  factory VocabModel.fromCombinedSqlite(VocabSqliteTableDataWithUserVocabSqliteTableData data) {
-    return VocabModel.fromSqlite(data.vocabSqliteTableData, data.userVocabSqliteTableData);
+  factory VocabModel.fromCombinedSqlite(VocabSqliteTableDataWithUserVocabSqliteTableData vocabWithUserVocab) {
+    return VocabModel.fromSqlite(vocabWithUserVocab.vocabSqliteTableData, vocabWithUserVocab.userVocabSqliteTableData);
   }
   VocabSqliteTableDataWithUserVocabSqliteTableData toCombinedSqlite() {
     return VocabSqliteTableDataWithUserVocabSqliteTableData(
         vocabSqliteTableData: VocabSqliteTableData(
-          id: this.id,
+          vocabId: this.vocabId,
           edition: this.edition,
           listId: this.listId,
           vocab: this.vocab,
@@ -118,10 +121,10 @@ class VocabModel {
           confusingWordId: this.confusingWordId,
           memTips: this.memTips,
           exampleSentences: this.exampleSentences,
-          userVocabSqliteTableId: this.id,
+          userVocabSqliteTableVocabId: this.vocabId,
         ),
         userVocabSqliteTableData: UserVocabSqliteTableData(
-          id: this.id,
+          vocabId: this.vocabId,
           nthWord: this.nthWord,
           nthAppear: this.nthAppear,
           markColors: this.markColors,
@@ -129,7 +132,8 @@ class VocabModel {
           bookMarked: this.bookMarked,
           questionMark: this.questionMark,
           starMark: this.starMark,
-          expoMark: this.expoMark,
+          pinMark: this.pinMark,
+          addedMark: this.addedMark,
         ));
   }
 }

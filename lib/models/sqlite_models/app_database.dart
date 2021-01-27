@@ -32,11 +32,11 @@ class AppDatabase extends _$AppDatabase {
 }
 
 class VocabSqliteTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get vocabId => text()();
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {vocabId};
 
-  IntColumn get edition => integer()();
+  DateTimeColumn get edition => dateTime()();
   IntColumn get listId => integer()(); // TODO: link
   TextColumn get vocab => text()();
   IntColumn get type => intEnum<VocabType>().nullable()();
@@ -51,13 +51,13 @@ class VocabSqliteTable extends Table {
   TextColumn get exampleSentences => text().nullable().map(const StringListConverter())();
 
   // foreign key constraint
-  TextColumn get userVocabSqliteTableId => text().nullable().customConstraint("NULL REFERENCES user_vocab_sqlite_table(id)")();
+  TextColumn get userVocabSqliteTableVocabId => text().nullable().customConstraint("NULL REFERENCES user_vocab_sqlite_table(vocab_id)")();
 }
 
 class UserVocabSqliteTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get vocabId => text()();
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {vocabId};
 
   IntColumn get nthWord => integer().withDefault(Constant(0))();
   IntColumn get nthAppear => integer().withDefault(Constant(0))();
@@ -66,5 +66,16 @@ class UserVocabSqliteTable extends Table {
   BoolColumn get bookMarked => boolean().withDefault(Constant(false))();
   BoolColumn get questionMark => boolean().withDefault(Constant(false))();
   BoolColumn get starMark => boolean().withDefault(Constant(false))();
-  BoolColumn get expoMark => boolean().withDefault(Constant(false))();
+  BoolColumn get pinMark => boolean().withDefault(Constant(false))();
+  BoolColumn get addedMark => boolean().withDefault(Constant(false))();
+}
+
+class ValueOrAbsent<T> {
+  final T value;
+
+  ValueOrAbsent(this.value);
+  Value<T> call() {
+    if (value == null) print("\n\n\nabsent\n\n\n");
+    return value == null ? Value.absent() : Value<T>(value);
+  }
 }

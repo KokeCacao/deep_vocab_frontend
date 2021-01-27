@@ -9,8 +9,8 @@ part of 'app_database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class VocabSqliteTableData extends DataClass
     implements Insertable<VocabSqliteTableData> {
-  final String id;
-  final int edition;
+  final String vocabId;
+  final DateTime edition;
   final int listId;
   final String vocab;
   final VocabType type;
@@ -23,9 +23,9 @@ class VocabSqliteTableData extends DataClass
   final List<String> confusingWordId;
   final String memTips;
   final List<String> exampleSentences;
-  final String userVocabSqliteTableId;
+  final String userVocabSqliteTableVocabId;
   VocabSqliteTableData(
-      {@required this.id,
+      {@required this.vocabId,
       @required this.edition,
       @required this.listId,
       @required this.vocab,
@@ -39,17 +39,19 @@ class VocabSqliteTableData extends DataClass
       this.confusingWordId,
       this.memTips,
       this.exampleSentences,
-      this.userVocabSqliteTableId});
+      this.userVocabSqliteTableVocabId});
   factory VocabSqliteTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     final intType = db.typeSystem.forDartType<int>();
     return VocabSqliteTableData(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      edition:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}edition']),
+      vocabId: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}vocab_id']),
+      edition: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}edition']),
       listId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}list_id']),
       vocab:
@@ -77,18 +79,18 @@ class VocabSqliteTableData extends DataClass
       exampleSentences: $VocabSqliteTableTable.$converter5.mapToDart(
           stringType.mapFromDatabaseResponse(
               data['${effectivePrefix}example_sentences'])),
-      userVocabSqliteTableId: stringType.mapFromDatabaseResponse(
-          data['${effectivePrefix}user_vocab_sqlite_table_id']),
+      userVocabSqliteTableVocabId: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}user_vocab_sqlite_table_vocab_id']),
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
+    if (!nullToAbsent || vocabId != null) {
+      map['vocab_id'] = Variable<String>(vocabId);
     }
     if (!nullToAbsent || edition != null) {
-      map['edition'] = Variable<int>(edition);
+      map['edition'] = Variable<DateTime>(edition);
     }
     if (!nullToAbsent || listId != null) {
       map['list_id'] = Variable<int>(listId);
@@ -135,16 +137,18 @@ class VocabSqliteTableData extends DataClass
       map['example_sentences'] =
           Variable<String>(converter.mapToSql(exampleSentences));
     }
-    if (!nullToAbsent || userVocabSqliteTableId != null) {
-      map['user_vocab_sqlite_table_id'] =
-          Variable<String>(userVocabSqliteTableId);
+    if (!nullToAbsent || userVocabSqliteTableVocabId != null) {
+      map['user_vocab_sqlite_table_vocab_id'] =
+          Variable<String>(userVocabSqliteTableVocabId);
     }
     return map;
   }
 
   VocabSqliteTableCompanion toCompanion(bool nullToAbsent) {
     return VocabSqliteTableCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      vocabId: vocabId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vocabId),
       edition: edition == null && nullToAbsent
           ? const Value.absent()
           : Value(edition),
@@ -180,9 +184,10 @@ class VocabSqliteTableData extends DataClass
       exampleSentences: exampleSentences == null && nullToAbsent
           ? const Value.absent()
           : Value(exampleSentences),
-      userVocabSqliteTableId: userVocabSqliteTableId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userVocabSqliteTableId),
+      userVocabSqliteTableVocabId:
+          userVocabSqliteTableVocabId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(userVocabSqliteTableVocabId),
     );
   }
 
@@ -190,8 +195,8 @@ class VocabSqliteTableData extends DataClass
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return VocabSqliteTableData(
-      id: serializer.fromJson<String>(json['id']),
-      edition: serializer.fromJson<int>(json['edition']),
+      vocabId: serializer.fromJson<String>(json['vocabId']),
+      edition: serializer.fromJson<DateTime>(json['edition']),
       listId: serializer.fromJson<int>(json['listId']),
       vocab: serializer.fromJson<String>(json['vocab']),
       type: serializer.fromJson<VocabType>(json['type']),
@@ -208,16 +213,16 @@ class VocabSqliteTableData extends DataClass
       memTips: serializer.fromJson<String>(json['memTips']),
       exampleSentences:
           serializer.fromJson<List<String>>(json['exampleSentences']),
-      userVocabSqliteTableId:
-          serializer.fromJson<String>(json['userVocabSqliteTableId']),
+      userVocabSqliteTableVocabId:
+          serializer.fromJson<String>(json['userVocabSqliteTableVocabId']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'edition': serializer.toJson<int>(edition),
+      'vocabId': serializer.toJson<String>(vocabId),
+      'edition': serializer.toJson<DateTime>(edition),
       'listId': serializer.toJson<int>(listId),
       'vocab': serializer.toJson<String>(vocab),
       'type': serializer.toJson<VocabType>(type),
@@ -230,14 +235,14 @@ class VocabSqliteTableData extends DataClass
       'confusingWordId': serializer.toJson<List<String>>(confusingWordId),
       'memTips': serializer.toJson<String>(memTips),
       'exampleSentences': serializer.toJson<List<String>>(exampleSentences),
-      'userVocabSqliteTableId':
-          serializer.toJson<String>(userVocabSqliteTableId),
+      'userVocabSqliteTableVocabId':
+          serializer.toJson<String>(userVocabSqliteTableVocabId),
     };
   }
 
   VocabSqliteTableData copyWith(
-          {String id,
-          int edition,
+          {String vocabId,
+          DateTime edition,
           int listId,
           String vocab,
           VocabType type,
@@ -250,9 +255,9 @@ class VocabSqliteTableData extends DataClass
           List<String> confusingWordId,
           String memTips,
           List<String> exampleSentences,
-          String userVocabSqliteTableId}) =>
+          String userVocabSqliteTableVocabId}) =>
       VocabSqliteTableData(
-        id: id ?? this.id,
+        vocabId: vocabId ?? this.vocabId,
         edition: edition ?? this.edition,
         listId: listId ?? this.listId,
         vocab: vocab ?? this.vocab,
@@ -266,13 +271,13 @@ class VocabSqliteTableData extends DataClass
         confusingWordId: confusingWordId ?? this.confusingWordId,
         memTips: memTips ?? this.memTips,
         exampleSentences: exampleSentences ?? this.exampleSentences,
-        userVocabSqliteTableId:
-            userVocabSqliteTableId ?? this.userVocabSqliteTableId,
+        userVocabSqliteTableVocabId:
+            userVocabSqliteTableVocabId ?? this.userVocabSqliteTableVocabId,
       );
   @override
   String toString() {
     return (StringBuffer('VocabSqliteTableData(')
-          ..write('id: $id, ')
+          ..write('vocabId: $vocabId, ')
           ..write('edition: $edition, ')
           ..write('listId: $listId, ')
           ..write('vocab: $vocab, ')
@@ -286,14 +291,14 @@ class VocabSqliteTableData extends DataClass
           ..write('confusingWordId: $confusingWordId, ')
           ..write('memTips: $memTips, ')
           ..write('exampleSentences: $exampleSentences, ')
-          ..write('userVocabSqliteTableId: $userVocabSqliteTableId')
+          ..write('userVocabSqliteTableVocabId: $userVocabSqliteTableVocabId')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => $mrjf($mrjc(
-      id.hashCode,
+      vocabId.hashCode,
       $mrjc(
           edition.hashCode,
           $mrjc(
@@ -321,13 +326,13 @@ class VocabSqliteTableData extends DataClass
                                                       $mrjc(
                                                           exampleSentences
                                                               .hashCode,
-                                                          userVocabSqliteTableId
+                                                          userVocabSqliteTableVocabId
                                                               .hashCode)))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is VocabSqliteTableData &&
-          other.id == this.id &&
+          other.vocabId == this.vocabId &&
           other.edition == this.edition &&
           other.listId == this.listId &&
           other.vocab == this.vocab &&
@@ -341,12 +346,13 @@ class VocabSqliteTableData extends DataClass
           other.confusingWordId == this.confusingWordId &&
           other.memTips == this.memTips &&
           other.exampleSentences == this.exampleSentences &&
-          other.userVocabSqliteTableId == this.userVocabSqliteTableId);
+          other.userVocabSqliteTableVocabId ==
+              this.userVocabSqliteTableVocabId);
 }
 
 class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
-  final Value<String> id;
-  final Value<int> edition;
+  final Value<String> vocabId;
+  final Value<DateTime> edition;
   final Value<int> listId;
   final Value<String> vocab;
   final Value<VocabType> type;
@@ -359,9 +365,9 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   final Value<List<String>> confusingWordId;
   final Value<String> memTips;
   final Value<List<String>> exampleSentences;
-  final Value<String> userVocabSqliteTableId;
+  final Value<String> userVocabSqliteTableVocabId;
   const VocabSqliteTableCompanion({
-    this.id = const Value.absent(),
+    this.vocabId = const Value.absent(),
     this.edition = const Value.absent(),
     this.listId = const Value.absent(),
     this.vocab = const Value.absent(),
@@ -375,11 +381,11 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     this.confusingWordId = const Value.absent(),
     this.memTips = const Value.absent(),
     this.exampleSentences = const Value.absent(),
-    this.userVocabSqliteTableId = const Value.absent(),
+    this.userVocabSqliteTableVocabId = const Value.absent(),
   });
   VocabSqliteTableCompanion.insert({
-    @required String id,
-    @required int edition,
+    @required String vocabId,
+    @required DateTime edition,
     @required int listId,
     @required String vocab,
     this.type = const Value.absent(),
@@ -392,14 +398,14 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     this.confusingWordId = const Value.absent(),
     this.memTips = const Value.absent(),
     this.exampleSentences = const Value.absent(),
-    this.userVocabSqliteTableId = const Value.absent(),
-  })  : id = Value(id),
+    this.userVocabSqliteTableVocabId = const Value.absent(),
+  })  : vocabId = Value(vocabId),
         edition = Value(edition),
         listId = Value(listId),
         vocab = Value(vocab);
   static Insertable<VocabSqliteTableData> custom({
-    Expression<String> id,
-    Expression<int> edition,
+    Expression<String> vocabId,
+    Expression<DateTime> edition,
     Expression<int> listId,
     Expression<String> vocab,
     Expression<int> type,
@@ -412,10 +418,10 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     Expression<String> confusingWordId,
     Expression<String> memTips,
     Expression<String> exampleSentences,
-    Expression<String> userVocabSqliteTableId,
+    Expression<String> userVocabSqliteTableVocabId,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (vocabId != null) 'vocab_id': vocabId,
       if (edition != null) 'edition': edition,
       if (listId != null) 'list_id': listId,
       if (vocab != null) 'vocab': vocab,
@@ -429,14 +435,14 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       if (confusingWordId != null) 'confusing_word_id': confusingWordId,
       if (memTips != null) 'mem_tips': memTips,
       if (exampleSentences != null) 'example_sentences': exampleSentences,
-      if (userVocabSqliteTableId != null)
-        'user_vocab_sqlite_table_id': userVocabSqliteTableId,
+      if (userVocabSqliteTableVocabId != null)
+        'user_vocab_sqlite_table_vocab_id': userVocabSqliteTableVocabId,
     });
   }
 
   VocabSqliteTableCompanion copyWith(
-      {Value<String> id,
-      Value<int> edition,
+      {Value<String> vocabId,
+      Value<DateTime> edition,
       Value<int> listId,
       Value<String> vocab,
       Value<VocabType> type,
@@ -449,9 +455,9 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       Value<List<String>> confusingWordId,
       Value<String> memTips,
       Value<List<String>> exampleSentences,
-      Value<String> userVocabSqliteTableId}) {
+      Value<String> userVocabSqliteTableVocabId}) {
     return VocabSqliteTableCompanion(
-      id: id ?? this.id,
+      vocabId: vocabId ?? this.vocabId,
       edition: edition ?? this.edition,
       listId: listId ?? this.listId,
       vocab: vocab ?? this.vocab,
@@ -465,19 +471,19 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       confusingWordId: confusingWordId ?? this.confusingWordId,
       memTips: memTips ?? this.memTips,
       exampleSentences: exampleSentences ?? this.exampleSentences,
-      userVocabSqliteTableId:
-          userVocabSqliteTableId ?? this.userVocabSqliteTableId,
+      userVocabSqliteTableVocabId:
+          userVocabSqliteTableVocabId ?? this.userVocabSqliteTableVocabId,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
+    if (vocabId.present) {
+      map['vocab_id'] = Variable<String>(vocabId.value);
     }
     if (edition.present) {
-      map['edition'] = Variable<int>(edition.value);
+      map['edition'] = Variable<DateTime>(edition.value);
     }
     if (listId.present) {
       map['list_id'] = Variable<int>(listId.value);
@@ -525,9 +531,9 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       map['example_sentences'] =
           Variable<String>(converter.mapToSql(exampleSentences.value));
     }
-    if (userVocabSqliteTableId.present) {
-      map['user_vocab_sqlite_table_id'] =
-          Variable<String>(userVocabSqliteTableId.value);
+    if (userVocabSqliteTableVocabId.present) {
+      map['user_vocab_sqlite_table_vocab_id'] =
+          Variable<String>(userVocabSqliteTableVocabId.value);
     }
     return map;
   }
@@ -535,7 +541,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   @override
   String toString() {
     return (StringBuffer('VocabSqliteTableCompanion(')
-          ..write('id: $id, ')
+          ..write('vocabId: $vocabId, ')
           ..write('edition: $edition, ')
           ..write('listId: $listId, ')
           ..write('vocab: $vocab, ')
@@ -549,7 +555,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
           ..write('confusingWordId: $confusingWordId, ')
           ..write('memTips: $memTips, ')
           ..write('exampleSentences: $exampleSentences, ')
-          ..write('userVocabSqliteTableId: $userVocabSqliteTableId')
+          ..write('userVocabSqliteTableVocabId: $userVocabSqliteTableVocabId')
           ..write(')'))
         .toString();
   }
@@ -560,24 +566,24 @@ class $VocabSqliteTableTable extends VocabSqliteTable
   final GeneratedDatabase _db;
   final String _alias;
   $VocabSqliteTableTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
+  final VerificationMeta _vocabIdMeta = const VerificationMeta('vocabId');
+  GeneratedTextColumn _vocabId;
   @override
-  GeneratedTextColumn get id => _id ??= _constructId();
-  GeneratedTextColumn _constructId() {
+  GeneratedTextColumn get vocabId => _vocabId ??= _constructVocabId();
+  GeneratedTextColumn _constructVocabId() {
     return GeneratedTextColumn(
-      'id',
+      'vocab_id',
       $tableName,
       false,
     );
   }
 
   final VerificationMeta _editionMeta = const VerificationMeta('edition');
-  GeneratedIntColumn _edition;
+  GeneratedDateTimeColumn _edition;
   @override
-  GeneratedIntColumn get edition => _edition ??= _constructEdition();
-  GeneratedIntColumn _constructEdition() {
-    return GeneratedIntColumn(
+  GeneratedDateTimeColumn get edition => _edition ??= _constructEdition();
+  GeneratedDateTimeColumn _constructEdition() {
+    return GeneratedDateTimeColumn(
       'edition',
       $tableName,
       false,
@@ -738,20 +744,22 @@ class $VocabSqliteTableTable extends VocabSqliteTable
     );
   }
 
-  final VerificationMeta _userVocabSqliteTableIdMeta =
-      const VerificationMeta('userVocabSqliteTableId');
-  GeneratedTextColumn _userVocabSqliteTableId;
+  final VerificationMeta _userVocabSqliteTableVocabIdMeta =
+      const VerificationMeta('userVocabSqliteTableVocabId');
+  GeneratedTextColumn _userVocabSqliteTableVocabId;
   @override
-  GeneratedTextColumn get userVocabSqliteTableId =>
-      _userVocabSqliteTableId ??= _constructUserVocabSqliteTableId();
-  GeneratedTextColumn _constructUserVocabSqliteTableId() {
-    return GeneratedTextColumn('user_vocab_sqlite_table_id', $tableName, true,
-        $customConstraints: 'NULL REFERENCES user_vocab_sqlite_table(id)');
+  GeneratedTextColumn get userVocabSqliteTableVocabId =>
+      _userVocabSqliteTableVocabId ??= _constructUserVocabSqliteTableVocabId();
+  GeneratedTextColumn _constructUserVocabSqliteTableVocabId() {
+    return GeneratedTextColumn(
+        'user_vocab_sqlite_table_vocab_id', $tableName, true,
+        $customConstraints:
+            'NULL REFERENCES user_vocab_sqlite_table(vocab_id)');
   }
 
   @override
   List<GeneratedColumn> get $columns => [
-        id,
+        vocabId,
         edition,
         listId,
         vocab,
@@ -765,7 +773,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
         confusingWordId,
         memTips,
         exampleSentences,
-        userVocabSqliteTableId
+        userVocabSqliteTableVocabId
       ];
   @override
   $VocabSqliteTableTable get asDslTable => this;
@@ -779,10 +787,11 @@ class $VocabSqliteTableTable extends VocabSqliteTable
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+    if (data.containsKey('vocab_id')) {
+      context.handle(_vocabIdMeta,
+          vocabId.isAcceptableOrUnknown(data['vocab_id'], _vocabIdMeta));
     } else if (isInserting) {
-      context.missing(_idMeta);
+      context.missing(_vocabIdMeta);
     }
     if (data.containsKey('edition')) {
       context.handle(_editionMeta,
@@ -828,17 +837,18 @@ class $VocabSqliteTableTable extends VocabSqliteTable
           memTips.isAcceptableOrUnknown(data['mem_tips'], _memTipsMeta));
     }
     context.handle(_exampleSentencesMeta, const VerificationResult.success());
-    if (data.containsKey('user_vocab_sqlite_table_id')) {
+    if (data.containsKey('user_vocab_sqlite_table_vocab_id')) {
       context.handle(
-          _userVocabSqliteTableIdMeta,
-          userVocabSqliteTableId.isAcceptableOrUnknown(
-              data['user_vocab_sqlite_table_id'], _userVocabSqliteTableIdMeta));
+          _userVocabSqliteTableVocabIdMeta,
+          userVocabSqliteTableVocabId.isAcceptableOrUnknown(
+              data['user_vocab_sqlite_table_vocab_id'],
+              _userVocabSqliteTableVocabIdMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {vocabId};
   @override
   VocabSqliteTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -866,7 +876,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
 
 class UserVocabSqliteTableData extends DataClass
     implements Insertable<UserVocabSqliteTableData> {
-  final String id;
+  final String vocabId;
   final int nthWord;
   final int nthAppear;
   final List<MarkColorModel> markColors;
@@ -874,9 +884,10 @@ class UserVocabSqliteTableData extends DataClass
   final bool bookMarked;
   final bool questionMark;
   final bool starMark;
-  final bool expoMark;
+  final bool pinMark;
+  final bool addedMark;
   UserVocabSqliteTableData(
-      {@required this.id,
+      {@required this.vocabId,
       @required this.nthWord,
       @required this.nthAppear,
       this.markColors,
@@ -884,7 +895,8 @@ class UserVocabSqliteTableData extends DataClass
       @required this.bookMarked,
       @required this.questionMark,
       @required this.starMark,
-      @required this.expoMark});
+      @required this.pinMark,
+      @required this.addedMark});
   factory UserVocabSqliteTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -893,7 +905,8 @@ class UserVocabSqliteTableData extends DataClass
     final intType = db.typeSystem.forDartType<int>();
     final boolType = db.typeSystem.forDartType<bool>();
     return UserVocabSqliteTableData(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      vocabId: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}vocab_id']),
       nthWord:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}nth_word']),
       nthAppear:
@@ -908,15 +921,17 @@ class UserVocabSqliteTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}question_mark']),
       starMark:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}star_mark']),
-      expoMark:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}expo_mark']),
+      pinMark:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}pin_mark']),
+      addedMark: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}added_mark']),
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
+    if (!nullToAbsent || vocabId != null) {
+      map['vocab_id'] = Variable<String>(vocabId);
     }
     if (!nullToAbsent || nthWord != null) {
       map['nth_word'] = Variable<int>(nthWord);
@@ -940,15 +955,20 @@ class UserVocabSqliteTableData extends DataClass
     if (!nullToAbsent || starMark != null) {
       map['star_mark'] = Variable<bool>(starMark);
     }
-    if (!nullToAbsent || expoMark != null) {
-      map['expo_mark'] = Variable<bool>(expoMark);
+    if (!nullToAbsent || pinMark != null) {
+      map['pin_mark'] = Variable<bool>(pinMark);
+    }
+    if (!nullToAbsent || addedMark != null) {
+      map['added_mark'] = Variable<bool>(addedMark);
     }
     return map;
   }
 
   UserVocabSqliteTableCompanion toCompanion(bool nullToAbsent) {
     return UserVocabSqliteTableCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      vocabId: vocabId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vocabId),
       nthWord: nthWord == null && nullToAbsent
           ? const Value.absent()
           : Value(nthWord),
@@ -970,9 +990,12 @@ class UserVocabSqliteTableData extends DataClass
       starMark: starMark == null && nullToAbsent
           ? const Value.absent()
           : Value(starMark),
-      expoMark: expoMark == null && nullToAbsent
+      pinMark: pinMark == null && nullToAbsent
           ? const Value.absent()
-          : Value(expoMark),
+          : Value(pinMark),
+      addedMark: addedMark == null && nullToAbsent
+          ? const Value.absent()
+          : Value(addedMark),
     );
   }
 
@@ -980,7 +1003,7 @@ class UserVocabSqliteTableData extends DataClass
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return UserVocabSqliteTableData(
-      id: serializer.fromJson<String>(json['id']),
+      vocabId: serializer.fromJson<String>(json['vocabId']),
       nthWord: serializer.fromJson<int>(json['nthWord']),
       nthAppear: serializer.fromJson<int>(json['nthAppear']),
       markColors: serializer.fromJson<List<MarkColorModel>>(json['markColors']),
@@ -988,14 +1011,15 @@ class UserVocabSqliteTableData extends DataClass
       bookMarked: serializer.fromJson<bool>(json['bookMarked']),
       questionMark: serializer.fromJson<bool>(json['questionMark']),
       starMark: serializer.fromJson<bool>(json['starMark']),
-      expoMark: serializer.fromJson<bool>(json['expoMark']),
+      pinMark: serializer.fromJson<bool>(json['pinMark']),
+      addedMark: serializer.fromJson<bool>(json['addedMark']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'vocabId': serializer.toJson<String>(vocabId),
       'nthWord': serializer.toJson<int>(nthWord),
       'nthAppear': serializer.toJson<int>(nthAppear),
       'markColors': serializer.toJson<List<MarkColorModel>>(markColors),
@@ -1003,12 +1027,13 @@ class UserVocabSqliteTableData extends DataClass
       'bookMarked': serializer.toJson<bool>(bookMarked),
       'questionMark': serializer.toJson<bool>(questionMark),
       'starMark': serializer.toJson<bool>(starMark),
-      'expoMark': serializer.toJson<bool>(expoMark),
+      'pinMark': serializer.toJson<bool>(pinMark),
+      'addedMark': serializer.toJson<bool>(addedMark),
     };
   }
 
   UserVocabSqliteTableData copyWith(
-          {String id,
+          {String vocabId,
           int nthWord,
           int nthAppear,
           List<MarkColorModel> markColors,
@@ -1016,9 +1041,10 @@ class UserVocabSqliteTableData extends DataClass
           bool bookMarked,
           bool questionMark,
           bool starMark,
-          bool expoMark}) =>
+          bool pinMark,
+          bool addedMark}) =>
       UserVocabSqliteTableData(
-        id: id ?? this.id,
+        vocabId: vocabId ?? this.vocabId,
         nthWord: nthWord ?? this.nthWord,
         nthAppear: nthAppear ?? this.nthAppear,
         markColors: markColors ?? this.markColors,
@@ -1026,12 +1052,13 @@ class UserVocabSqliteTableData extends DataClass
         bookMarked: bookMarked ?? this.bookMarked,
         questionMark: questionMark ?? this.questionMark,
         starMark: starMark ?? this.starMark,
-        expoMark: expoMark ?? this.expoMark,
+        pinMark: pinMark ?? this.pinMark,
+        addedMark: addedMark ?? this.addedMark,
       );
   @override
   String toString() {
     return (StringBuffer('UserVocabSqliteTableData(')
-          ..write('id: $id, ')
+          ..write('vocabId: $vocabId, ')
           ..write('nthWord: $nthWord, ')
           ..write('nthAppear: $nthAppear, ')
           ..write('markColors: $markColors, ')
@@ -1039,14 +1066,15 @@ class UserVocabSqliteTableData extends DataClass
           ..write('bookMarked: $bookMarked, ')
           ..write('questionMark: $questionMark, ')
           ..write('starMark: $starMark, ')
-          ..write('expoMark: $expoMark')
+          ..write('pinMark: $pinMark, ')
+          ..write('addedMark: $addedMark')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => $mrjf($mrjc(
-      id.hashCode,
+      vocabId.hashCode,
       $mrjc(
           nthWord.hashCode,
           $mrjc(
@@ -1060,12 +1088,14 @@ class UserVocabSqliteTableData extends DataClass
                           $mrjc(
                               questionMark.hashCode,
                               $mrjc(
-                                  starMark.hashCode, expoMark.hashCode)))))))));
+                                  starMark.hashCode,
+                                  $mrjc(pinMark.hashCode,
+                                      addedMark.hashCode))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is UserVocabSqliteTableData &&
-          other.id == this.id &&
+          other.vocabId == this.vocabId &&
           other.nthWord == this.nthWord &&
           other.nthAppear == this.nthAppear &&
           other.markColors == this.markColors &&
@@ -1073,12 +1103,13 @@ class UserVocabSqliteTableData extends DataClass
           other.bookMarked == this.bookMarked &&
           other.questionMark == this.questionMark &&
           other.starMark == this.starMark &&
-          other.expoMark == this.expoMark);
+          other.pinMark == this.pinMark &&
+          other.addedMark == this.addedMark);
 }
 
 class UserVocabSqliteTableCompanion
     extends UpdateCompanion<UserVocabSqliteTableData> {
-  final Value<String> id;
+  final Value<String> vocabId;
   final Value<int> nthWord;
   final Value<int> nthAppear;
   final Value<List<MarkColorModel>> markColors;
@@ -1086,9 +1117,10 @@ class UserVocabSqliteTableCompanion
   final Value<bool> bookMarked;
   final Value<bool> questionMark;
   final Value<bool> starMark;
-  final Value<bool> expoMark;
+  final Value<bool> pinMark;
+  final Value<bool> addedMark;
   const UserVocabSqliteTableCompanion({
-    this.id = const Value.absent(),
+    this.vocabId = const Value.absent(),
     this.nthWord = const Value.absent(),
     this.nthAppear = const Value.absent(),
     this.markColors = const Value.absent(),
@@ -1096,10 +1128,11 @@ class UserVocabSqliteTableCompanion
     this.bookMarked = const Value.absent(),
     this.questionMark = const Value.absent(),
     this.starMark = const Value.absent(),
-    this.expoMark = const Value.absent(),
+    this.pinMark = const Value.absent(),
+    this.addedMark = const Value.absent(),
   });
   UserVocabSqliteTableCompanion.insert({
-    @required String id,
+    @required String vocabId,
     this.nthWord = const Value.absent(),
     this.nthAppear = const Value.absent(),
     this.markColors = const Value.absent(),
@@ -1107,10 +1140,11 @@ class UserVocabSqliteTableCompanion
     this.bookMarked = const Value.absent(),
     this.questionMark = const Value.absent(),
     this.starMark = const Value.absent(),
-    this.expoMark = const Value.absent(),
-  }) : id = Value(id);
+    this.pinMark = const Value.absent(),
+    this.addedMark = const Value.absent(),
+  }) : vocabId = Value(vocabId);
   static Insertable<UserVocabSqliteTableData> custom({
-    Expression<String> id,
+    Expression<String> vocabId,
     Expression<int> nthWord,
     Expression<int> nthAppear,
     Expression<String> markColors,
@@ -1118,10 +1152,11 @@ class UserVocabSqliteTableCompanion
     Expression<bool> bookMarked,
     Expression<bool> questionMark,
     Expression<bool> starMark,
-    Expression<bool> expoMark,
+    Expression<bool> pinMark,
+    Expression<bool> addedMark,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (vocabId != null) 'vocab_id': vocabId,
       if (nthWord != null) 'nth_word': nthWord,
       if (nthAppear != null) 'nth_appear': nthAppear,
       if (markColors != null) 'mark_colors': markColors,
@@ -1129,12 +1164,13 @@ class UserVocabSqliteTableCompanion
       if (bookMarked != null) 'book_marked': bookMarked,
       if (questionMark != null) 'question_mark': questionMark,
       if (starMark != null) 'star_mark': starMark,
-      if (expoMark != null) 'expo_mark': expoMark,
+      if (pinMark != null) 'pin_mark': pinMark,
+      if (addedMark != null) 'added_mark': addedMark,
     });
   }
 
   UserVocabSqliteTableCompanion copyWith(
-      {Value<String> id,
+      {Value<String> vocabId,
       Value<int> nthWord,
       Value<int> nthAppear,
       Value<List<MarkColorModel>> markColors,
@@ -1142,9 +1178,10 @@ class UserVocabSqliteTableCompanion
       Value<bool> bookMarked,
       Value<bool> questionMark,
       Value<bool> starMark,
-      Value<bool> expoMark}) {
+      Value<bool> pinMark,
+      Value<bool> addedMark}) {
     return UserVocabSqliteTableCompanion(
-      id: id ?? this.id,
+      vocabId: vocabId ?? this.vocabId,
       nthWord: nthWord ?? this.nthWord,
       nthAppear: nthAppear ?? this.nthAppear,
       markColors: markColors ?? this.markColors,
@@ -1152,15 +1189,16 @@ class UserVocabSqliteTableCompanion
       bookMarked: bookMarked ?? this.bookMarked,
       questionMark: questionMark ?? this.questionMark,
       starMark: starMark ?? this.starMark,
-      expoMark: expoMark ?? this.expoMark,
+      pinMark: pinMark ?? this.pinMark,
+      addedMark: addedMark ?? this.addedMark,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
+    if (vocabId.present) {
+      map['vocab_id'] = Variable<String>(vocabId.value);
     }
     if (nthWord.present) {
       map['nth_word'] = Variable<int>(nthWord.value);
@@ -1185,8 +1223,11 @@ class UserVocabSqliteTableCompanion
     if (starMark.present) {
       map['star_mark'] = Variable<bool>(starMark.value);
     }
-    if (expoMark.present) {
-      map['expo_mark'] = Variable<bool>(expoMark.value);
+    if (pinMark.present) {
+      map['pin_mark'] = Variable<bool>(pinMark.value);
+    }
+    if (addedMark.present) {
+      map['added_mark'] = Variable<bool>(addedMark.value);
     }
     return map;
   }
@@ -1194,7 +1235,7 @@ class UserVocabSqliteTableCompanion
   @override
   String toString() {
     return (StringBuffer('UserVocabSqliteTableCompanion(')
-          ..write('id: $id, ')
+          ..write('vocabId: $vocabId, ')
           ..write('nthWord: $nthWord, ')
           ..write('nthAppear: $nthAppear, ')
           ..write('markColors: $markColors, ')
@@ -1202,7 +1243,8 @@ class UserVocabSqliteTableCompanion
           ..write('bookMarked: $bookMarked, ')
           ..write('questionMark: $questionMark, ')
           ..write('starMark: $starMark, ')
-          ..write('expoMark: $expoMark')
+          ..write('pinMark: $pinMark, ')
+          ..write('addedMark: $addedMark')
           ..write(')'))
         .toString();
   }
@@ -1213,13 +1255,13 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
   final GeneratedDatabase _db;
   final String _alias;
   $UserVocabSqliteTableTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
+  final VerificationMeta _vocabIdMeta = const VerificationMeta('vocabId');
+  GeneratedTextColumn _vocabId;
   @override
-  GeneratedTextColumn get id => _id ??= _constructId();
-  GeneratedTextColumn _constructId() {
+  GeneratedTextColumn get vocabId => _vocabId ??= _constructVocabId();
+  GeneratedTextColumn _constructVocabId() {
     return GeneratedTextColumn(
-      'id',
+      'vocab_id',
       $tableName,
       false,
     );
@@ -1298,18 +1340,27 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
         defaultValue: Constant(false));
   }
 
-  final VerificationMeta _expoMarkMeta = const VerificationMeta('expoMark');
-  GeneratedBoolColumn _expoMark;
+  final VerificationMeta _pinMarkMeta = const VerificationMeta('pinMark');
+  GeneratedBoolColumn _pinMark;
   @override
-  GeneratedBoolColumn get expoMark => _expoMark ??= _constructExpoMark();
-  GeneratedBoolColumn _constructExpoMark() {
-    return GeneratedBoolColumn('expo_mark', $tableName, false,
+  GeneratedBoolColumn get pinMark => _pinMark ??= _constructPinMark();
+  GeneratedBoolColumn _constructPinMark() {
+    return GeneratedBoolColumn('pin_mark', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _addedMarkMeta = const VerificationMeta('addedMark');
+  GeneratedBoolColumn _addedMark;
+  @override
+  GeneratedBoolColumn get addedMark => _addedMark ??= _constructAddedMark();
+  GeneratedBoolColumn _constructAddedMark() {
+    return GeneratedBoolColumn('added_mark', $tableName, false,
         defaultValue: Constant(false));
   }
 
   @override
   List<GeneratedColumn> get $columns => [
-        id,
+        vocabId,
         nthWord,
         nthAppear,
         markColors,
@@ -1317,7 +1368,8 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
         bookMarked,
         questionMark,
         starMark,
-        expoMark
+        pinMark,
+        addedMark
       ];
   @override
   $UserVocabSqliteTableTable get asDslTable => this;
@@ -1331,10 +1383,11 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+    if (data.containsKey('vocab_id')) {
+      context.handle(_vocabIdMeta,
+          vocabId.isAcceptableOrUnknown(data['vocab_id'], _vocabIdMeta));
     } else if (isInserting) {
-      context.missing(_idMeta);
+      context.missing(_vocabIdMeta);
     }
     if (data.containsKey('nth_word')) {
       context.handle(_nthWordMeta,
@@ -1367,15 +1420,19 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
       context.handle(_starMarkMeta,
           starMark.isAcceptableOrUnknown(data['star_mark'], _starMarkMeta));
     }
-    if (data.containsKey('expo_mark')) {
-      context.handle(_expoMarkMeta,
-          expoMark.isAcceptableOrUnknown(data['expo_mark'], _expoMarkMeta));
+    if (data.containsKey('pin_mark')) {
+      context.handle(_pinMarkMeta,
+          pinMark.isAcceptableOrUnknown(data['pin_mark'], _pinMarkMeta));
+    }
+    if (data.containsKey('added_mark')) {
+      context.handle(_addedMarkMeta,
+          addedMark.isAcceptableOrUnknown(data['added_mark'], _addedMarkMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {vocabId};
   @override
   UserVocabSqliteTableData map(Map<String, dynamic> data,
       {String tablePrefix}) {

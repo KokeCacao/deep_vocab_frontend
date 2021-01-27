@@ -1,5 +1,13 @@
+import 'package:deep_vocab/controllers/vocab_state_controller.dart';
+import 'package:deep_vocab/models/vocab_list_model.dart';
+import 'package:deep_vocab/models/vocab_model.dart';
+import 'package:deep_vocab/view_models/auth_view_model.dart';
+import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/dismissible_vocab_row.dart';
+import 'package:deep_vocab/widgets/learning_screen/selection_panel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class VocabList extends StatelessWidget {
@@ -16,19 +24,12 @@ class VocabList extends StatelessWidget {
   final void Function(RefreshController controller) onTwoLevel;
   final Widget Function(BuildContext context, int index) itemBuilder;
 
-  VocabList(
-      {Key key,
-      this.refreshable = true,
-      @required this.itemCount,
-      @required this.onRefresh,
-      this.onTwoLevel,
-      @required this.itemBuilder})
+  VocabList({Key key, this.refreshable = true, @required this.itemCount, @required this.onRefresh, this.onTwoLevel, @required this.itemBuilder})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    RefreshController _refreshController =
-        refreshable ? RefreshController(initialRefresh: false) : null;
+    RefreshController _refreshController = refreshable ? RefreshController(initialRefresh: false) : null;
 
     Widget result = ListView.builder(
       physics: BouncingScrollPhysics(),
@@ -63,17 +64,31 @@ class VocabList extends StatelessWidget {
             controller: _refreshController,
             onRefresh: () => onRefresh(_refreshController),
             onLoading: _refreshController.loadComplete,
-            onTwoLevel: onTwoLevel == null
-                ? () => onRefresh(_refreshController)
-                : () => onRefresh(_refreshController),
+            onTwoLevel: onTwoLevel == null ? () => onRefresh(_refreshController) : () => onRefresh(_refreshController),
             child: result,
           )
         : result;
 
-    return Flexible(child: result);
+    return Flexible(
+        child: Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        result,
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SelectionPanel(itemCount: itemCount,),
+        ),
+      ],
+    ));
   }
 
-  factory VocabList.task() {
+  static Widget task(BuildContext context) {
+    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn())
+      // TODO: implement a button that takes user to log in screen
+      return Expanded(
+        child: Center(child: Text("Please Log in first")),
+      );
+
     void _onRefresh(RefreshController controller) async {
       await Future.delayed(Duration(seconds: 1));
       // if failed, use refreshFailed()
@@ -81,37 +96,65 @@ class VocabList extends StatelessWidget {
     }
 
     // TODO: buggy onTwoLevel
-    return VocabList(
-      refreshable: true,
-      itemCount: 10,
-      onRefresh: _onRefresh,
-      onTwoLevel: _onRefresh,
-      itemBuilder: (context, i) => DismissibleVocabRow(
-        index: i,
-      ),
-    );
+    return ChangeNotifierProvider<VocabStateController>(
+        // to store vocab states for a vocab list
+        create: (ctx) => VocabStateController(),
+        child: VocabList(
+          refreshable: true,
+          itemCount: 20,
+          onRefresh: _onRefresh,
+          onTwoLevel: _onRefresh,
+          itemBuilder: (context, i) => DismissibleVocabRow(
+            vocab: VocabModel(vocabId: "id", edition: DateTime.now(), listId: 0, vocab: "grandiloquent", mainTranslation: "辞藻浮夸的; 夸大"),
+          ),
+        ));
   }
 
-  factory VocabList.memorized() {
-    return VocabList(
-      refreshable: false,
-      itemCount: 2,
-      onRefresh: null,
-      onTwoLevel: null,
-      itemBuilder: (context, i) => DismissibleVocabRow(
-        index: i,
-      ),
-    );
+  // TODO: fix but that memorized() and task() share the same VocabStateController()
+  static Widget memorized(BuildContext context) {
+    return ChangeNotifierProvider<VocabStateController>(
+        // to store vocab states for a vocab list
+        create: (ctx) => VocabStateController(),
+        child: StreamBuilder(
+          stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
+          builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+            if (snapshot.data == null) return SizedBox.shrink();
+            VocabListModel data = snapshot.data;
+            List<VocabModel> list = data.vocabs;
+            return VocabList(
+              refreshable: false,
+              itemCount: list.length,
+              onRefresh: null,
+              onTwoLevel: null,
+              itemBuilder: (context, i) => DismissibleVocabRow(
+                vocab: list[i],
+              ),
+            );
+          },
+        ));
   }
 
-  factory VocabList.list() {
-    return VocabList(
-      refreshable: false,
-      itemCount: 20,
-      onRefresh: null,
-      onTwoLevel: null,
-      itemBuilder: (context, i) => DismissibleVocabRow(
-        index: i,
+  static Widget list(BuildContext context) {
+    return ChangeNotifierProvider<VocabStateController>(
+      // to store vocab states for a vocab list
+      create: (ctx) => VocabStateController(),
+      child: StreamBuilder(
+        // TODO: maybe I don't need user defined vocab data here
+        stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
+        builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+          if (snapshot.data == null) return SizedBox.shrink();
+          VocabListModel data = snapshot.data;
+          List<VocabModel> list = data.vocabs;
+          return VocabList(
+            refreshable: false,
+            itemCount: list.length,
+            onRefresh: null,
+            onTwoLevel: null,
+            itemBuilder: (context, i) => DismissibleVocabRow(
+              vocab: list[i],
+            ),
+          );
+        },
       ),
     );
   }

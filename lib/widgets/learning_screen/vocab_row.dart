@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/screens/vocab_dialog.dart';
 import 'package:deep_vocab/widgets/separator.dart';
 import 'package:deep_vocab/widgets/vocab_dialog/bookmark_shape.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VocabRow extends StatefulWidget {
   bool hide;
@@ -12,6 +14,7 @@ class VocabRow extends StatefulWidget {
 
   final void Function(bool value) onSelect;
   final void Function(bool value) onHide;
+  final String vocabId;
   final String vocab;
   final String translation;
   final bool bookMarked;
@@ -22,6 +25,7 @@ class VocabRow extends StatefulWidget {
       this.checkBox = false,
       this.onSelect,
       this.onHide,
+      @required this.vocabId,
       @required this.vocab,
       @required this.translation,
       this.bookMarked = false});
@@ -31,17 +35,11 @@ class VocabRow extends StatefulWidget {
     return VocabRowState();
   }
 
-  VocabRow copyWith(
-      {bool hide,
-      bool cross,
-      bool checkBox,
-      void Function(bool value) onSelect,
-      String vocab,
-      String translation,
-      bool bookMarked}) {
+  VocabRow copyWith({bool hide, bool cross, bool checkBox, void Function(bool value) onSelect, String vocab, String translation, bool bookMarked}) {
     return VocabRow(
-      vocab: vocab ?? this.vocab,
-      translation: translation ?? this.translation,
+      vocabId: this.vocabId,
+      vocab: this.vocab,
+      translation: this.translation,
       hide: hide ?? this.hide,
       cross: cross ?? this.cross,
       checkBox: checkBox ?? this.checkBox,
@@ -69,14 +67,16 @@ class VocabRowState extends State<VocabRow> {
           DragTarget(onWillAccept: (_) {
             // TODO: 长按全选, 双击反选 (选择时右下角提示此信息以及选中数量/总共)
             widget.checkBox = !widget.checkBox;
+            if (widget.checkBox) Provider.of<VocabStateController>(context, listen: false).selectedVocabIdAdd(widget.vocabId);
+            else Provider.of<VocabStateController>(context, listen: false).selectedVocabIdRemove(widget.vocabId);
+
             if (widget.onSelect != null) widget.onSelect(widget.checkBox);
             setState(() {});
             return false;
           }, builder: (ctx, candidateData, rejectedData) {
             return Draggable(
                 axis: Axis.vertical,
-                feedback: SizedBox
-                    .shrink(), // See: https://stackoverflow.com/questions/53455358/how-to-present-an-empty-view-in-flutter
+                feedback: SizedBox.shrink(), // See: https://stackoverflow.com/questions/53455358/how-to-present-an-empty-view-in-flutter
                 child: IntrinsicWidth(
                   child: Row(
                     children: [
@@ -84,8 +84,10 @@ class VocabRowState extends State<VocabRow> {
                         value: widget.checkBox,
                         onChanged: (bool) {
                           widget.checkBox = bool;
-                          if (widget.onSelect != null)
-                            widget.onSelect(widget.checkBox);
+                          if (widget.checkBox) Provider.of<VocabStateController>(context, listen: false).selectedVocabIdAdd(widget.vocabId);
+                          else Provider.of<VocabStateController>(context, listen: false).selectedVocabIdRemove(widget.vocabId);
+
+                          if (widget.onSelect != null) widget.onSelect(widget.checkBox);
                           setState(() {});
                         },
                       )
@@ -100,23 +102,21 @@ class VocabRowState extends State<VocabRow> {
               children: [
                 Expanded(
                     child: GestureDetector(
-                  onTap: () => VocabDialog.showVocabDialog(
-                      vocab: widget.vocab, context: context),
+                  onTap: () => VocabDialog.showVocabDialog(vocabId: widget.vocabId, vocab: widget.vocab, context: context),
                   child: AutoSizeText(widget.vocab,
                       minFontSize: 12,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
                       style: TextStyle(
-                          decoration: widget.cross
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                          color:
-                              widget.cross ? Colors.black38 : Colors.black87)),
+                          decoration: widget.cross ? TextDecoration.lineThrough : TextDecoration.none, color: widget.cross ? Colors.black38 : Colors.black87)),
                 )),
                 Expanded(
                     child: GestureDetector(
                   onTap: () {
                     widget.hide = !widget.hide;
+                    if (widget.hide) Provider.of<VocabStateController>(context, listen: false).unhideVocabIdRemove(widget.vocabId);
+                    else Provider.of<VocabStateController>(context, listen: false).unhideVocabIdAdd(widget.vocabId);
+
                     if (widget.onHide != null) widget.onHide(widget.hide);
                     setState(() {});
                   },
@@ -130,20 +130,13 @@ class VocabRowState extends State<VocabRow> {
                         overflow: TextOverflow.fade,
                         maxLines: 2,
                         style: TextStyle(
-                            decoration: widget.cross
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            color:
-                                widget.cross ? Colors.black38 : Colors.black87),
+                            decoration: widget.cross ? TextDecoration.lineThrough : TextDecoration.none, color: widget.cross ? Colors.black38 : Colors.black87),
                       ),
                       Padding(
                         // black cover of the word
                         padding: EdgeInsets.only(top: 8, bottom: 8, right: 4),
                         child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                          decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(10))),
                         ),
                       )
                     ],
@@ -186,12 +179,8 @@ class VocabRowState extends State<VocabRow> {
                     height: 20, // half of vocab row
                     width: 8,
                     borderRadius: 0,
-                    color: widget.bookMarked
-                        ? Colors.red[700]
-                        : Colors.transparent,
-                    borderColor: widget.bookMarked
-                        ? Colors.red[900]
-                        : Colors.transparent,
+                    color: widget.bookMarked ? Colors.red[700] : Colors.transparent,
+                    borderColor: widget.bookMarked ? Colors.red[900] : Colors.transparent,
                   ),
                 )
               ],

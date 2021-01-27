@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class BookmarkButton extends StatefulWidget {
   final int number;
   final void Function(bool bookmarked) onChangeBookmarked;
+  final bool optimiztic;
 
   bool bookmarked;
 
@@ -13,7 +14,7 @@ class BookmarkButton extends StatefulWidget {
       {Key key,
       @required this.number,
       @required this.bookmarked,
-      this.onChangeBookmarked})
+      this.onChangeBookmarked, this.optimiztic=false})
       : super(key: key);
 
   @override
@@ -47,9 +48,9 @@ class BookmarkButtonState extends State<BookmarkButton>
         // when click
         _animationController.reverse();
 
-        widget.bookmarked = !widget.bookmarked;
         if (widget.onChangeBookmarked != null)
-          widget.onChangeBookmarked(widget.bookmarked);
+          widget.onChangeBookmarked(!widget.bookmarked);
+        if (widget.optimiztic) widget.bookmarked = !widget.bookmarked;
         setState(() {});
       },
       child: AnimatedBuilder(

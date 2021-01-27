@@ -1,17 +1,11 @@
-import 'package:deep_vocab/models/sub_models/comment_model.dart';
-import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
-import 'package:deep_vocab/models/sqlite_models/app_database.dart';
-import 'package:deep_vocab/models/sqlite_models/global_value_serializer.dart';
-import 'package:deep_vocab/models/vocab_list_model.dart';
-import 'package:deep_vocab/utils/file_manager.dart';
-import 'package:deep_vocab/utils/http_widget.dart';
-import 'package:deep_vocab/models/vocab_model.dart';
+import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/learning_navbar.dart';
 import 'package:deep_vocab/widgets/learning_screen/learning_selection_bar.dart';
 import 'package:deep_vocab/widgets/learning_screen/vocab_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fsearch/fsearch.dart';
+import 'package:provider/provider.dart';
 
 class LearningScreen extends StatefulWidget {
   bool random = false;
@@ -27,11 +21,11 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
   Widget _buildList() {
     switch (widget._index) {
       case 0:
-        return VocabList.task();
+        return VocabList.task(context);
       case 1:
-        return VocabList.memorized();
+        return VocabList.memorized(context);
       case 2:
-        return VocabList.list();
+        return VocabList.list(context);
       default:
         throw Exception("There is no ${widget._index}-th tab in GNav");
     }
@@ -72,49 +66,8 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
                         Text("Barron3500"),
                         RaisedButton(
                           onPressed: () async {
-                            String path = await HttpWidget.downloadFile(from: "test.txt", to: "test.txt", onReceiveProgress: null);
-                            Map<String, dynamic> map = await FileManager.filePathToJson(path);
-
-                            VocabSqliteTableData data = VocabSqliteTableData(
-                                id: "id",
-                                edition: 0,
-                                listId: 0,
-                                vocab: "Vocab",
-                                type: VocabType.adj,
-                                mainTranslation: "mainTrans",
-                                otherTranslation: ["other", "trans"],
-                                mainSound: "sound",
-                                otherSound: [],
-                                englishTranslation: "engtrans",
-                                comments: [
-                                  CommentModel(
-                                      userName: "user", uuid: "uuid", dateTime: DateTime.now(), message: "message", avatarUrl: "avatar", likes: 233, isLike: false)
-                                ],
-                                confusingWordId: ["confuse"],
-                                memTips: "tip",
-                                exampleSentences: [],
-                                userVocabSqliteTableId: "id");
-
-                            print(data.toJsonString(serializer: GlobalValueSerializer()));
-
-                            UserVocabSqliteTableData user = UserVocabSqliteTableData(
-                              id: "id",
-                              nthWord: 1,
-                              nthAppear: 0,
-                              markColors: [MarkColorModel(color: ColorModel.black, time: DateTime.now())],
-                              editedMeaning: "",
-                              bookMarked: false,
-                              questionMark: false,
-                              starMark: false,
-                              expoMark: false,
-                            );
-                            print(user.toJsonString(serializer: GlobalValueSerializer()));
-
-                            VocabModel model = VocabModel.fromSqlite(data, user);
-                            print(model.toJsonString());
-
-                            VocabListModel list = VocabListModel(name: "listname", id: 0, edition: DateTime.now(), vocabs: [model]);
-                            print(list.toJsonString());
+                            Provider.of<VocabListViewModel>(context, listen: false).downloadVocab();
+                            print("[LearningScreen] finish update vocab list");
                           },
                           child: Text("Download"),
                         )

@@ -8,11 +8,9 @@ part of 'vocab_list_model.dart';
 
 VocabListModel _$VocabListModelFromJson(Map<String, dynamic> json) {
   return VocabListModel(
-    name: json['name'] as String,
-    id: json['id'] as int,
-    edition: json['edition'] == null
+    header: json['header'] == null
         ? null
-        : DateTime.parse(json['edition'] as String),
+        : VocabHeaderModel.fromJson(json['header'] as Map<String, dynamic>),
     vocabs: (json['vocabs'] as List)
         ?.map((e) =>
             e == null ? null : VocabModel.fromJson(e as Map<String, dynamic>))
@@ -22,8 +20,6 @@ VocabListModel _$VocabListModelFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$VocabListModelToJson(VocabListModel instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'id': instance.id,
-      'edition': instance.edition?.toIso8601String(),
+      'header': instance.header,
       'vocabs': instance.vocabs,
     };

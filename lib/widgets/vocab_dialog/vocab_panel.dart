@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
 import 'package:deep_vocab/models/vocab_model.dart';
+import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/separator.dart';
 import 'package:deep_vocab/widgets/stateful_icon_button.dart';
 import 'package:deep_vocab/widgets/vocab_dialog/bookmark_button.dart';
@@ -7,22 +9,19 @@ import 'package:deep_vocab/widgets/vocab_dialog/comment.dart';
 import 'package:deep_vocab/widgets/vocab_dialog/vocab_badge.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class VocabPanel extends StatelessWidget {
+  final VocabModel vocabModel;
+  final PanelController panelController;
 
-  final VocabModel vocabViewModel;
-
-
-  const VocabPanel({Key key, this.vocabViewModel}) : super(key: key);
+  const VocabPanel({Key key, @required this.vocabModel, @required this.panelController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PanelController panelController = PanelController();
-
     double borderRadius = 10;
-    BorderRadius border =
-        BorderRadius.vertical(top: Radius.circular(borderRadius));
+    BorderRadius border = BorderRadius.vertical(top: Radius.circular(borderRadius));
 
     return SlidingUpPanel(
       color: Colors.white70,
@@ -48,21 +47,25 @@ class VocabPanel extends StatelessWidget {
                 borderRadius: border, // same as above
                 child: Flex(
                   direction: Axis.horizontal,
-                  children: [
-                    for (Color color in [Colors.black38])
-                      Expanded(
-                        child: Container(
-                          height: borderRadius,
-                          color: color,
-                        ),
-                      ),
-                  ],
+                  children: vocabModel.markColors == null
+                      ? []
+                      : [
+                          for (MarkColorModel markColor in vocabModel.markColors)
+                            Expanded(
+                              child: Container(
+                                height: borderRadius,
+                                color: markColor.color.color,
+                              ),
+                            )
+                        ],
                 ),
               ),
               Stack(
                 children: [
                   TwoStateButton(
-                      onPressed: null, // TODO
+                      value: vocabModel.pinMark,
+                      onPressed: (bool value) => Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, pinMark: value)
+                      , // TODO
                       trueIcon: Icon(
                         Icons.push_pin,
                         color: Colors.blueGrey,
@@ -74,9 +77,9 @@ class VocabPanel extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: BookmarkButton(
-                      number: 233,
-                      bookmarked: false,
-                      onChangeBookmarked: null, // TODO
+                      number: vocabModel.nthWord,
+                      bookmarked: vocabModel.bookMarked,
+                      onChangeBookmarked: (bool value) => Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, bookMarked: value)
                     ),
                   ),
                   Container(
@@ -85,7 +88,7 @@ class VocabPanel extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AutoSizeText(
-                          vocabViewModel.vocab,
+                          vocabModel.vocab,
                           maxFontSize: 64,
                           minFontSize: 42,
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -98,7 +101,7 @@ class VocabPanel extends StatelessWidget {
                               child: SizedBox(),
                             ),
                             AutoSizeText(
-                              vocabViewModel.mainTranslation,
+                              vocabModel.mainTranslation,
                               maxFontSize: 32,
                               minFontSize: 16,
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -107,8 +110,7 @@ class VocabPanel extends StatelessWidget {
                               child: Align(
                                 // so that its on the right side of centered widget
                                 alignment: Alignment.centerLeft,
-                                child: IconButton(
-                                    icon: Icon(Icons.edit), onPressed: () {}),
+                                child: IconButton(icon: Icon(Icons.edit), onPressed: () {}),
                               ),
                             )
                           ],
@@ -130,23 +132,11 @@ class VocabPanel extends StatelessWidget {
                       spacing: 4,
                       children: [
                         // TODO: List.generate(data.currentPerson.tags.length, (index) => toBadge(data.currentPerson.tags.elementAt(index)))
-                        for (String translation in vocabViewModel.otherTranslation)
-                        VocabBadge(
-                          text: translation,
-                          color: Colors.blueGrey[700],
-                        ),
-                        // VocabBadge(
-                        //   text: "夸张的; 大言不惭的",
-                        //   color: Colors.blueGrey[700],
-                        // ),
-                        // VocabBadge(
-                        //   text: "语言夸张的",
-                        //   color: Colors.blueGrey[700],
-                        // ),
-                        // VocabBadge(
-                        //   text: "夸张",
-                        //   color: Colors.blueGrey[700],
-                        // ),
+                        for (String translation in vocabModel.otherTranslation)
+                          VocabBadge(
+                            text: translation,
+                            color: Colors.blueGrey[700],
+                          ),
                         Icon(
                           Icons.add_box,
                           color: Colors.blueGrey[700],
@@ -156,10 +146,8 @@ class VocabPanel extends StatelessWidget {
                     Separator(
                       color: Colors.transparent,
                     ),
-                    Text(
-                        "英译: ${vocabViewModel.englishTranslation}"),
-                    Text(
-                        "例句: ${vocabViewModel.exampleSentences[0]}")
+                    Text("英译: ${vocabModel.englishTranslation}"),
+                    Text("例句: ${vocabModel.exampleSentences[0]}")
                   ],
                 ),
               ),
@@ -178,13 +166,12 @@ class VocabPanel extends StatelessWidget {
                         children: [
                           Text(
                             "联想空间",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Separator(
                             color: Colors.transparent,
                           ),
-                          Text("grandi: 很大的; loquent: (形容词)感觉"), // TODO: fix it
+                          Text(vocabModel.memTips),
                         ],
                       ),
                     ),
@@ -194,13 +181,12 @@ class VocabPanel extends StatelessWidget {
                         children: [
                           Text(
                             "混淆单词",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Separator(
                             color: Colors.transparent,
                           ),
-                          Text("grand: 大的"), // TODO: fix it
+                          for (String confusing in vocabModel.confusingWordId) Text(confusing),
                         ],
                       ),
                     )
@@ -217,13 +203,13 @@ class VocabPanel extends StatelessWidget {
                   children: [
                     Text(
                       "吐槽空间",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Separator(
                       color: Colors.transparent,
                     ),
-                    ListView.builder( // TODO: buggy. Will rebuild each time scroll, see: https://github.com/flutter/flutter/issues/26072
+                    ListView.builder(
+                      // TODO: buggy. Will rebuild each time scroll, see: https://github.com/flutter/flutter/issues/26072
                       shrinkWrap: true,
                       itemCount: 1,
                       itemBuilder: (BuildContext ctx, int index) {

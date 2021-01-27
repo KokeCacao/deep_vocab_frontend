@@ -73,33 +73,27 @@ class MultiDismissibleState extends State<MultiDismissible>
     if (!_canBeDragged) return;
     double value = _horizontalAnimationController.value;
 
-    if (0.3 < value && value < 0.7) {
-      if (widget.builder != null)
-        widget.child =
-            widget.builder(widget.child, MultiDismissibleStatus.ON_IDLE);
-      backToSpace();
-    } else if (value <= 0.3) {
-      if (widget.builder != null && value < 0.5)
-        widget.child =
-            widget.builder(widget.child, MultiDismissibleStatus.ON_LEFT_EDGE);
-      if (widget.builder != null && value >= 0.5)
-        widget.child =
-            widget.builder(widget.child, MultiDismissibleStatus.ON_MIDDLE_LEFT);
-      if (widget.dismissAnimation)
-        dismissToLeft();
-      else
+    switch(_layerIndex) {
+      case 0:
+        widget.child = widget.builder(widget.child, MultiDismissibleStatus.ON_IDLE);
         backToSpace();
-    } else {
-      if (widget.builder != null && value < 0.85)
-        widget.child = widget.builder(
-            widget.child, MultiDismissibleStatus.ON_MIDDLE_RIGHT);
-      if (widget.builder != null && value >= 0.85)
-        widget.child =
-            widget.builder(widget.child, MultiDismissibleStatus.ON_RIGHT_EDGE);
-      if (widget.dismissAnimation)
-        dismissToRight(); // >= 0.7
-      else
-        backToSpace();
+        break;
+      case 1:
+        widget.child = widget.builder(widget.child, MultiDismissibleStatus.ON_RIGHT_EDGE);
+        widget.dismissAnimation ? dismissToLeft() : backToSpace();
+        break;
+      case 2:
+        widget.child = widget.builder(widget.child, MultiDismissibleStatus.ON_MIDDLE_RIGHT);
+        widget.dismissAnimation ? dismissToLeft() : backToSpace();
+        break;
+      case 3:
+        widget.child = widget.builder(widget.child, MultiDismissibleStatus.ON_MIDDLE_LEFT);
+        widget.dismissAnimation ? dismissToLeft() : backToSpace();
+        break;
+      case 4:
+        widget.child = widget.builder(widget.child, MultiDismissibleStatus.ON_LEFT_EDGE);
+        widget.dismissAnimation ? dismissToLeft() : backToSpace();
+        break;
     }
   }
 

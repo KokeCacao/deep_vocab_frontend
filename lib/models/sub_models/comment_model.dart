@@ -56,7 +56,7 @@ class CommentModelListConverter extends TypeConverter<List<CommentModel>, String
       return null;
     }
     assert(StringListConverter().mapToDart(fromDb).map((e) => CommentModelConverter().mapToDart(e)).isNotEmpty);
-    return StringListConverter().mapToDart(fromDb).map((e) => CommentModelConverter().mapToDart(e));
+    return StringListConverter().mapToDart(fromDb).map((e) => CommentModelConverter().mapToDart(e)).toList();
   }
 
   @override
@@ -65,6 +65,6 @@ class CommentModelListConverter extends TypeConverter<List<CommentModel>, String
     if (value == null) {
       return null;
     }
-    return StringListConverter().mapToSql(value.map((e) => CommentModelConverter().mapToSql(e)));
+    return StringListConverter().mapToSql(value.map((e) => CommentModelConverter().mapToSql(e)).toList());
   }
 }

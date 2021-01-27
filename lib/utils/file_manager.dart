@@ -9,7 +9,7 @@ class FileManager {
     var completer = Completer<List<FileSystemEntity>>();
     var lister = dir.list(recursive: false);
     lister.listen((file) => files.add(file),
-        // should also register onError
+        // TODO: should also register onError
         onDone: () => completer.complete(files));
     return completer.future;
   }
@@ -21,7 +21,12 @@ class FileManager {
 
   static Future<Map<String, dynamic>> filePathToJson(String path) async {
     String s = await new File(path).readAsString();
-    print("[FileManager] I read:\n${s}");
+    print("[FileManager] read:\n${s}");
     return Future.value(json.decode(s) as Map<String, dynamic>);
+  }
+
+  static Future<void> deteleFile(String path) async {
+    await File(path).delete();
+    print("[FileManager] deleted: ${path}");
   }
 }

@@ -5,52 +5,48 @@ import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
 
 class AuthViewModel extends ChangeNotifier {
+  /// storage
+  final BuildContext context;
+  final Box<dynamic> _box;
   final boxUuidKey = HiveBox.USER_SINGLETON_UUID;
   final boxAccessTokenKey = HiveBox.USER_SINGLETON_ACCESS_TOKEN;
   final boxRefreshTokenKey = HiveBox.USER_SINGLETON_REFRESH_TOKEN;
   final boxWxTokenKey = HiveBox.USER_SINGLETON_WX_TOKEN;
 
+  /// store value
   String _uuid;
   String _accessToken;
   String _refreshToken;
   String _wxToken = "NOT IMPLEMENTED"; // TODO: un-initialize it and implement it. change updateAccessTokenIfNull() as needed
 
-  Box<dynamic> _box;
-
-  AuthViewModel({@required Box<dynamic> box}) {
-    _box = box;
+  /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
+  AuthViewModel({@required this.context})
+      : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),
+        _box = HiveBox.getBox(HiveBox.SINGLETON_BOX) {
     _uuid = _box.get(boxUuidKey, defaultValue: null);
     _accessToken = _box.get(boxAccessTokenKey, defaultValue: null);
     _refreshToken = _box.get(boxRefreshTokenKey, defaultValue: null);
     _wxToken = _box.get(boxWxTokenKey, defaultValue: null);
-
-    _updateAccessTokenIfRefreshTokenExists();
+    updateAccessTokenIfRefreshTokenExists();
   }
 
-  bool loggedIn() {
-    return _accessToken != null;
-  }
+  /// getters
+  bool isLoggedIn() => _accessToken != null;
+  bool isNotLoggedIn() => _accessToken == null;
+  get uuid => _uuid;
+  get accessToken => _accessToken;
+  get refreshToken => _refreshToken;
+  get wxToken => _wxToken;
 
-  void _updateAccessTokenIfRefreshTokenExists() async {
-    if (_uuid != null && _refreshToken != null) {
-      print("[AuthViewModel] detected refresh token, trying to login using that");
-      Map<String, dynamic> map = await _refreshAccessTokenOrNull(_uuid, _refreshToken);
-
-      if (map["errorMessage"] != null) print("[AuthViewModel] refresh error: ${map["errorMessage"]}");
-      else _updateWith(accessToken: map["accessToken"]);
-    } else {
-      print("[AuthViewModel] there is no refresh token or uuid");
-    }
-  }
-
-  Future<String> loginWithUsername(String userName, String password) async {
+  /// interface
+  Future<String> loginWithUsernameIfNeeded(String userName, String password) async {
     assert(userName != null && password != null);
     print("[AuthViewModel] try login with userName=${userName} and password=${password}");
     if (_uuid != null) return Future.value("[Warning] You have already logged in");
     Map<String, dynamic> map = await _loginOrNull(userName, password);
 
     if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
-    _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
+    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
     return Future.value(); // finished-success
   }
 
@@ -73,14 +69,32 @@ class AuthViewModel extends ChangeNotifier {
     Map<String, dynamic> map = await _createAccountOrNull(userName, password, email);
 
     if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
-    _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
+    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
     return Future.value(); // finished-success
   }
 
+  Future<bool> updateAccessTokenIfRefreshTokenExists() async {
+    if (_uuid != null && _refreshToken != null) {
+      print("[AuthViewModel] detected refresh token, trying to login using that");
+      Map<String, dynamic> map = await _refreshAccessTokenOrNull(_uuid, _refreshToken);
+
+      if (map["errorMessage"] != null) {
+        print("[AuthViewModel] refresh error: ${map["errorMessage"]}");
+        return Future.value(false);
+      }
+      else {
+        await _updateWith(accessToken: map["accessToken"]);
+        return Future.value(true);
+      }
+    } else {
+      print("[AuthViewModel] there is no refresh token or uuid");
+      return Future.value(false);
+    }
+  }
   // TODO: implement login with email, ect
 
-  Future<Map<String, dynamic>> _createAccountOrNull(String userName,
-      String password, String email) async {
+  /// internal functions
+  Future<Map<String, dynamic>> _createAccountOrNull(String userName, String password, String email) async {
     assert(userName != null && password != null && email != null);
     String accessToken;
     String refreshToken;
@@ -116,8 +130,7 @@ class AuthViewModel extends ChangeNotifier {
     });
   }
 
-  Future<Map<String, dynamic>> _loginOrNull(String userName,
-      String password) async {
+  Future<Map<String, dynamic>> _loginOrNull(String userName, String password) async {
     assert(userName != null && password != null);
     String accessToken;
     String refreshToken;
@@ -153,8 +166,7 @@ class AuthViewModel extends ChangeNotifier {
     });
   }
 
-  Future<Map<String, dynamic>> _refreshAccessTokenOrNull(String uuid,
-      String refreshToken) async {
+  Future<Map<String, dynamic>> _refreshAccessTokenOrNull(String uuid, String refreshToken) async {
     assert(uuid != null && refreshToken != null);
     String accessToken;
     String errorMessage;
@@ -179,27 +191,28 @@ class AuthViewModel extends ChangeNotifier {
     return Future<Map<String, dynamic>>.value({"accessToken": accessToken, "errorMessage": errorMessage});
   }
 
-  void _updateWith({String accessToken, String refreshToken, String wxToken, String uuid}) {
+  Future<void> _updateWith({String accessToken, String refreshToken, String wxToken, String uuid}) async {
     if (accessToken != null) {
       print("[Box] put ${accessToken}");
-      _box.put(boxAccessTokenKey, accessToken);
+      await _box.put(boxAccessTokenKey, accessToken);
       _accessToken = accessToken;
     }
     if (refreshToken != null) {
       print("[Box] put ${refreshToken}");
-      _box.put(boxRefreshTokenKey, refreshToken);
+      await _box.put(boxRefreshTokenKey, refreshToken);
       _refreshToken = refreshToken;
     }
     if (wxToken != null) {
       print("[Box] put ${wxToken}");
-      _box.put(boxWxTokenKey, wxToken);
+      await _box.put(boxWxTokenKey, wxToken);
       _wxToken = wxToken;
     }
     if (uuid != null) {
       print("[Box] put ${uuid}");
-      _box.put(boxUuidKey, uuid);
+      await _box.put(boxUuidKey, uuid);
       _uuid = uuid;
     }
     notifyListeners();
+    return Future.value();
   }
 }

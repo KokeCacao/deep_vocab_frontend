@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Provider.of<AuthViewModel>(context, listen: false);
 
       String errorMessage = widget._login
-          ? await authViewModel.loginWithUsername(
+          ? await authViewModel.loginWithUsernameIfNeeded(
               widget._userName, widget._password)
           : await authViewModel.createUser(
               widget._userName, widget._password, widget._email);

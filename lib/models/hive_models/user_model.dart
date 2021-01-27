@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 part 'user_model.g.dart';
@@ -6,19 +7,21 @@ part 'user_model.g.dart';
 @HiveType(typeId: 0)
 class UserModel {
   @HiveField(0)
-  int xp;
+  final int xp;
   @HiveField(1)
-  int level;
+  final int level;
   @HiveField(2)
-  String avatarUrl;
+  final String avatarUrl;
   @HiveField(3)
-  String userName;
+  final String userName;
   @HiveField(4)
-  String uuid;
+  final String uuid;
 
-  UserModel({this.uuid, this.userName, this.avatarUrl, this.level, this.xp});
+  const UserModel({@required this.uuid, @required this.userName, @required this.avatarUrl, @required this.level, @required this.xp});
 
-  static UserModel fromJson(json) {
+  // TODO: use @JsonSerializable() instead
+  @Deprecated("use @JsonSerializable() instead")
+  factory UserModel.fromJson(json) {
     dynamic user = json['user'];
     return UserModel(
         uuid: user['uuid'],
