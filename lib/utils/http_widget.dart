@@ -49,6 +49,7 @@ class HttpWidget extends Object {
   }
 
   // see: https://stackoverflow.com/questions/60761984/flutter-how-to-download-video-and-save-them-to-internal-storage
+  @Deprecated("API deprecated, use secure download instead")
   static Future<String> downloadFile({@required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
     var appDocDir = await getApplicationDocumentsDirectory();
     try {
@@ -64,6 +65,24 @@ class HttpWidget extends Object {
     FileManager.printDir(appDocDir);
     return Future.value("${appDocDir.path}/${to}");
   }
+
+  static Future<String> secureDownloadFile({@required BuildContext context, @required int listId, @required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
+    var appDocDir = await getApplicationDocumentsDirectory();
+    try {
+      print("[HttpWidget] Start downloading to ${appDocDir.path}");
+      AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      await dio.download("${BASE_URL}/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/${listId}/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
+        print("[HttpWidget] ${count} / ${total} = ${((count / total) * 100).toStringAsFixed(0) + "%"}");
+        if (onReceiveProgress != null) onReceiveProgress(count, total);
+      });
+    } catch (e) {
+      print(e);
+    }
+    print("[HttpWidget] Download completed.");
+    FileManager.printDir(appDocDir);
+    return Future.value("${appDocDir.path}/${to}");
+  }
+
 
   /// onSuccess inputs with a map of the requested argument
   /// onFail inputs with error message

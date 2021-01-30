@@ -43,6 +43,7 @@ VocabModel _$VocabModelFromJson(Map<String, dynamic> json) {
     starMark: json['starMark'] as bool,
     pinMark: json['pinMark'] as bool,
     addedMark: json['addedMark'] as bool,
+    pushedMark: json['pushedMark'] as bool,
   );
 }
 
@@ -71,6 +72,7 @@ Map<String, dynamic> _$VocabModelToJson(VocabModel instance) =>
       'starMark': instance.starMark,
       'pinMark': instance.pinMark,
       'addedMark': instance.addedMark,
+      'pushedMark': instance.pushedMark,
     };
 
 T _$enumDecode<T>(

@@ -38,6 +38,7 @@ class VocabModel {
   bool starMark = false;
   bool pinMark = false;
   bool addedMark = false;
+  bool pushedMark = false;
 
   VocabModel({
     @required this.vocabId,
@@ -63,6 +64,7 @@ class VocabModel {
     this.starMark = false,
     this.pinMark = false,
     this.addedMark = false,
+    this.pushedMark = false,
   });
 
   factory VocabModel.fromJson(Map<String, dynamic> json) => _$VocabModelFromJson(json);
@@ -98,6 +100,7 @@ class VocabModel {
       starMark: userVocab.starMark,
       pinMark: userVocab.pinMark,
       addedMark: userVocab.addedMark,
+      pushedMark: userVocab.pushedMark,
     );
   }
 
@@ -134,6 +137,7 @@ class VocabModel {
           starMark: this.starMark,
           pinMark: this.pinMark,
           addedMark: this.addedMark,
+          pushedMark: this.pushedMark,
         ));
   }
 }

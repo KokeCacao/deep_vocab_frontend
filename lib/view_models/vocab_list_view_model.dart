@@ -30,7 +30,8 @@ class VocabListViewModel {
 
   /// interface
   Future<void> downloadVocab({void Function(int count, int total) onReceiveProgress}) async {
-    String path = await HttpWidget.downloadFile(from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
+    String path = await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
+    // String path = await HttpWidget.downloadFile(from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
     print("[VocabListViewModel] downloaded to path ${path}");
     VocabListModel vocabListModel = VocabListModel.fromJson(await FileManager.filePathToJson(path));
 
@@ -59,10 +60,12 @@ class VocabListViewModel {
     return Future.value();
   }
 
-  Future<VocabListModel> getFromDatabase({int listId, String vocabId, bool memorized}) async {
-    Expression<bool> Function($VocabSqliteTableTable tbl) filter =
-        (tbl) => (isNull(Variable<int>(listId)) | tbl.listId.equals(listId)) & (isNull(Variable<String>(vocabId)) | tbl.vocabId.equals(vocabId));
-    List<VocabSqliteTableDataWithUserVocabSqliteTableData> list = await _dao.getVocabsWithUserWhere(filter: filter);
+  // TODO: rewrite this function, like the function below, with additional arguments
+  Future<VocabListModel> getFromDatabase({int listId, String vocabId}) async {
+    Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter =
+        (tbl) => (listId == null ? Variable<bool>(true) : tbl.listId.equals(listId))
+    & (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
+    List<VocabSqliteTableDataWithUserVocabSqliteTableData> list = await _dao.getVocabsWithUserWhere(filter: leftFilter);
 
     return Future.value(VocabListModel(
         header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null), vocabs: list.map((e) => VocabModel.fromCombinedSqlite(e)).toList()));
@@ -71,18 +74,20 @@ class VocabListViewModel {
   /// This function access the database that select specific [listId] and [vocabId] and returns a stream
   /// If [listId] is not provided as an argument, the function selects all variants of [listId]
   /// If [vocabId] is not provided as an argument, the function selects all variants of [vocabId]
-  Stream<VocabListModel> watchFromDatabase({int listId, String vocabId, bool memorized}) {
+  Stream<VocabListModel> watchFromDatabase({int listId, String vocabId, bool memorized, bool pushedMark}) {
     // See: https://github.com/simolus3/moor/issues/1015
     Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter =
-        (tbl) => (isNull(Variable<int>(listId)) | tbl.listId.equals(listId)) & (isNull(Variable<String>(vocabId)) | tbl.vocabId.equals(vocabId));
+        (tbl) => (listId == null ? Variable<bool>(true) : tbl.listId.equals(listId))
+        & (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
 
     Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> stream;
-    if (memorized == null)
+    if (memorized == null && pushedMark == null)
       stream = _dao.watchVocabsWithUserWhere(filter: leftFilter);
     else {
       Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter =
           // (tbl) => tbl.markColors.dartCast<List<MarkColorModel>>().equals(<MarkColorModel>[]).not();
-          (tbl) => memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors);
+          (tbl) => (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors)))
+          & (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
       stream = _dao.watchMarkedVocabsWithUserWhere(leftFilter: leftFilter, rightFilter: rightFilter);
     }
 
@@ -112,6 +117,33 @@ class VocabListViewModel {
     if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
     if (replaceLast) originals = originals..removeLast();
     await updateUserVocab(vocabId: vocabId, markColors: originals..add(MarkColorModel(color: color, time: DateTime.now())));
+    return Future.value();
+  }
+
+  Future<NetworkException> refreshVocab() async {
+    AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+
+    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+      context: context,
+      data: """
+      mutation {
+          refreshVocab(uuid: "${authViewModel.uuid}", accessToken: "${authViewModel.accessToken}", clientVocabRefreshTime: "${DateTime.now().toIso8601String()}") {
+              vocabs {
+                  vocabId
+              }
+          }
+      }
+      """,
+      queryName: "refreshVocab",
+      onSuccess: (Map<String, dynamic> response) => response,
+      onFail: (String exception) => <String, dynamic>{"errorMessage": exception},
+    );
+    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+
+    List<Map<String, dynamic>> vocabList = map["vocabs"].cast<Map<String, dynamic>>();
+    List<String> vocabIds = vocabList.map((e) => e["vocabId"]).cast<String>().toList();
+    for (String vocabId in vocabIds) updateUserVocab(vocabId: vocabId, pushedMark: true);
     return Future.value();
   }
 
@@ -183,6 +215,7 @@ class VocabListViewModel {
     bool starMark,
     bool pinMark,
     bool addedMark,
+    bool pushedMark,
   }) {
     return _dao.upsertUserVocab(UserVocabSqliteTableCompanion(
       vocabId: ValueOrAbsent(vocabId)(),
@@ -195,6 +228,7 @@ class VocabListViewModel {
       starMark: ValueOrAbsent(starMark)(),
       pinMark: ValueOrAbsent(pinMark)(),
       addedMark: ValueOrAbsent(addedMark)(),
+      pushedMark: ValueOrAbsent(pushedMark)(),
     ));
   }
 }

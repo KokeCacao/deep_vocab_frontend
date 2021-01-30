@@ -7,6 +7,7 @@ import 'package:deep_vocab/widgets/learning_screen/dismissible_vocab_row.dart';
 import 'package:deep_vocab/widgets/learning_screen/selection_panel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -76,7 +77,9 @@ class VocabList extends StatelessWidget {
         result,
         Align(
           alignment: Alignment.bottomRight,
-          child: SelectionPanel(itemCount: itemCount,),
+          child: SelectionPanel(
+            itemCount: itemCount,
+          ),
         ),
       ],
     ));
@@ -90,23 +93,33 @@ class VocabList extends StatelessWidget {
       );
 
     void _onRefresh(RefreshController controller) async {
-      await Future.delayed(Duration(seconds: 1));
-      // if failed, use refreshFailed()
-      controller.refreshCompleted();
+      NetworkException exception = await Provider.of<VocabListViewModel>(context, listen: false).refreshVocab();
+      if (exception == null)
+        controller.refreshCompleted();
+      else
+        controller.refreshFailed();
     }
 
     // TODO: buggy onTwoLevel
     return ChangeNotifierProvider<VocabStateController>(
         // to store vocab states for a vocab list
         create: (ctx) => VocabStateController(),
-        child: VocabList(
-          refreshable: true,
-          itemCount: 20,
-          onRefresh: _onRefresh,
-          onTwoLevel: _onRefresh,
-          itemBuilder: (context, i) => DismissibleVocabRow(
-            vocab: VocabModel(vocabId: "id", edition: DateTime.now(), listId: 0, vocab: "grandiloquent", mainTranslation: "辞藻浮夸的; 夸大"),
-          ),
+        child: StreamBuilder(
+          stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(pushedMark: true),
+          builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+            if (snapshot.data == null) return SizedBox.shrink();
+            VocabListModel data = snapshot.data;
+            List<VocabModel> list = data.vocabs;
+            return VocabList(
+              refreshable: true,
+              itemCount: list.length,
+              onRefresh: _onRefresh,
+              onTwoLevel: _onRefresh,
+              itemBuilder: (context, i) => DismissibleVocabRow(
+                vocab: list[i],
+              ),
+            );
+          },
         ));
   }
 

@@ -13,16 +13,11 @@ import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
-LazyDatabase _openConnection() {
-  // the LazyDatabase util lets us find the right location for the file async.
-  return LazyDatabase(() async {
-    // put the database file, called db.sqlite here, into the documents folder
-    // for your app.
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
-    return VmDatabase(file);
-  });
-}
+LazyDatabase _openConnection() =>
+    // the LazyDatabase util lets us find the right location for the file async.
+    LazyDatabase(() async =>
+        // put the database file, called db.sqlite here, into the documents folder for your app.
+        VmDatabase(File(p.join((await getApplicationDocumentsDirectory()).path, 'db.sqlite')), logStatements: false));
 
 @UseMoor(tables: [VocabSqliteTable, UserVocabSqliteTable], daos: [VocabSqliteDao])
 class AppDatabase extends _$AppDatabase {
@@ -84,6 +79,7 @@ class UserVocabSqliteTable extends Table {
   BoolColumn get starMark => boolean().withDefault(Constant(false))();
   BoolColumn get pinMark => boolean().withDefault(Constant(false))();
   BoolColumn get addedMark => boolean().withDefault(Constant(false))();
+  BoolColumn get pushedMark => boolean().withDefault(Constant(false))();
 }
 
 class ValueOrAbsent<T> {

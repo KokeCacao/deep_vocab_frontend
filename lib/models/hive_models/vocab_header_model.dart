@@ -15,6 +15,7 @@ class VocabHeaderModel {
   final int listId;
   @HiveField(2)
   final DateTime edition;
+  // TODO: urgent add vocabIds
 
   const VocabHeaderModel({@required this.name, @required this.listId, @required this.edition});
 

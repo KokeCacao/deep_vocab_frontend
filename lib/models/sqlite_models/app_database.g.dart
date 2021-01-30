@@ -886,6 +886,7 @@ class UserVocabSqliteTableData extends DataClass
   final bool starMark;
   final bool pinMark;
   final bool addedMark;
+  final bool pushedMark;
   UserVocabSqliteTableData(
       {@required this.vocabId,
       @required this.nthWord,
@@ -896,7 +897,8 @@ class UserVocabSqliteTableData extends DataClass
       @required this.questionMark,
       @required this.starMark,
       @required this.pinMark,
-      @required this.addedMark});
+      @required this.addedMark,
+      @required this.pushedMark});
   factory UserVocabSqliteTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -925,6 +927,8 @@ class UserVocabSqliteTableData extends DataClass
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}pin_mark']),
       addedMark: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}added_mark']),
+      pushedMark: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}pushed_mark']),
     );
   }
   @override
@@ -961,6 +965,9 @@ class UserVocabSqliteTableData extends DataClass
     if (!nullToAbsent || addedMark != null) {
       map['added_mark'] = Variable<bool>(addedMark);
     }
+    if (!nullToAbsent || pushedMark != null) {
+      map['pushed_mark'] = Variable<bool>(pushedMark);
+    }
     return map;
   }
 
@@ -996,6 +1003,9 @@ class UserVocabSqliteTableData extends DataClass
       addedMark: addedMark == null && nullToAbsent
           ? const Value.absent()
           : Value(addedMark),
+      pushedMark: pushedMark == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pushedMark),
     );
   }
 
@@ -1013,6 +1023,7 @@ class UserVocabSqliteTableData extends DataClass
       starMark: serializer.fromJson<bool>(json['starMark']),
       pinMark: serializer.fromJson<bool>(json['pinMark']),
       addedMark: serializer.fromJson<bool>(json['addedMark']),
+      pushedMark: serializer.fromJson<bool>(json['pushedMark']),
     );
   }
   @override
@@ -1029,6 +1040,7 @@ class UserVocabSqliteTableData extends DataClass
       'starMark': serializer.toJson<bool>(starMark),
       'pinMark': serializer.toJson<bool>(pinMark),
       'addedMark': serializer.toJson<bool>(addedMark),
+      'pushedMark': serializer.toJson<bool>(pushedMark),
     };
   }
 
@@ -1042,7 +1054,8 @@ class UserVocabSqliteTableData extends DataClass
           bool questionMark,
           bool starMark,
           bool pinMark,
-          bool addedMark}) =>
+          bool addedMark,
+          bool pushedMark}) =>
       UserVocabSqliteTableData(
         vocabId: vocabId ?? this.vocabId,
         nthWord: nthWord ?? this.nthWord,
@@ -1054,6 +1067,7 @@ class UserVocabSqliteTableData extends DataClass
         starMark: starMark ?? this.starMark,
         pinMark: pinMark ?? this.pinMark,
         addedMark: addedMark ?? this.addedMark,
+        pushedMark: pushedMark ?? this.pushedMark,
       );
   @override
   String toString() {
@@ -1067,7 +1081,8 @@ class UserVocabSqliteTableData extends DataClass
           ..write('questionMark: $questionMark, ')
           ..write('starMark: $starMark, ')
           ..write('pinMark: $pinMark, ')
-          ..write('addedMark: $addedMark')
+          ..write('addedMark: $addedMark, ')
+          ..write('pushedMark: $pushedMark')
           ..write(')'))
         .toString();
   }
@@ -1089,8 +1104,10 @@ class UserVocabSqliteTableData extends DataClass
                               questionMark.hashCode,
                               $mrjc(
                                   starMark.hashCode,
-                                  $mrjc(pinMark.hashCode,
-                                      addedMark.hashCode))))))))));
+                                  $mrjc(
+                                      pinMark.hashCode,
+                                      $mrjc(addedMark.hashCode,
+                                          pushedMark.hashCode)))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -1104,7 +1121,8 @@ class UserVocabSqliteTableData extends DataClass
           other.questionMark == this.questionMark &&
           other.starMark == this.starMark &&
           other.pinMark == this.pinMark &&
-          other.addedMark == this.addedMark);
+          other.addedMark == this.addedMark &&
+          other.pushedMark == this.pushedMark);
 }
 
 class UserVocabSqliteTableCompanion
@@ -1119,6 +1137,7 @@ class UserVocabSqliteTableCompanion
   final Value<bool> starMark;
   final Value<bool> pinMark;
   final Value<bool> addedMark;
+  final Value<bool> pushedMark;
   const UserVocabSqliteTableCompanion({
     this.vocabId = const Value.absent(),
     this.nthWord = const Value.absent(),
@@ -1130,6 +1149,7 @@ class UserVocabSqliteTableCompanion
     this.starMark = const Value.absent(),
     this.pinMark = const Value.absent(),
     this.addedMark = const Value.absent(),
+    this.pushedMark = const Value.absent(),
   });
   UserVocabSqliteTableCompanion.insert({
     @required String vocabId,
@@ -1142,6 +1162,7 @@ class UserVocabSqliteTableCompanion
     this.starMark = const Value.absent(),
     this.pinMark = const Value.absent(),
     this.addedMark = const Value.absent(),
+    this.pushedMark = const Value.absent(),
   }) : vocabId = Value(vocabId);
   static Insertable<UserVocabSqliteTableData> custom({
     Expression<String> vocabId,
@@ -1154,6 +1175,7 @@ class UserVocabSqliteTableCompanion
     Expression<bool> starMark,
     Expression<bool> pinMark,
     Expression<bool> addedMark,
+    Expression<bool> pushedMark,
   }) {
     return RawValuesInsertable({
       if (vocabId != null) 'vocab_id': vocabId,
@@ -1166,6 +1188,7 @@ class UserVocabSqliteTableCompanion
       if (starMark != null) 'star_mark': starMark,
       if (pinMark != null) 'pin_mark': pinMark,
       if (addedMark != null) 'added_mark': addedMark,
+      if (pushedMark != null) 'pushed_mark': pushedMark,
     });
   }
 
@@ -1179,7 +1202,8 @@ class UserVocabSqliteTableCompanion
       Value<bool> questionMark,
       Value<bool> starMark,
       Value<bool> pinMark,
-      Value<bool> addedMark}) {
+      Value<bool> addedMark,
+      Value<bool> pushedMark}) {
     return UserVocabSqliteTableCompanion(
       vocabId: vocabId ?? this.vocabId,
       nthWord: nthWord ?? this.nthWord,
@@ -1191,6 +1215,7 @@ class UserVocabSqliteTableCompanion
       starMark: starMark ?? this.starMark,
       pinMark: pinMark ?? this.pinMark,
       addedMark: addedMark ?? this.addedMark,
+      pushedMark: pushedMark ?? this.pushedMark,
     );
   }
 
@@ -1229,6 +1254,9 @@ class UserVocabSqliteTableCompanion
     if (addedMark.present) {
       map['added_mark'] = Variable<bool>(addedMark.value);
     }
+    if (pushedMark.present) {
+      map['pushed_mark'] = Variable<bool>(pushedMark.value);
+    }
     return map;
   }
 
@@ -1244,7 +1272,8 @@ class UserVocabSqliteTableCompanion
           ..write('questionMark: $questionMark, ')
           ..write('starMark: $starMark, ')
           ..write('pinMark: $pinMark, ')
-          ..write('addedMark: $addedMark')
+          ..write('addedMark: $addedMark, ')
+          ..write('pushedMark: $pushedMark')
           ..write(')'))
         .toString();
   }
@@ -1358,6 +1387,15 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
         defaultValue: Constant(false));
   }
 
+  final VerificationMeta _pushedMarkMeta = const VerificationMeta('pushedMark');
+  GeneratedBoolColumn _pushedMark;
+  @override
+  GeneratedBoolColumn get pushedMark => _pushedMark ??= _constructPushedMark();
+  GeneratedBoolColumn _constructPushedMark() {
+    return GeneratedBoolColumn('pushed_mark', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         vocabId,
@@ -1369,7 +1407,8 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
         questionMark,
         starMark,
         pinMark,
-        addedMark
+        addedMark,
+        pushedMark
       ];
   @override
   $UserVocabSqliteTableTable get asDslTable => this;
@@ -1427,6 +1466,12 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
     if (data.containsKey('added_mark')) {
       context.handle(_addedMarkMeta,
           addedMark.isAcceptableOrUnknown(data['added_mark'], _addedMarkMeta));
+    }
+    if (data.containsKey('pushed_mark')) {
+      context.handle(
+          _pushedMarkMeta,
+          pushedMark.isAcceptableOrUnknown(
+              data['pushed_mark'], _pushedMarkMeta));
     }
     return context;
   }
