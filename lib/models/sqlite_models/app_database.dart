@@ -48,7 +48,7 @@ class VocabSqliteTable extends Table {
   Set<Column> get primaryKey => {vocabId};
 
   DateTimeColumn get edition => dateTime()();
-  IntColumn get listId => integer()(); // TODO: link
+  TextColumn get listIds => text().map(const IntegerListConverter())();
   TextColumn get vocab => text()();
   IntColumn get type => intEnum<VocabType>().nullable()();
   TextColumn get mainTranslation => text().nullable()();

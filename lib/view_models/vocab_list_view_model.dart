@@ -1,3 +1,4 @@
+import 'package:deep_vocab/models/hive_models/vocab_header_model.dart';
 import 'package:deep_vocab/models/sqlite_models/app_database.dart';
 import 'package:deep_vocab/models/sqlite_models/vocab_sqlite_dao.dart';
 import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
@@ -29,9 +30,14 @@ class VocabListViewModel {
   /// getters
 
   /// interface
-  Future<void> downloadVocab({void Function(int count, int total) onReceiveProgress}) async {
-    String path = await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
+  Future<bool> downloadVocab({void Function(int count, int total) onReceiveProgress}) async {
+    String path =
+        await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
     // String path = await HttpWidget.downloadFile(from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
+    if (path == null) {
+      print("[VocabListViewModel] error downloading file, user not logged in?"); // TODO: direct user to log in first
+      return Future.value(false);
+    }
     print("[VocabListViewModel] downloaded to path ${path}");
     VocabListModel vocabListModel = VocabListModel.fromJson(await FileManager.filePathToJson(path));
 
@@ -57,14 +63,16 @@ class VocabListViewModel {
 
     await FileManager.deteleFile(path);
     print("[VocabListViewModel] delete file success");
-    return Future.value();
+    return Future.value(true);
   }
 
   // TODO: rewrite this function, like the function below, with additional arguments
   Future<VocabListModel> getFromDatabase({int listId, String vocabId}) async {
-    Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter =
-        (tbl) => (listId == null ? Variable<bool>(true) : tbl.listId.equals(listId))
-    & (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
+    VocabHeaderModel vocabHeaderModel = HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null);
+
+    Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter = (tbl) =>
+        (listId == null || vocabHeaderModel == null ? Variable<bool>(true) : tbl.vocabId.isIn(vocabHeaderModel.vocabIds)) &
+        (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
     List<VocabSqliteTableDataWithUserVocabSqliteTableData> list = await _dao.getVocabsWithUserWhere(filter: leftFilter);
 
     return Future.value(VocabListModel(
@@ -75,10 +83,12 @@ class VocabListViewModel {
   /// If [listId] is not provided as an argument, the function selects all variants of [listId]
   /// If [vocabId] is not provided as an argument, the function selects all variants of [vocabId]
   Stream<VocabListModel> watchFromDatabase({int listId, String vocabId, bool memorized, bool pushedMark}) {
+    VocabHeaderModel vocabHeaderModel = HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null);
+
     // See: https://github.com/simolus3/moor/issues/1015
-    Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter =
-        (tbl) => (listId == null ? Variable<bool>(true) : tbl.listId.equals(listId))
-        & (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
+    Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter = (tbl) =>
+        (listId == null || vocabHeaderModel == null ? Variable<bool>(true) : tbl.vocabId.isIn(vocabHeaderModel.vocabIds)) &
+        (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
 
     Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> stream;
     if (memorized == null && pushedMark == null)
@@ -86,8 +96,9 @@ class VocabListViewModel {
     else {
       Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter =
           // (tbl) => tbl.markColors.dartCast<List<MarkColorModel>>().equals(<MarkColorModel>[]).not();
-          (tbl) => (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors)))
-          & (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
+          (tbl) =>
+              (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors))) &
+              (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
       stream = _dao.watchMarkedVocabsWithUserWhere(leftFilter: leftFilter, rightFilter: rightFilter);
     }
 

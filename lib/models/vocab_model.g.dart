@@ -12,7 +12,7 @@ VocabModel _$VocabModelFromJson(Map<String, dynamic> json) {
     edition: json['edition'] == null
         ? null
         : DateTime.parse(json['edition'] as String),
-    listId: json['listId'] as int,
+    listIds: (json['listIds'] as List)?.map((e) => e as int)?.toList(),
     vocab: json['vocab'] as String,
     type: _$enumDecodeNullable(_$VocabTypeEnumMap, json['type']),
     mainTranslation: json['mainTranslation'] as String,
@@ -51,7 +51,7 @@ Map<String, dynamic> _$VocabModelToJson(VocabModel instance) =>
     <String, dynamic>{
       'vocabId': instance.vocabId,
       'edition': instance.edition?.toIso8601String(),
-      'listId': instance.listId,
+      'listIds': instance.listIds,
       'vocab': instance.vocab,
       'type': _$VocabTypeEnumMap[instance.type],
       'mainTranslation': instance.mainTranslation,

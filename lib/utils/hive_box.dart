@@ -8,7 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class HiveBox {
   static const String SINGLETON_BOX = "singleton"; // store singleton (see below)
   static const String REQUEST_BOX = "request"; // store temp json request
-  static const String VOCAB_LIST_HEADER_BOX = "vocabListHeader"; // store Map<String, dynamic>
+  static const String VOCAB_LIST_HEADER_BOX = "vocabListHeader"; // store Map<listId, VocabHeaderModel>
 
   // indexes in singleton
   static const String USER_SINGLETON_INDEX = "user"; // store UserViewModel: uuid, userName, avatarUrl, level, xp...

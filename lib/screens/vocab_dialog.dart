@@ -25,7 +25,7 @@ class VocabDialog {
                   vocabModel: VocabModel(
                     vocabId: "null",
                     edition: DateTime.now(),
-                    listId: 0,
+                    listIds: [0],
                     vocab: "null",
                     type: VocabType.adj,
                     mainTranslation: "null",

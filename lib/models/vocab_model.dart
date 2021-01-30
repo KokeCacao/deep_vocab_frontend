@@ -15,7 +15,7 @@ class VocabModel {
 
   // above are fetched from database
   DateTime edition;
-  int listId;
+  List<int> listIds;
   String vocab;
   VocabType type;
   String mainTranslation;
@@ -43,7 +43,7 @@ class VocabModel {
   VocabModel({
     @required this.vocabId,
     @required this.edition,
-    @required this.listId,
+    @required this.listIds,
     @required this.vocab,
     this.type,
     this.mainTranslation,
@@ -79,7 +79,7 @@ class VocabModel {
       // TODO: check nullable
       vocabId: vocab.vocabId,
       edition: vocab.edition,
-      listId: vocab.listId,
+      listIds: vocab.listIds,
       vocab: vocab.vocab,
       type: vocab.type,
       mainTranslation: vocab.mainTranslation,
@@ -112,7 +112,7 @@ class VocabModel {
         vocabSqliteTableData: VocabSqliteTableData(
           vocabId: this.vocabId,
           edition: this.edition,
-          listId: this.listId,
+          listIds: this.listIds,
           vocab: this.vocab,
           type: this.type,
           mainTranslation: this.mainTranslation,

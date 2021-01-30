@@ -15,9 +15,10 @@ class VocabHeaderModel {
   final int listId;
   @HiveField(2)
   final DateTime edition;
-  // TODO: urgent add vocabIds
+  @HiveField(3)
+  final List<String> vocabIds;
 
-  const VocabHeaderModel({@required this.name, @required this.listId, @required this.edition});
+  const VocabHeaderModel({@required this.name, @required this.listId, @required this.edition, @required this.vocabIds});
 
   factory VocabHeaderModel.fromJson(Map<String, dynamic> json) => _$VocabHeaderModelFromJson(json);
   Map<String, dynamic> toJson() => _$VocabHeaderModelToJson(this);

@@ -77,6 +77,7 @@ class HttpWidget extends Object {
       });
     } catch (e) {
       print(e);
+      return Future.value(null);
     }
     print("[HttpWidget] Download completed.");
     FileManager.printDir(appDocDir);

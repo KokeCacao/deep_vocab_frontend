@@ -20,19 +20,22 @@ class VocabHeaderModelAdapter extends TypeAdapter<VocabHeaderModel> {
       name: fields[0] as String,
       listId: fields[1] as int,
       edition: fields[2] as DateTime,
+      vocabIds: (fields[3] as List)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, VocabHeaderModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.listId)
       ..writeByte(2)
-      ..write(obj.edition);
+      ..write(obj.edition)
+      ..writeByte(3)
+      ..write(obj.vocabIds);
   }
 
   @override
@@ -57,6 +60,7 @@ VocabHeaderModel _$VocabHeaderModelFromJson(Map<String, dynamic> json) {
     edition: json['edition'] == null
         ? null
         : DateTime.parse(json['edition'] as String),
+    vocabIds: (json['vocabIds'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
@@ -65,4 +69,5 @@ Map<String, dynamic> _$VocabHeaderModelToJson(VocabHeaderModel instance) =>
       'name': instance.name,
       'listId': instance.listId,
       'edition': instance.edition?.toIso8601String(),
+      'vocabIds': instance.vocabIds,
     };

@@ -11,7 +11,7 @@ class VocabSqliteTableData extends DataClass
     implements Insertable<VocabSqliteTableData> {
   final String vocabId;
   final DateTime edition;
-  final int listId;
+  final List<int> listIds;
   final String vocab;
   final VocabType type;
   final String mainTranslation;
@@ -27,7 +27,7 @@ class VocabSqliteTableData extends DataClass
   VocabSqliteTableData(
       {@required this.vocabId,
       @required this.edition,
-      @required this.listId,
+      @required this.listIds,
       @required this.vocab,
       this.type,
       this.mainTranslation,
@@ -52,31 +52,31 @@ class VocabSqliteTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}vocab_id']),
       edition: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}edition']),
-      listId:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}list_id']),
+      listIds: $VocabSqliteTableTable.$converter0.mapToDart(stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}list_ids'])),
       vocab:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}vocab']),
-      type: $VocabSqliteTableTable.$converter0.mapToDart(
+      type: $VocabSqliteTableTable.$converter1.mapToDart(
           intType.mapFromDatabaseResponse(data['${effectivePrefix}type'])),
       mainTranslation: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}main_translation']),
-      otherTranslation: $VocabSqliteTableTable.$converter1.mapToDart(
+      otherTranslation: $VocabSqliteTableTable.$converter2.mapToDart(
           stringType.mapFromDatabaseResponse(
               data['${effectivePrefix}other_translation'])),
       mainSound: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}main_sound']),
-      otherSound: $VocabSqliteTableTable.$converter2.mapToDart(stringType
+      otherSound: $VocabSqliteTableTable.$converter3.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}other_sound'])),
       englishTranslation: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}english_translation']),
-      comments: $VocabSqliteTableTable.$converter3.mapToDart(stringType
+      comments: $VocabSqliteTableTable.$converter4.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}comments'])),
-      confusingWordId: $VocabSqliteTableTable.$converter4.mapToDart(
+      confusingWordId: $VocabSqliteTableTable.$converter5.mapToDart(
           stringType.mapFromDatabaseResponse(
               data['${effectivePrefix}confusing_word_id'])),
       memTips: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}mem_tips']),
-      exampleSentences: $VocabSqliteTableTable.$converter5.mapToDart(
+      exampleSentences: $VocabSqliteTableTable.$converter6.mapToDart(
           stringType.mapFromDatabaseResponse(
               data['${effectivePrefix}example_sentences'])),
       userVocabSqliteTableVocabId: stringType.mapFromDatabaseResponse(
@@ -92,21 +92,22 @@ class VocabSqliteTableData extends DataClass
     if (!nullToAbsent || edition != null) {
       map['edition'] = Variable<DateTime>(edition);
     }
-    if (!nullToAbsent || listId != null) {
-      map['list_id'] = Variable<int>(listId);
+    if (!nullToAbsent || listIds != null) {
+      final converter = $VocabSqliteTableTable.$converter0;
+      map['list_ids'] = Variable<String>(converter.mapToSql(listIds));
     }
     if (!nullToAbsent || vocab != null) {
       map['vocab'] = Variable<String>(vocab);
     }
     if (!nullToAbsent || type != null) {
-      final converter = $VocabSqliteTableTable.$converter0;
+      final converter = $VocabSqliteTableTable.$converter1;
       map['type'] = Variable<int>(converter.mapToSql(type));
     }
     if (!nullToAbsent || mainTranslation != null) {
       map['main_translation'] = Variable<String>(mainTranslation);
     }
     if (!nullToAbsent || otherTranslation != null) {
-      final converter = $VocabSqliteTableTable.$converter1;
+      final converter = $VocabSqliteTableTable.$converter2;
       map['other_translation'] =
           Variable<String>(converter.mapToSql(otherTranslation));
     }
@@ -114,18 +115,18 @@ class VocabSqliteTableData extends DataClass
       map['main_sound'] = Variable<String>(mainSound);
     }
     if (!nullToAbsent || otherSound != null) {
-      final converter = $VocabSqliteTableTable.$converter2;
+      final converter = $VocabSqliteTableTable.$converter3;
       map['other_sound'] = Variable<String>(converter.mapToSql(otherSound));
     }
     if (!nullToAbsent || englishTranslation != null) {
       map['english_translation'] = Variable<String>(englishTranslation);
     }
     if (!nullToAbsent || comments != null) {
-      final converter = $VocabSqliteTableTable.$converter3;
+      final converter = $VocabSqliteTableTable.$converter4;
       map['comments'] = Variable<String>(converter.mapToSql(comments));
     }
     if (!nullToAbsent || confusingWordId != null) {
-      final converter = $VocabSqliteTableTable.$converter4;
+      final converter = $VocabSqliteTableTable.$converter5;
       map['confusing_word_id'] =
           Variable<String>(converter.mapToSql(confusingWordId));
     }
@@ -133,7 +134,7 @@ class VocabSqliteTableData extends DataClass
       map['mem_tips'] = Variable<String>(memTips);
     }
     if (!nullToAbsent || exampleSentences != null) {
-      final converter = $VocabSqliteTableTable.$converter5;
+      final converter = $VocabSqliteTableTable.$converter6;
       map['example_sentences'] =
           Variable<String>(converter.mapToSql(exampleSentences));
     }
@@ -152,8 +153,9 @@ class VocabSqliteTableData extends DataClass
       edition: edition == null && nullToAbsent
           ? const Value.absent()
           : Value(edition),
-      listId:
-          listId == null && nullToAbsent ? const Value.absent() : Value(listId),
+      listIds: listIds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(listIds),
       vocab:
           vocab == null && nullToAbsent ? const Value.absent() : Value(vocab),
       type: type == null && nullToAbsent ? const Value.absent() : Value(type),
@@ -197,7 +199,7 @@ class VocabSqliteTableData extends DataClass
     return VocabSqliteTableData(
       vocabId: serializer.fromJson<String>(json['vocabId']),
       edition: serializer.fromJson<DateTime>(json['edition']),
-      listId: serializer.fromJson<int>(json['listId']),
+      listIds: serializer.fromJson<List<int>>(json['listIds']),
       vocab: serializer.fromJson<String>(json['vocab']),
       type: serializer.fromJson<VocabType>(json['type']),
       mainTranslation: serializer.fromJson<String>(json['mainTranslation']),
@@ -223,7 +225,7 @@ class VocabSqliteTableData extends DataClass
     return <String, dynamic>{
       'vocabId': serializer.toJson<String>(vocabId),
       'edition': serializer.toJson<DateTime>(edition),
-      'listId': serializer.toJson<int>(listId),
+      'listIds': serializer.toJson<List<int>>(listIds),
       'vocab': serializer.toJson<String>(vocab),
       'type': serializer.toJson<VocabType>(type),
       'mainTranslation': serializer.toJson<String>(mainTranslation),
@@ -243,7 +245,7 @@ class VocabSqliteTableData extends DataClass
   VocabSqliteTableData copyWith(
           {String vocabId,
           DateTime edition,
-          int listId,
+          List<int> listIds,
           String vocab,
           VocabType type,
           String mainTranslation,
@@ -259,7 +261,7 @@ class VocabSqliteTableData extends DataClass
       VocabSqliteTableData(
         vocabId: vocabId ?? this.vocabId,
         edition: edition ?? this.edition,
-        listId: listId ?? this.listId,
+        listIds: listIds ?? this.listIds,
         vocab: vocab ?? this.vocab,
         type: type ?? this.type,
         mainTranslation: mainTranslation ?? this.mainTranslation,
@@ -279,7 +281,7 @@ class VocabSqliteTableData extends DataClass
     return (StringBuffer('VocabSqliteTableData(')
           ..write('vocabId: $vocabId, ')
           ..write('edition: $edition, ')
-          ..write('listId: $listId, ')
+          ..write('listIds: $listIds, ')
           ..write('vocab: $vocab, ')
           ..write('type: $type, ')
           ..write('mainTranslation: $mainTranslation, ')
@@ -302,7 +304,7 @@ class VocabSqliteTableData extends DataClass
       $mrjc(
           edition.hashCode,
           $mrjc(
-              listId.hashCode,
+              listIds.hashCode,
               $mrjc(
                   vocab.hashCode,
                   $mrjc(
@@ -334,7 +336,7 @@ class VocabSqliteTableData extends DataClass
       (other is VocabSqliteTableData &&
           other.vocabId == this.vocabId &&
           other.edition == this.edition &&
-          other.listId == this.listId &&
+          other.listIds == this.listIds &&
           other.vocab == this.vocab &&
           other.type == this.type &&
           other.mainTranslation == this.mainTranslation &&
@@ -353,7 +355,7 @@ class VocabSqliteTableData extends DataClass
 class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   final Value<String> vocabId;
   final Value<DateTime> edition;
-  final Value<int> listId;
+  final Value<List<int>> listIds;
   final Value<String> vocab;
   final Value<VocabType> type;
   final Value<String> mainTranslation;
@@ -369,7 +371,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   const VocabSqliteTableCompanion({
     this.vocabId = const Value.absent(),
     this.edition = const Value.absent(),
-    this.listId = const Value.absent(),
+    this.listIds = const Value.absent(),
     this.vocab = const Value.absent(),
     this.type = const Value.absent(),
     this.mainTranslation = const Value.absent(),
@@ -386,7 +388,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   VocabSqliteTableCompanion.insert({
     @required String vocabId,
     @required DateTime edition,
-    @required int listId,
+    @required List<int> listIds,
     @required String vocab,
     this.type = const Value.absent(),
     this.mainTranslation = const Value.absent(),
@@ -401,12 +403,12 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     this.userVocabSqliteTableVocabId = const Value.absent(),
   })  : vocabId = Value(vocabId),
         edition = Value(edition),
-        listId = Value(listId),
+        listIds = Value(listIds),
         vocab = Value(vocab);
   static Insertable<VocabSqliteTableData> custom({
     Expression<String> vocabId,
     Expression<DateTime> edition,
-    Expression<int> listId,
+    Expression<String> listIds,
     Expression<String> vocab,
     Expression<int> type,
     Expression<String> mainTranslation,
@@ -423,7 +425,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     return RawValuesInsertable({
       if (vocabId != null) 'vocab_id': vocabId,
       if (edition != null) 'edition': edition,
-      if (listId != null) 'list_id': listId,
+      if (listIds != null) 'list_ids': listIds,
       if (vocab != null) 'vocab': vocab,
       if (type != null) 'type': type,
       if (mainTranslation != null) 'main_translation': mainTranslation,
@@ -443,7 +445,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   VocabSqliteTableCompanion copyWith(
       {Value<String> vocabId,
       Value<DateTime> edition,
-      Value<int> listId,
+      Value<List<int>> listIds,
       Value<String> vocab,
       Value<VocabType> type,
       Value<String> mainTranslation,
@@ -459,7 +461,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     return VocabSqliteTableCompanion(
       vocabId: vocabId ?? this.vocabId,
       edition: edition ?? this.edition,
-      listId: listId ?? this.listId,
+      listIds: listIds ?? this.listIds,
       vocab: vocab ?? this.vocab,
       type: type ?? this.type,
       mainTranslation: mainTranslation ?? this.mainTranslation,
@@ -485,21 +487,22 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     if (edition.present) {
       map['edition'] = Variable<DateTime>(edition.value);
     }
-    if (listId.present) {
-      map['list_id'] = Variable<int>(listId.value);
+    if (listIds.present) {
+      final converter = $VocabSqliteTableTable.$converter0;
+      map['list_ids'] = Variable<String>(converter.mapToSql(listIds.value));
     }
     if (vocab.present) {
       map['vocab'] = Variable<String>(vocab.value);
     }
     if (type.present) {
-      final converter = $VocabSqliteTableTable.$converter0;
+      final converter = $VocabSqliteTableTable.$converter1;
       map['type'] = Variable<int>(converter.mapToSql(type.value));
     }
     if (mainTranslation.present) {
       map['main_translation'] = Variable<String>(mainTranslation.value);
     }
     if (otherTranslation.present) {
-      final converter = $VocabSqliteTableTable.$converter1;
+      final converter = $VocabSqliteTableTable.$converter2;
       map['other_translation'] =
           Variable<String>(converter.mapToSql(otherTranslation.value));
     }
@@ -507,7 +510,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       map['main_sound'] = Variable<String>(mainSound.value);
     }
     if (otherSound.present) {
-      final converter = $VocabSqliteTableTable.$converter2;
+      final converter = $VocabSqliteTableTable.$converter3;
       map['other_sound'] =
           Variable<String>(converter.mapToSql(otherSound.value));
     }
@@ -515,11 +518,11 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       map['english_translation'] = Variable<String>(englishTranslation.value);
     }
     if (comments.present) {
-      final converter = $VocabSqliteTableTable.$converter3;
+      final converter = $VocabSqliteTableTable.$converter4;
       map['comments'] = Variable<String>(converter.mapToSql(comments.value));
     }
     if (confusingWordId.present) {
-      final converter = $VocabSqliteTableTable.$converter4;
+      final converter = $VocabSqliteTableTable.$converter5;
       map['confusing_word_id'] =
           Variable<String>(converter.mapToSql(confusingWordId.value));
     }
@@ -527,7 +530,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       map['mem_tips'] = Variable<String>(memTips.value);
     }
     if (exampleSentences.present) {
-      final converter = $VocabSqliteTableTable.$converter5;
+      final converter = $VocabSqliteTableTable.$converter6;
       map['example_sentences'] =
           Variable<String>(converter.mapToSql(exampleSentences.value));
     }
@@ -543,7 +546,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     return (StringBuffer('VocabSqliteTableCompanion(')
           ..write('vocabId: $vocabId, ')
           ..write('edition: $edition, ')
-          ..write('listId: $listId, ')
+          ..write('listIds: $listIds, ')
           ..write('vocab: $vocab, ')
           ..write('type: $type, ')
           ..write('mainTranslation: $mainTranslation, ')
@@ -590,13 +593,13 @@ class $VocabSqliteTableTable extends VocabSqliteTable
     );
   }
 
-  final VerificationMeta _listIdMeta = const VerificationMeta('listId');
-  GeneratedIntColumn _listId;
+  final VerificationMeta _listIdsMeta = const VerificationMeta('listIds');
+  GeneratedTextColumn _listIds;
   @override
-  GeneratedIntColumn get listId => _listId ??= _constructListId();
-  GeneratedIntColumn _constructListId() {
-    return GeneratedIntColumn(
-      'list_id',
+  GeneratedTextColumn get listIds => _listIds ??= _constructListIds();
+  GeneratedTextColumn _constructListIds() {
+    return GeneratedTextColumn(
+      'list_ids',
       $tableName,
       false,
     );
@@ -761,7 +764,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
   List<GeneratedColumn> get $columns => [
         vocabId,
         edition,
-        listId,
+        listIds,
         vocab,
         type,
         mainTranslation,
@@ -799,12 +802,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
     } else if (isInserting) {
       context.missing(_editionMeta);
     }
-    if (data.containsKey('list_id')) {
-      context.handle(_listIdMeta,
-          listId.isAcceptableOrUnknown(data['list_id'], _listIdMeta));
-    } else if (isInserting) {
-      context.missing(_listIdMeta);
-    }
+    context.handle(_listIdsMeta, const VerificationResult.success());
     if (data.containsKey('vocab')) {
       context.handle(
           _vocabMeta, vocab.isAcceptableOrUnknown(data['vocab'], _vocabMeta));
@@ -860,17 +858,19 @@ class $VocabSqliteTableTable extends VocabSqliteTable
     return $VocabSqliteTableTable(_db, alias);
   }
 
-  static TypeConverter<VocabType, int> $converter0 =
+  static TypeConverter<List<int>, String> $converter0 =
+      const IntegerListConverter();
+  static TypeConverter<VocabType, int> $converter1 =
       const EnumIndexConverter<VocabType>(VocabType.values);
-  static TypeConverter<List<String>, String> $converter1 =
-      const StringListConverter();
   static TypeConverter<List<String>, String> $converter2 =
       const StringListConverter();
-  static TypeConverter<List<CommentModel>, String> $converter3 =
-      const CommentModelListConverter();
-  static TypeConverter<List<String>, String> $converter4 =
+  static TypeConverter<List<String>, String> $converter3 =
       const StringListConverter();
+  static TypeConverter<List<CommentModel>, String> $converter4 =
+      const CommentModelListConverter();
   static TypeConverter<List<String>, String> $converter5 =
+      const StringListConverter();
+  static TypeConverter<List<String>, String> $converter6 =
       const StringListConverter();
 }
 

@@ -66,8 +66,8 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
                         Text("Barron3500"),
                         RaisedButton(
                           onPressed: () async {
-                            Provider.of<VocabListViewModel>(context, listen: false).downloadVocab();
-                            print("[LearningScreen] finish update vocab list");
+                            bool success = await Provider.of<VocabListViewModel>(context, listen: false).downloadVocab();
+                            print("[LearningScreen] update vocab list ${success ? "Success!" : "Failed."}");
                           },
                           child: Text("Download"),
                         )
