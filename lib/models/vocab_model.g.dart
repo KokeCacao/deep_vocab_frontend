@@ -25,8 +25,8 @@ VocabModel _$VocabModelFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : CommentModel.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    confusingWordId:
-        (json['confusingWordId'] as List)?.map((e) => e as String)?.toList(),
+    confusingWords:
+        (json['confusingWords'] as List)?.map((e) => e as String)?.toList(),
     memTips: json['memTips'] as String,
     exampleSentences:
         (json['exampleSentences'] as List)?.map((e) => e as String)?.toList(),
@@ -60,7 +60,7 @@ Map<String, dynamic> _$VocabModelToJson(VocabModel instance) =>
       'otherSound': instance.otherSound,
       'englishTranslation': instance.englishTranslation,
       'comments': instance.comments,
-      'confusingWordId': instance.confusingWordId,
+      'confusingWords': instance.confusingWords,
       'memTips': instance.memTips,
       'exampleSentences': instance.exampleSentences,
       'nthWord': instance.nthWord,

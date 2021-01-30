@@ -34,7 +34,7 @@ class VocabDialog {
                     otherSound: [],
                     englishTranslation: "none",
                     comments: [],
-                    confusingWordId: [],
+                    confusingWords: [],
                     memTips: "top",
                     exampleSentences: ["eg"],
                   ),

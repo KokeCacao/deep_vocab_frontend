@@ -186,7 +186,7 @@ class VocabPanel extends StatelessWidget {
                           Separator(
                             color: Colors.transparent,
                           ),
-                          for (String confusing in vocabModel.confusingWordId) Text(confusing),
+                          for (String confusing in vocabModel.confusingWords) Text(confusing),
                         ],
                       ),
                     )

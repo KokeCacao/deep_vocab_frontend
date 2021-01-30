@@ -57,7 +57,7 @@ class VocabSqliteTable extends Table {
   TextColumn get otherSound => text().nullable().map(const StringListConverter())();
   TextColumn get englishTranslation => text().nullable()();
   TextColumn get comments => text().nullable().map(const CommentModelListConverter())();
-  TextColumn get confusingWordId => text().nullable().map(const StringListConverter())();
+  TextColumn get confusingWords => text().nullable().map(const StringListConverter())();
   TextColumn get memTips => text().nullable()();
   TextColumn get exampleSentences => text().nullable().map(const StringListConverter())();
 

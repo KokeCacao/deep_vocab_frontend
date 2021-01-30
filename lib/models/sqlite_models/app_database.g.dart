@@ -20,7 +20,7 @@ class VocabSqliteTableData extends DataClass
   final List<String> otherSound;
   final String englishTranslation;
   final List<CommentModel> comments;
-  final List<String> confusingWordId;
+  final List<String> confusingWords;
   final String memTips;
   final List<String> exampleSentences;
   final String userVocabSqliteTableVocabId;
@@ -36,7 +36,7 @@ class VocabSqliteTableData extends DataClass
       this.otherSound,
       this.englishTranslation,
       this.comments,
-      this.confusingWordId,
+      this.confusingWords,
       this.memTips,
       this.exampleSentences,
       this.userVocabSqliteTableVocabId});
@@ -71,9 +71,8 @@ class VocabSqliteTableData extends DataClass
           data['${effectivePrefix}english_translation']),
       comments: $VocabSqliteTableTable.$converter4.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}comments'])),
-      confusingWordId: $VocabSqliteTableTable.$converter5.mapToDart(
-          stringType.mapFromDatabaseResponse(
-              data['${effectivePrefix}confusing_word_id'])),
+      confusingWords: $VocabSqliteTableTable.$converter5.mapToDart(stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}confusing_words'])),
       memTips: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}mem_tips']),
       exampleSentences: $VocabSqliteTableTable.$converter6.mapToDart(
@@ -125,10 +124,10 @@ class VocabSqliteTableData extends DataClass
       final converter = $VocabSqliteTableTable.$converter4;
       map['comments'] = Variable<String>(converter.mapToSql(comments));
     }
-    if (!nullToAbsent || confusingWordId != null) {
+    if (!nullToAbsent || confusingWords != null) {
       final converter = $VocabSqliteTableTable.$converter5;
-      map['confusing_word_id'] =
-          Variable<String>(converter.mapToSql(confusingWordId));
+      map['confusing_words'] =
+          Variable<String>(converter.mapToSql(confusingWords));
     }
     if (!nullToAbsent || memTips != null) {
       map['mem_tips'] = Variable<String>(memTips);
@@ -177,9 +176,9 @@ class VocabSqliteTableData extends DataClass
       comments: comments == null && nullToAbsent
           ? const Value.absent()
           : Value(comments),
-      confusingWordId: confusingWordId == null && nullToAbsent
+      confusingWords: confusingWords == null && nullToAbsent
           ? const Value.absent()
-          : Value(confusingWordId),
+          : Value(confusingWords),
       memTips: memTips == null && nullToAbsent
           ? const Value.absent()
           : Value(memTips),
@@ -210,8 +209,7 @@ class VocabSqliteTableData extends DataClass
       englishTranslation:
           serializer.fromJson<String>(json['englishTranslation']),
       comments: serializer.fromJson<List<CommentModel>>(json['comments']),
-      confusingWordId:
-          serializer.fromJson<List<String>>(json['confusingWordId']),
+      confusingWords: serializer.fromJson<List<String>>(json['confusingWords']),
       memTips: serializer.fromJson<String>(json['memTips']),
       exampleSentences:
           serializer.fromJson<List<String>>(json['exampleSentences']),
@@ -234,7 +232,7 @@ class VocabSqliteTableData extends DataClass
       'otherSound': serializer.toJson<List<String>>(otherSound),
       'englishTranslation': serializer.toJson<String>(englishTranslation),
       'comments': serializer.toJson<List<CommentModel>>(comments),
-      'confusingWordId': serializer.toJson<List<String>>(confusingWordId),
+      'confusingWords': serializer.toJson<List<String>>(confusingWords),
       'memTips': serializer.toJson<String>(memTips),
       'exampleSentences': serializer.toJson<List<String>>(exampleSentences),
       'userVocabSqliteTableVocabId':
@@ -254,7 +252,7 @@ class VocabSqliteTableData extends DataClass
           List<String> otherSound,
           String englishTranslation,
           List<CommentModel> comments,
-          List<String> confusingWordId,
+          List<String> confusingWords,
           String memTips,
           List<String> exampleSentences,
           String userVocabSqliteTableVocabId}) =>
@@ -270,7 +268,7 @@ class VocabSqliteTableData extends DataClass
         otherSound: otherSound ?? this.otherSound,
         englishTranslation: englishTranslation ?? this.englishTranslation,
         comments: comments ?? this.comments,
-        confusingWordId: confusingWordId ?? this.confusingWordId,
+        confusingWords: confusingWords ?? this.confusingWords,
         memTips: memTips ?? this.memTips,
         exampleSentences: exampleSentences ?? this.exampleSentences,
         userVocabSqliteTableVocabId:
@@ -290,7 +288,7 @@ class VocabSqliteTableData extends DataClass
           ..write('otherSound: $otherSound, ')
           ..write('englishTranslation: $englishTranslation, ')
           ..write('comments: $comments, ')
-          ..write('confusingWordId: $confusingWordId, ')
+          ..write('confusingWords: $confusingWords, ')
           ..write('memTips: $memTips, ')
           ..write('exampleSentences: $exampleSentences, ')
           ..write('userVocabSqliteTableVocabId: $userVocabSqliteTableVocabId')
@@ -322,7 +320,7 @@ class VocabSqliteTableData extends DataClass
                                           $mrjc(
                                               comments.hashCode,
                                               $mrjc(
-                                                  confusingWordId.hashCode,
+                                                  confusingWords.hashCode,
                                                   $mrjc(
                                                       memTips.hashCode,
                                                       $mrjc(
@@ -345,7 +343,7 @@ class VocabSqliteTableData extends DataClass
           other.otherSound == this.otherSound &&
           other.englishTranslation == this.englishTranslation &&
           other.comments == this.comments &&
-          other.confusingWordId == this.confusingWordId &&
+          other.confusingWords == this.confusingWords &&
           other.memTips == this.memTips &&
           other.exampleSentences == this.exampleSentences &&
           other.userVocabSqliteTableVocabId ==
@@ -364,7 +362,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
   final Value<List<String>> otherSound;
   final Value<String> englishTranslation;
   final Value<List<CommentModel>> comments;
-  final Value<List<String>> confusingWordId;
+  final Value<List<String>> confusingWords;
   final Value<String> memTips;
   final Value<List<String>> exampleSentences;
   final Value<String> userVocabSqliteTableVocabId;
@@ -380,7 +378,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     this.otherSound = const Value.absent(),
     this.englishTranslation = const Value.absent(),
     this.comments = const Value.absent(),
-    this.confusingWordId = const Value.absent(),
+    this.confusingWords = const Value.absent(),
     this.memTips = const Value.absent(),
     this.exampleSentences = const Value.absent(),
     this.userVocabSqliteTableVocabId = const Value.absent(),
@@ -397,7 +395,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     this.otherSound = const Value.absent(),
     this.englishTranslation = const Value.absent(),
     this.comments = const Value.absent(),
-    this.confusingWordId = const Value.absent(),
+    this.confusingWords = const Value.absent(),
     this.memTips = const Value.absent(),
     this.exampleSentences = const Value.absent(),
     this.userVocabSqliteTableVocabId = const Value.absent(),
@@ -417,7 +415,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
     Expression<String> otherSound,
     Expression<String> englishTranslation,
     Expression<String> comments,
-    Expression<String> confusingWordId,
+    Expression<String> confusingWords,
     Expression<String> memTips,
     Expression<String> exampleSentences,
     Expression<String> userVocabSqliteTableVocabId,
@@ -434,7 +432,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       if (otherSound != null) 'other_sound': otherSound,
       if (englishTranslation != null) 'english_translation': englishTranslation,
       if (comments != null) 'comments': comments,
-      if (confusingWordId != null) 'confusing_word_id': confusingWordId,
+      if (confusingWords != null) 'confusing_words': confusingWords,
       if (memTips != null) 'mem_tips': memTips,
       if (exampleSentences != null) 'example_sentences': exampleSentences,
       if (userVocabSqliteTableVocabId != null)
@@ -454,7 +452,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       Value<List<String>> otherSound,
       Value<String> englishTranslation,
       Value<List<CommentModel>> comments,
-      Value<List<String>> confusingWordId,
+      Value<List<String>> confusingWords,
       Value<String> memTips,
       Value<List<String>> exampleSentences,
       Value<String> userVocabSqliteTableVocabId}) {
@@ -470,7 +468,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       otherSound: otherSound ?? this.otherSound,
       englishTranslation: englishTranslation ?? this.englishTranslation,
       comments: comments ?? this.comments,
-      confusingWordId: confusingWordId ?? this.confusingWordId,
+      confusingWords: confusingWords ?? this.confusingWords,
       memTips: memTips ?? this.memTips,
       exampleSentences: exampleSentences ?? this.exampleSentences,
       userVocabSqliteTableVocabId:
@@ -521,10 +519,10 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
       final converter = $VocabSqliteTableTable.$converter4;
       map['comments'] = Variable<String>(converter.mapToSql(comments.value));
     }
-    if (confusingWordId.present) {
+    if (confusingWords.present) {
       final converter = $VocabSqliteTableTable.$converter5;
-      map['confusing_word_id'] =
-          Variable<String>(converter.mapToSql(confusingWordId.value));
+      map['confusing_words'] =
+          Variable<String>(converter.mapToSql(confusingWords.value));
     }
     if (memTips.present) {
       map['mem_tips'] = Variable<String>(memTips.value);
@@ -555,7 +553,7 @@ class VocabSqliteTableCompanion extends UpdateCompanion<VocabSqliteTableData> {
           ..write('otherSound: $otherSound, ')
           ..write('englishTranslation: $englishTranslation, ')
           ..write('comments: $comments, ')
-          ..write('confusingWordId: $confusingWordId, ')
+          ..write('confusingWords: $confusingWords, ')
           ..write('memTips: $memTips, ')
           ..write('exampleSentences: $exampleSentences, ')
           ..write('userVocabSqliteTableVocabId: $userVocabSqliteTableVocabId')
@@ -707,15 +705,15 @@ class $VocabSqliteTableTable extends VocabSqliteTable
     );
   }
 
-  final VerificationMeta _confusingWordIdMeta =
-      const VerificationMeta('confusingWordId');
-  GeneratedTextColumn _confusingWordId;
+  final VerificationMeta _confusingWordsMeta =
+      const VerificationMeta('confusingWords');
+  GeneratedTextColumn _confusingWords;
   @override
-  GeneratedTextColumn get confusingWordId =>
-      _confusingWordId ??= _constructConfusingWordId();
-  GeneratedTextColumn _constructConfusingWordId() {
+  GeneratedTextColumn get confusingWords =>
+      _confusingWords ??= _constructConfusingWords();
+  GeneratedTextColumn _constructConfusingWords() {
     return GeneratedTextColumn(
-      'confusing_word_id',
+      'confusing_words',
       $tableName,
       true,
     );
@@ -773,7 +771,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
         otherSound,
         englishTranslation,
         comments,
-        confusingWordId,
+        confusingWords,
         memTips,
         exampleSentences,
         userVocabSqliteTableVocabId
@@ -829,7 +827,7 @@ class $VocabSqliteTableTable extends VocabSqliteTable
               data['english_translation'], _englishTranslationMeta));
     }
     context.handle(_commentsMeta, const VerificationResult.success());
-    context.handle(_confusingWordIdMeta, const VerificationResult.success());
+    context.handle(_confusingWordsMeta, const VerificationResult.success());
     if (data.containsKey('mem_tips')) {
       context.handle(_memTipsMeta,
           memTips.isAcceptableOrUnknown(data['mem_tips'], _memTipsMeta));

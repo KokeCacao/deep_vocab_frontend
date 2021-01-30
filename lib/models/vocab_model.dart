@@ -24,7 +24,7 @@ class VocabModel {
   List<String> otherSound;
   String englishTranslation;
   List<CommentModel> comments;
-  List<String> confusingWordId;
+  List<String> confusingWords;
   String memTips;
   List<String> exampleSentences;
 
@@ -52,7 +52,7 @@ class VocabModel {
     this.otherSound,
     this.englishTranslation,
     this.comments,
-    this.confusingWordId,
+    this.confusingWords,
     this.memTips,
     this.exampleSentences,
     this.nthWord = 0,
@@ -88,7 +88,7 @@ class VocabModel {
       otherSound: vocab.otherSound,
       englishTranslation: vocab.englishTranslation,
       comments: vocab.comments,
-      confusingWordId: vocab.confusingWordId,
+      confusingWords: vocab.confusingWords,
       memTips: vocab.memTips,
       exampleSentences: vocab.exampleSentences,
       nthWord: userVocab.nthWord,
@@ -121,7 +121,7 @@ class VocabModel {
           otherSound: this.otherSound,
           englishTranslation: this.englishTranslation,
           comments: this.comments,
-          confusingWordId: this.confusingWordId,
+          confusingWords: this.confusingWords,
           memTips: this.memTips,
           exampleSentences: this.exampleSentences,
           userVocabSqliteTableVocabId: this.vocabId,
