@@ -62,6 +62,7 @@ class SelectionPanel extends StatelessWidget {
                   // TODO: combine them into a single query, you can do that with graphql
                   for (String selectedId in selectedIds)
                     await Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: selectedId, addedMark: true);
+                  vocabStateController.noneSelect();
                 },
                 child: Text(
                   "加入计划",
