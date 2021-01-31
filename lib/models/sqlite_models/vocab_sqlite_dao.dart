@@ -15,13 +15,15 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
 
   /// get VocabData through stream
   Stream<List<VocabSqliteTableData>> watchAllVocabs() => select(vocabSqliteTable).watch();
-  Future upsertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => into(vocabSqliteTable).insert(vocabSqliteTableData, onConflict: DoUpdate((_) => vocabSqliteTableData));
+  Future upsertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) =>
+      into(vocabSqliteTable).insert(vocabSqliteTableData, onConflict: DoUpdate((_) => vocabSqliteTableData));
   Future insertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => into(vocabSqliteTable).insert(vocabSqliteTableData);
   Future deleteVocabWith(Insertable<VocabSqliteTableData> vocabSqliteTableData) => update(vocabSqliteTable).replace(vocabSqliteTableData);
   Future deleteVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => delete(vocabSqliteTable).delete(vocabSqliteTableData);
 
   /// TO GET USER VOCAB DATA ///
-  Future upsertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => into(userVocabSqliteTable).insert(userVocabSqliteTableData, onConflict: DoUpdate((_) => userVocabSqliteTableData));
+  Future upsertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) =>
+      into(userVocabSqliteTable).insert(userVocabSqliteTableData, onConflict: DoUpdate((_) => userVocabSqliteTableData));
   Future insertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => into(userVocabSqliteTable).insert(userVocabSqliteTableData);
   Future deleteUserVocabWith(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => update(userVocabSqliteTable).replace(userVocabSqliteTableData);
   Future deleteUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => delete(userVocabSqliteTable).delete(userVocabSqliteTableData);
@@ -50,11 +52,24 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
         .toList());
   }
 
+  Future<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> getMarkedVocabsWithUserWhere(
+      {@required Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter,
+      @required Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter}) async {
+    List<TypedResult> rows = await (select(vocabSqliteTable)..where(leftFilter))
+        .join([innerJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId) & rightFilter(userVocabSqliteTable))]).get();
+    return Future.value(rows
+        .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
+            vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
+        .toList());
+  }
+
   /// get VocabData + UserDefinedData through stream
   /// select all of [VocabSqliteTable] table
   @Deprecated("use watchVocabsWithUserWhere() instead")
-  Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchAllVocabsWithUser() =>
-      select(vocabSqliteTable).join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))]).watch().map((rows) => rows
+  Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchAllVocabsWithUser() => select(vocabSqliteTable)
+      .join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))])
+      .watch()
+      .map((rows) => rows
           .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
               vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
           .toList());
@@ -62,8 +77,10 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
   /// select all of [VocabSqliteTable] table that matches the expression [filter], where [UserVocabSqliteTable] might be null
   Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchVocabsWithUserWhere(
           {@required Expression<bool> Function($VocabSqliteTableTable tbl) filter}) =>
-      (select(vocabSqliteTable)..where(filter)).join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))]).watch().map(
-          (rows) => rows
+      (select(vocabSqliteTable)..where(filter))
+          .join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))])
+          .watch()
+          .map((rows) => rows
               .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
                   vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
               .toList());

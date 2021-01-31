@@ -61,9 +61,7 @@ class DismissibleVocabRow extends StatelessWidget {
             .addMarkColor(vocabId: vocab.vocabId, originals: markColors, color: color, replaceLast: replaceLast)
             .then((exception) => {
                   if (exception == null)
-                    replaceLast
-                        ? Provider.of<VocabStateController>(context, listen: false).crossedVocabIdRemove(vocab.vocabId)
-                        : Provider.of<VocabStateController>(context, listen: false).crossedVocabIdAdd(vocab.vocabId)
+                    Provider.of<VocabStateController>(context, listen: false).crossedVocabIdAdd(vocab.vocabId)
                   else
                     print("[DismissibleVocabRow] ${exception.message}")
                 });
@@ -71,7 +69,7 @@ class DismissibleVocabRow extends StatelessWidget {
         return vocabRow.copyWith(
           // cross: !vocabRow.cross,
           // hide: vocabRow.hide,
-          checkBox: !vocabRow.checkBox,
+          // checkBox: !vocabRow.checkBox,
         );
       },
     );

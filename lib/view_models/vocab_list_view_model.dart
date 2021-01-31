@@ -67,13 +67,23 @@ class VocabListViewModel {
   }
 
   // TODO: rewrite this function, like the function below, with additional arguments
-  Future<VocabListModel> getFromDatabase({int listId, String vocabId}) async {
+  Future<VocabListModel> getFromDatabase({int listId, String vocabId, bool memorized, bool pushedMark}) async {
     VocabHeaderModel vocabHeaderModel = HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null);
 
     Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter = (tbl) =>
         (listId == null || vocabHeaderModel == null ? Variable<bool>(true) : tbl.vocabId.isIn(vocabHeaderModel.vocabIds)) &
         (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
-    List<VocabSqliteTableDataWithUserVocabSqliteTableData> list = await _dao.getVocabsWithUserWhere(filter: leftFilter);
+
+    List<VocabSqliteTableDataWithUserVocabSqliteTableData> list;
+    if (memorized == null && pushedMark == null)
+      list = await _dao.getVocabsWithUserWhere(filter: leftFilter);
+    else {
+      Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter =
+          (tbl) =>
+      (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors))) &
+      (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
+      list = await _dao.getMarkedVocabsWithUserWhere(leftFilter: leftFilter, rightFilter: rightFilter);
+    }
 
     return Future.value(VocabListModel(
         header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null), vocabs: list.map((e) => VocabModel.fromCombinedSqlite(e)).toList()));
@@ -95,7 +105,6 @@ class VocabListViewModel {
       stream = _dao.watchVocabsWithUserWhere(filter: leftFilter);
     else {
       Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter =
-          // (tbl) => tbl.markColors.dartCast<List<MarkColorModel>>().equals(<MarkColorModel>[]).not();
           (tbl) =>
               (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors))) &
               (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
@@ -154,6 +163,12 @@ class VocabListViewModel {
 
     List<Map<String, dynamic>> vocabList = map["vocabs"].cast<Map<String, dynamic>>();
     List<String> vocabIds = vocabList.map((e) => e["vocabId"]).cast<String>().toList();
+
+    // set back all pushMarked=true to pushMarked=false
+    VocabListModel vocabListModel = await getFromDatabase(pushedMark: true);
+    for (String vocabId in vocabListModel.vocabs.map((e) => e.vocabId).cast<String>()) updateUserVocab(vocabId: vocabId, pushedMark: false);
+
+    // only set given pushMark to true
     for (String vocabId in vocabIds) updateUserVocab(vocabId: vocabId, pushedMark: true);
     return Future.value();
   }
