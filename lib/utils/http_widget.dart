@@ -48,24 +48,8 @@ class HttpWidget extends Object {
     return _graphQLClient;
   }
 
+  // TODO: auto refresh token when secure download fail
   // see: https://stackoverflow.com/questions/60761984/flutter-how-to-download-video-and-save-them-to-internal-storage
-  @Deprecated("API deprecated, use secure download instead")
-  static Future<String> downloadFile({@required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
-    var appDocDir = await getApplicationDocumentsDirectory();
-    try {
-      print("[HttpWidget] Start downloading to ${appDocDir.path}");
-      await dio.download("${BASE_URL}/download/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
-        print("[HttpWidget] ${count} / ${total} = ${((count / total) * 100).toStringAsFixed(0) + "%"}");
-        if (onReceiveProgress != null) onReceiveProgress(count, total);
-      });
-    } catch (e) {
-      print(e);
-    }
-    print("[HttpWidget] Download completed.");
-    FileManager.printDir(appDocDir);
-    return Future.value("${appDocDir.path}/${to}");
-  }
-
   static Future<String> secureDownloadFile({@required BuildContext context, @required int listId, @required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
     var appDocDir = await getApplicationDocumentsDirectory();
     try {
@@ -89,8 +73,6 @@ class HttpWidget extends Object {
   /// onFail inputs with error message
   /// if onFail, onSuccess are defined, graphQLMutation() returns what those function returns
   /// if onFail, onSuccess are both undefined, graphQLMutation() returns variable, s.t. variable["data"] may result an error
-  // TODO: what happen when the access token is invalid?
-  // TODO: integrate access token?
   static Future<Map<String, dynamic>> graphQLMutation(
       {@required BuildContext context,
         @required String data,
@@ -117,11 +99,12 @@ class HttpWidget extends Object {
       print("[HttpWidget] Exception: ${exception.replaceAll("\n", "; ")}");
       // refresh access token if query unsuccessful because of expiration of access token
       if (autoRefreshToken && exception.contains("JWT")) { // TODO: use actual error number to determine
-        bool success = await Provider.of<AuthViewModel>(context, listen: false).updateAccessTokenIfRefreshTokenExists();
+        AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+        String oldToken = authViewModel.accessToken;
+        bool success = await authViewModel.updateAccessTokenIfRefreshTokenExists();
         if (success) {
-          // TODO: the problem if that the access token is in the query string, get it out!
-          // TODO: also fix null updating table
           print("[HttpWidget] Successfully updated access token, resend request");
+          data = data.replaceFirst(oldToken, authViewModel.accessToken); // Warning: assume only 1 accessToken provided
           return graphQLMutation(
               context: context,
               data: data,

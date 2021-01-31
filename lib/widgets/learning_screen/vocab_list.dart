@@ -86,7 +86,7 @@ class VocabList extends StatelessWidget {
   }
 
   static Widget task(BuildContext context) {
-    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn())
+    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
       // TODO: implement a button that takes user to log in screen
       return Expanded(
         child: Center(child: Text("Please Log in first")),

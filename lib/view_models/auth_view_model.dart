@@ -11,38 +11,31 @@ class AuthViewModel extends ChangeNotifier {
   final boxUuidKey = HiveBox.USER_SINGLETON_UUID;
   final boxAccessTokenKey = HiveBox.USER_SINGLETON_ACCESS_TOKEN;
   final boxRefreshTokenKey = HiveBox.USER_SINGLETON_REFRESH_TOKEN;
-  final boxWxTokenKey = HiveBox.USER_SINGLETON_WX_TOKEN;
+  final boxWxTokenKey = HiveBox.USER_SINGLETON_WX_TOKEN; // TODO: un-initialize it and implement it. change updateAccessTokenIfNull() as needed
 
   /// store value
-  String _uuid;
-  String _accessToken;
-  String _refreshToken;
-  String _wxToken = "NOT IMPLEMENTED"; // TODO: un-initialize it and implement it. change updateAccessTokenIfNull() as needed
 
   /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
   AuthViewModel({@required this.context})
       : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),
         _box = HiveBox.getBox(HiveBox.SINGLETON_BOX) {
-    _uuid = _box.get(boxUuidKey, defaultValue: null);
-    _accessToken = _box.get(boxAccessTokenKey, defaultValue: null);
-    _refreshToken = _box.get(boxRefreshTokenKey, defaultValue: null);
-    _wxToken = _box.get(boxWxTokenKey, defaultValue: null);
     updateAccessTokenIfRefreshTokenExists();
   }
 
   /// getters
-  bool isLoggedIn() => _accessToken != null;
-  bool isNotLoggedIn() => _accessToken == null;
-  get uuid => _uuid;
-  get accessToken => _accessToken;
-  get refreshToken => _refreshToken;
-  get wxToken => _wxToken;
+  get isLoggedIn => accessToken != null;
+  get isNotLoggedIn => accessToken == null;
+  get box => _box;
+  get uuid => box.get(boxUuidKey, defaultValue: null);
+  get accessToken => box.get(boxAccessTokenKey, defaultValue: null);
+  get refreshToken => box.get(boxRefreshTokenKey, defaultValue: null);
+  get wxToken => box.get(boxWxTokenKey, defaultValue: null);
 
   /// interface
   Future<String> loginWithUsernameIfNeeded(String userName, String password) async {
     assert(userName != null && password != null);
     print("[AuthViewModel] try login with userName=${userName} and password=${password}");
-    if (_uuid != null) return Future.value("[Warning] You have already logged in");
+    if (isLoggedIn) return Future.value("[Warning] You have already logged in");
     Map<String, dynamic> map = await _loginOrNull(userName, password);
 
     if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
@@ -51,13 +44,9 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   void logout() {
-    _accessToken = null;
     _box.delete(boxAccessTokenKey);
-    _uuid = null;
     _box.delete(boxUuidKey);
-    _refreshToken = null;
     _box.delete(boxRefreshTokenKey);
-    _wxToken = null;
     _box.delete(boxWxTokenKey);
     notifyListeners();
   }
@@ -65,7 +54,7 @@ class AuthViewModel extends ChangeNotifier {
   Future<String> createUser(String userName, String password, String email) async {
     assert(userName != null && password != null && email != null);
     print("[AuthViewModel] create user with userName=${userName}, password=${password}, and email=${email}");
-    if (_uuid != null) return Future.value("[Warning] You have already logged in");
+    if (isLoggedIn) return Future.value("[Warning] You have already logged in");
     Map<String, dynamic> map = await _createAccountOrNull(userName, password, email);
 
     if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
@@ -74,9 +63,9 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<bool> updateAccessTokenIfRefreshTokenExists() async {
-    if (_uuid != null && _refreshToken != null) {
+    if (uuid != null && refreshToken != null) {
       print("[AuthViewModel] detected refresh token, trying to login using that");
-      Map<String, dynamic> map = await _refreshAccessTokenOrNull(_uuid, _refreshToken);
+      Map<String, dynamic> map = await _refreshAccessTokenOrNull(uuid, refreshToken);
 
       if (map["errorMessage"] != null) {
         print("[AuthViewModel] refresh error: ${map["errorMessage"]}");
@@ -195,22 +184,18 @@ class AuthViewModel extends ChangeNotifier {
     if (accessToken != null) {
       print("[Box] put ${accessToken}");
       await _box.put(boxAccessTokenKey, accessToken);
-      _accessToken = accessToken;
     }
     if (refreshToken != null) {
       print("[Box] put ${refreshToken}");
       await _box.put(boxRefreshTokenKey, refreshToken);
-      _refreshToken = refreshToken;
     }
     if (wxToken != null) {
       print("[Box] put ${wxToken}");
       await _box.put(boxWxTokenKey, wxToken);
-      _wxToken = wxToken;
     }
     if (uuid != null) {
       print("[Box] put ${uuid}");
       await _box.put(boxUuidKey, uuid);
-      _uuid = uuid;
     }
     notifyListeners();
     return Future.value();

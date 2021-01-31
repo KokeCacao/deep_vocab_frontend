@@ -55,7 +55,7 @@ class UserScreen extends StatelessWidget {
           avatarInfo: _avatarInfo,
           onPressed: () {
             AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-            if (authViewModel.isNotLoggedIn()) Navigator.of(context).pushNamed("/login_screen");
+            if (authViewModel.isNotLoggedIn) Navigator.of(context).pushNamed("/login_screen");
             else authViewModel.logout();
           },
         ),
