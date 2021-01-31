@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class VocabStateController extends ChangeNotifier {
+  /// storage
+  final BuildContext context;
   final Set<String> _crossedVocabId;
   final Set<String> _selectedVocabId;
   final Set<String> _unhideVocabId;
@@ -9,13 +12,22 @@ class VocabStateController extends ChangeNotifier {
   bool _inverseSelect;
   bool _inverseUnhide;
 
-  VocabStateController()
+  VocabStateController({@required this.context})
       : this._crossedVocabId = {},
         this._selectedVocabId = {},
         this._unhideVocabId = {},
         _inverseCross = false,
         _inverseSelect = false,
         _inverseUnhide = false;
+
+  void clear() {
+    _crossedVocabId.clear();
+    _selectedVocabId.clear();
+    _unhideVocabId.clear();
+    _inverseCross = false;
+    _inverseUnhide = false;
+    _inverseUnhide = false;
+  }
 
   void allCross() {
     _inverseCross = true;

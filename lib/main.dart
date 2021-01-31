@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/models/sqlite_models/app_database.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/route_table.dart';
@@ -97,6 +98,10 @@ class _MyAppState extends State<MyApp> {
               ),
               Provider<VocabListViewModel>(
                 create: (ctx) => VocabListViewModel(context: ctx),
+              ),
+              ChangeNotifierProvider<VocabStateController>(
+                // to store vocab states for a vocab list
+                create: (ctx) => VocabStateController(),
               ),
             ],
             child: MaterialApp(

@@ -1,3 +1,4 @@
+import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/learning_navbar.dart';
 import 'package:deep_vocab/widgets/learning_screen/learning_selection_bar.dart';
@@ -42,6 +43,7 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
             LearningNavbar(
               onTabChange: (index) {
                 widget._index = index;
+                Provider.of<VocabStateController>(context, listen: false).clear();
                 setState(() {});
               },
               selectedIndex: widget._index,

@@ -93,7 +93,7 @@ class VocabList extends StatelessWidget {
       );
 
     void _onRefresh(RefreshController controller) async {
-      NetworkException exception = await Provider.of<VocabListViewModel>(context, listen: false).refreshVocab();
+      NetworkException exception = await Provider.of<VocabListViewModel>(context, listen: false).refreshVocab(context);
       if (exception == null)
         controller.refreshCompleted();
       else
@@ -101,10 +101,7 @@ class VocabList extends StatelessWidget {
     }
 
     // TODO: buggy onTwoLevel
-    return ChangeNotifierProvider<VocabStateController>(
-        // to store vocab states for a vocab list
-        create: (ctx) => VocabStateController(),
-        child: StreamBuilder(
+    return StreamBuilder(
           stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(pushedMark: true),
           builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
             if (snapshot.data == null) return SizedBox.shrink();
@@ -120,15 +117,12 @@ class VocabList extends StatelessWidget {
               ),
             );
           },
-        ));
+        );
   }
 
   // TODO: fix but that memorized() and task() share the same VocabStateController()
   static Widget memorized(BuildContext context) {
-    return ChangeNotifierProvider<VocabStateController>(
-        // to store vocab states for a vocab list
-        create: (ctx) => VocabStateController(),
-        child: StreamBuilder(
+    return StreamBuilder(
           stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
           builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
             if (snapshot.data == null) return SizedBox.shrink();
@@ -144,14 +138,11 @@ class VocabList extends StatelessWidget {
               ),
             );
           },
-        ));
+        );
   }
 
   static Widget list(BuildContext context) {
-    return ChangeNotifierProvider<VocabStateController>(
-      // to store vocab states for a vocab list
-      create: (ctx) => VocabStateController(),
-      child: StreamBuilder(
+    return StreamBuilder(
         // TODO: maybe I don't need user defined vocab data here
         stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
         builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
@@ -168,7 +159,6 @@ class VocabList extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }

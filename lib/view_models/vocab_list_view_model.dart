@@ -1,3 +1,4 @@
+import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/models/hive_models/vocab_header_model.dart';
 import 'package:deep_vocab/models/sqlite_models/app_database.dart';
 import 'package:deep_vocab/models/sqlite_models/vocab_sqlite_dao.dart';
@@ -140,7 +141,7 @@ class VocabListViewModel {
     return Future.value();
   }
 
-  Future<NetworkException> refreshVocab() async {
+  Future<NetworkException> refreshVocab(BuildContext context) async {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
@@ -164,12 +165,19 @@ class VocabListViewModel {
     List<Map<String, dynamic>> vocabList = map["vocabs"].cast<Map<String, dynamic>>();
     List<String> vocabIds = vocabList.map((e) => e["vocabId"]).cast<String>().toList();
 
-    // set back all pushMarked=true to pushMarked=false
+    VocabStateController vocabStateController = Provider.of<VocabStateController>(context, listen: false);
+    // set back all pushMarked=true to pushMarked=false, and non-crossMark
     VocabListModel vocabListModel = await getFromDatabase(pushedMark: true);
-    for (String vocabId in vocabListModel.vocabs.map((e) => e.vocabId).cast<String>()) updateUserVocab(vocabId: vocabId, pushedMark: false);
+    for (String vocabId in vocabListModel.vocabs.map((e) => e.vocabId).cast<String>()) {
+      updateUserVocab(vocabId: vocabId, pushedMark: false);
+      vocabStateController.crossedVocabIdRemove(vocabId);
+    }
 
-    // only set given pushMark to true
-    for (String vocabId in vocabIds) updateUserVocab(vocabId: vocabId, pushedMark: true);
+    // only set given pushMark to true, and non-crossMark
+    for (String vocabId in vocabIds) {
+      updateUserVocab(vocabId: vocabId, pushedMark: true);
+      vocabStateController.crossedVocabIdRemove(vocabId);
+    }
     return Future.value();
   }
 
