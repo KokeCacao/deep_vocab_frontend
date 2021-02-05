@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/models/sqlite_models/app_database.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
@@ -87,11 +86,12 @@ class _MyAppState extends State<MyApp> {
               Provider<AppDatabase>.value(value: appDatabase),
               ChangeNotifierProvider<AuthViewModel>(
                 create: (ctx) => AuthViewModel(context: ctx),
-                lazy: false, // initiate AuthViewModel when start
+                lazy: false,
               ),
-              ChangeNotifierProvider<UserViewModel>(
-                create: (ctx) => UserViewModel(context: ctx),
-                lazy: true, // UserViewModel should initialize after AuthViewModel so that user can log in before fetching user data
+              ChangeNotifierProxyProvider<AuthViewModel, UserViewModel>(
+                create: (ctx) => UserViewModel(context: ctx, connectionStatus: ConnectionState.waiting),
+                update: (ctx, authViewModel, oldUserViewModel) => UserViewModel(context: ctx, connectionStatus: ConnectionState.done),
+                lazy: false,
               ),
               ChangeNotifierProvider<SettingsViewModel>(
                 create: (ctx) => SettingsViewModel(context: ctx),

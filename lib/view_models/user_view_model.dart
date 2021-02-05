@@ -1,9 +1,11 @@
 import 'package:deep_vocab/models/hive_models/user_model.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/http_widget.dart';
+import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 class UserViewModel extends ChangeNotifier {
   /// storage
@@ -11,45 +13,45 @@ class UserViewModel extends ChangeNotifier {
   final Box<dynamic> _box;
   final boxKey = HiveBox.USER_SINGLETON_INDEX;
 
-  /// store value
-  UserModel _userModel; // TODO: integrate displayName
-
   /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
-  UserViewModel({@required this.context})
+  UserViewModel({@required this.context, @required connectionStatus})
       : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),
         _box = HiveBox.getBox(HiveBox.SINGLETON_BOX) {
-    _userModel = _box.get(boxKey, defaultValue: null);
+    if (connectionStatus != ConnectionState.waiting) update();
   }
 
   /// getters
-  get userModel {
-    updateIfNeeded(); // who ever uses userModel must come from consumer, therefore will automatically notify them if needed
-    return _userModel;
+  get userModel => _box.get(boxKey, defaultValue: null);
+
+  Future<void> setUserModel(UserModel userModel) async {
+    await _box.put(boxKey, userModel);
+    notifyListeners();
+    return Future.value();
   }
 
   // TODO: fix a serious bug: when login with new account, Box is not updated, user info is still shows old one
   /// interface
-  void updateIfNeeded() async {
-    if (_userModel != null) return; // already fetched
-    String refreshToken = HiveBox.get(HiveBox.SINGLETON_BOX, HiveBox.USER_SINGLETON_REFRESH_TOKEN);
-    if (refreshToken == null) return; // user not logged in
-
-    String uuid = HiveBox.get(HiveBox.SINGLETON_BOX, HiveBox.USER_SINGLETON_UUID);
-    if (uuid != null) {
-      UserModel userModel = await _fetchUserOrNull(uuid);
-      if (userModel != null) _updateWith(userModel);
-    } else {
-      // waiting for auth to log in
-      print("[UserViewModel] update unsuccessful, waiting 5 seconds");
-      await Future.delayed(Duration(seconds: 5));
-      updateIfNeeded();
+  Future<bool> update() async {
+    // somehow get uuid
+    AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    if (authViewModel.uuid == null) {
+      await setUserModel(null);
+      print("[UserViewModel] user not logged in, setUserModel to null");
+      return Future.value(false);
     }
+    NetworkException exception = await _updateUser(uuid: authViewModel.uuid);
+    if (exception != null) {
+      print("[UserViewModel] Exception: ${exception}");
+      return Future.value(false);
+    }
+    print("[UserViewModel] updated ${userModel.userName} as my username");
+    return Future.value(true);
   }
 
   /// internal functions
-  Future<UserModel> _fetchUserOrNull(String uuid) async {
-    UserModel model;
-    await HttpWidget.postWithGraphQL(
+  Future<NetworkException> _updateUser({@required String uuid}) async {
+    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+      context: context,
         data: """
           query {
               user(uuid: "$uuid") {
@@ -61,20 +63,13 @@ class UserViewModel extends ChangeNotifier {
               }
           }
         """,
-        onSuccess: (QueryResult response) {
-          if (response.data["user"] == null) {
-            throw NetworkException(message: "[AuthViewModel] null return.");
-          }
-          model = UserModel.fromJson(response.data);
-        });
-    return Future<UserModel>.value(model);
-  }
+        queryName: "user",
+        onSuccess: (Map<String, dynamic> response) => response,
+        onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
+    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
 
-  void _updateWith(UserModel userModel) {
-    _box.put(boxKey, userModel);
-
-    _userModel = userModel;
-    print("[UserViewModel] updated ${_userModel.userName} as my username");
-    notifyListeners();
+    await setUserModel(UserModel.fromJson(map));
+    return Future.value();
   }
 }

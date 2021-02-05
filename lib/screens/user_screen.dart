@@ -56,7 +56,7 @@ class UserScreen extends StatelessWidget {
           onPressed: () {
             AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
             if (authViewModel.isNotLoggedIn) Navigator.of(context).pushNamed("/login_screen");
-            else authViewModel.logout();
+            else authViewModel.logout(); // TODO: other logout button
           },
         ),
         Separator(),

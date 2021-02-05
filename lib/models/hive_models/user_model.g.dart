@@ -51,3 +51,25 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UserModel _$UserModelFromJson(Map<String, dynamic> json) {
+  return UserModel(
+    uuid: json['uuid'] as String,
+    userName: json['userName'] as String,
+    avatarUrl: json['avatarUrl'] as String,
+    level: json['level'] as int,
+    xp: json['xp'] as int,
+  );
+}
+
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+      'xp': instance.xp,
+      'level': instance.level,
+      'avatarUrl': instance.avatarUrl,
+      'userName': instance.userName,
+      'uuid': instance.uuid,
+    };

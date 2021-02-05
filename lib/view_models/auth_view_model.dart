@@ -36,14 +36,13 @@ class AuthViewModel extends ChangeNotifier {
     assert(userName != null && password != null);
     print("[AuthViewModel] try login with userName=${userName} and password=${password}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    Map<String, dynamic> map = await _loginOrNull(userName, password);
-
-    if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
-    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
-    return Future.value(); // finished-success
+    NetworkException exception = await _loginOrNull(userName: userName, password: password);
+    if (exception == null) return Future.value();
+    return Future.value(exception.message);
   }
 
   void logout() {
+    // TODO: clear database when logout
     _box.delete(boxAccessTokenKey);
     _box.delete(boxUuidKey);
     _box.delete(boxRefreshTokenKey);
@@ -55,41 +54,23 @@ class AuthViewModel extends ChangeNotifier {
     assert(userName != null && password != null && email != null);
     print("[AuthViewModel] create user with userName=${userName}, password=${password}, and email=${email}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    Map<String, dynamic> map = await _createAccountOrNull(userName, password, email);
-
-    if (map["errorMessage"] != null) return Future.value(map["errorMessage"]); // finished-error
-    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
-    return Future.value(); // finished-success
+    NetworkException exception = await _createAccountOrNull(userName: userName, password: password, email: email);
+    if (exception != null) return Future.value(exception.message);
+    return Future.value();
   }
 
-  Future<bool> updateAccessTokenIfRefreshTokenExists() async {
-    if (uuid != null && refreshToken != null) {
-      print("[AuthViewModel] detected refresh token, trying to login using that");
-      Map<String, dynamic> map = await _refreshAccessTokenOrNull(uuid, refreshToken);
-
-      if (map["errorMessage"] != null) {
-        print("[AuthViewModel] refresh error: ${map["errorMessage"]}");
-        return Future.value(false);
-      }
-      else {
-        await _updateWith(accessToken: map["accessToken"]);
-        return Future.value(true);
-      }
-    } else {
-      print("[AuthViewModel] there is no refresh token or uuid");
-      return Future.value(false);
-    }
+  Future<String> updateAccessTokenIfRefreshTokenExists() async {
+    if (uuid == null || refreshToken == null) return Future.value("[AuthViewModel] there is no refresh token or uuid");
+    print("[AuthViewModel] detected refresh token, trying to login using that");
+    NetworkException exception = await _refreshAccessTokenOrNull(uuid: uuid, refreshToken: refreshToken);
+    if (exception != null) return Future.value(exception.message);
+    return Future.value();
   }
   // TODO: implement login with email, ect
 
   /// internal functions
-  Future<Map<String, dynamic>> _createAccountOrNull(String userName, String password, String email) async {
-    assert(userName != null && password != null && email != null);
-    String accessToken;
-    String refreshToken;
-    String uuid;
-    String errorMessage;
-    await HttpWidget.postWithGraphQL(
+  Future<NetworkException> _createAccountOrNull({@required String userName, @required String password, @required String email}) async {
+    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
               createUser(userName: "$userName", password: "$password", email: "$email") {
@@ -99,33 +80,18 @@ class AuthViewModel extends ChangeNotifier {
               }
           }
         """,
-        onSuccess: (QueryResult response) {
-          if (response.data["createUser"] == null) {
-            throw NetworkException(message: "[AuthViewModel] null return.");
-          }
-          accessToken = response.data["createUser"]["accessToken"];
-          refreshToken = response.data["createUser"]["refreshToken"];
-          uuid = response.data["createUser"]["uuid"];
-        },
-        onFail: (String e) {
-          errorMessage = e;
-        },
-        onFinished: (QueryResult response) {});
-    return Future<Map<String, dynamic>>.value({
-      "accessToken": accessToken,
-      "refreshToken": refreshToken,
-      "uuid": uuid,
-      "errorMessage": errorMessage,
-    });
+        queryName: "createUser",
+        onSuccess: (Map<String, dynamic> response) => response,
+        onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
+    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+
+    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
+    return Future.value();
   }
 
-  Future<Map<String, dynamic>> _loginOrNull(String userName, String password) async {
-    assert(userName != null && password != null);
-    String accessToken;
-    String refreshToken;
-    String uuid;
-    String errorMessage;
-    await HttpWidget.postWithGraphQL(
+  Future<NetworkException> _loginOrNull({@required String userName, @required String password}) async {
+    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
               auth(userName: "$userName", password: "$password") {
@@ -135,31 +101,18 @@ class AuthViewModel extends ChangeNotifier {
               }
           }
         """,
-        onSuccess: (QueryResult response) {
-          if (response.data["auth"] == null) {
-            throw NetworkException(message: "[AuthViewModel] null return.");
-          }
-          accessToken = response.data["auth"]["accessToken"];
-          refreshToken = response.data["auth"]["refreshToken"];
-          uuid = response.data["auth"]["uuid"];
-        },
-        onFail: (String e) {
-          errorMessage = e;
-        },
-        onFinished: (QueryResult response) {});
-    return Future<Map<String, dynamic>>.value({
-      "accessToken": accessToken,
-      "refreshToken": refreshToken,
-      "uuid": uuid,
-      "errorMessage": errorMessage,
-    });
+        queryName: "auth",
+        onSuccess: (Map<String, dynamic> response) => response,
+        onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
+    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+
+    await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
+    return Future.value();
   }
 
-  Future<Map<String, dynamic>> _refreshAccessTokenOrNull(String uuid, String refreshToken) async {
-    assert(uuid != null && refreshToken != null);
-    String accessToken;
-    String errorMessage;
-    await HttpWidget.postWithGraphQL(
+  Future<NetworkException> _refreshAccessTokenOrNull({@required String uuid, @required String refreshToken}) async {
+    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
               refresh(uuid: "$uuid", refreshToken: "$refreshToken") {
@@ -167,17 +120,14 @@ class AuthViewModel extends ChangeNotifier {
               }
           }
         """,
-        onSuccess: (QueryResult response) {
-          if (response.data["refresh"] == null) {
-            throw NetworkException(message: "[AuthViewModel] null return.");
-          }
-          accessToken = response.data["refresh"]["accessToken"];
-        },
-        onFail: (String e) {
-          errorMessage = e;
-        },
-        onFinished: (QueryResult response) {});
-    return Future<Map<String, dynamic>>.value({"accessToken": accessToken, "errorMessage": errorMessage});
+        queryName: "refresh",
+        onSuccess: (Map<String, dynamic> response) => response,
+        onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
+    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+
+    await _updateWith(accessToken: map["accessToken"]);
+    return Future.value();
   }
 
   Future<void> _updateWith({String accessToken, String refreshToken, String wxToken, String uuid}) async {

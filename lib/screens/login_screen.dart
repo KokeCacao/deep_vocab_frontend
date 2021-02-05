@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
-import 'package:deep_vocab/view_models/user_view_model.dart';
 import 'package:deep_vocab/widgets/separator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,8 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (errorMessage == null) {
         Navigator.of(context).pop();
-        UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
-        userViewModel.updateIfNeeded();
+        // TODO: the below two lines of code should not needed because we use ProxyProvider
+        // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
+        // userViewModel.updateIfNeeded();
       } else
         widget._scaffoldKey.currentState.showSnackBar(SnackBar(
           duration: Duration(seconds: 4),

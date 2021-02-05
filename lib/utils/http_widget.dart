@@ -101,8 +101,8 @@ class HttpWidget extends Object {
       if (autoRefreshToken && exception.contains("JWT")) { // TODO: use actual error number to determine
         AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
         String oldToken = authViewModel.accessToken;
-        bool success = await authViewModel.updateAccessTokenIfRefreshTokenExists();
-        if (success) {
+        String error = await authViewModel.updateAccessTokenIfRefreshTokenExists();
+        if (error == null) {
           print("[HttpWidget] Successfully updated access token, resend request");
           data = data.replaceFirst(oldToken, authViewModel.accessToken); // Warning: assume only 1 accessToken provided
           return graphQLMutation(
@@ -112,6 +112,7 @@ class HttpWidget extends Object {
               onSuccess: onSuccess,
               onFail: onFail, autoRefreshToken: false);
         } else {
+          print("[HttpWidget] Try to refresh access token failed");
           if (onFail != null) result = onFail(exception);
         }
       } else {
@@ -124,85 +125,5 @@ class HttpWidget extends Object {
     }
     print("[HttpWidget] Response data=${response.data}; error=${response.exception.toString()};");
     return Future.value(result);
-  }
-
-  @Deprecated("Badly Written Code, use graphQLMutation() instead.")
-  static Future<void> postWithGraphQL({
-    String data,
-    void Function(QueryResult response) onSuccess,
-    void Function(String errorMessage) onFail,
-    void Function(QueryResult response) onFinished,
-  }) {
-    String hash = md5.convert(utf8.encode(data)).toString();
-    FutureOr<dynamic> processResponse(QueryResult response) {
-      HiveBox.deleteFrom(HiveBox.REQUEST_BOX, hash);
-
-      if (response.hasException && onFail != null) {
-        if (response.exception.graphqlErrors.length > 0)
-          onFail(response.exception.graphqlErrors[0].message); // suit response
-        else
-          onFail(response.exception.toString());
-      }
-      if (!response.hasException && onSuccess != null) onSuccess(response);
-      if (onFinished != null) onFinished(response);
-
-      print("[HTTP] Response data=${response.data}; error=${response.exception.toString()};");
-    }
-
-    if (HiveBox.containKey(HiveBox.REQUEST_BOX, hash)) {
-      print("[DEBUG] duplicate request detected: ${data}");
-      return null;
-    }
-    HiveBox.put(HiveBox.REQUEST_BOX, hash, data);
-    return graphQLClient
-        .query(QueryOptions(
-          documentNode: gql(data),
-        ))
-        .then(processResponse);
-  }
-
-  static Future<void> post({
-    String path,
-    String protocol,
-    data,
-    Map<String, dynamic> queryParameters,
-    Options options,
-    CancelToken cancelToken,
-    ProgressCallback onReceiveProgress,
-    void Function(dynamic response) onSuccess,
-    void Function(dynamic response) onFail,
-    void Function(dynamic response) onFinished,
-  }) {
-    void processResponse(dynamic response) {
-      switch (response.statusCode) {
-        case 200:
-          {
-            if (onSuccess != null) onSuccess(response);
-            break;
-          }
-        default: // fail
-          if (onFail != null) onFail(response);
-          break;
-      }
-      if (onFinished != null) onFinished(response);
-    }
-
-    switch (protocol) {
-      case "GET":
-        assert(data == null);
-        dio.get(path, queryParameters: queryParameters, options: options, cancelToken: cancelToken, onReceiveProgress: onReceiveProgress).then(processResponse);
-        break;
-      case "POST":
-        assert(data != null);
-        dio
-            .post(path, data: data, queryParameters: queryParameters, options: options, cancelToken: cancelToken, onReceiveProgress: onReceiveProgress)
-            .then(processResponse);
-        break;
-      default:
-        throw new Exception("The protocol ${protocol} is not supported.");
-        break;
-    }
-
-    return Future.value();
   }
 }
