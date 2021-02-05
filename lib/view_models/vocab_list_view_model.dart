@@ -32,6 +32,7 @@ class VocabListViewModel {
 
   /// interface
   Future<bool> downloadVocab({void Function(int count, int total) onReceiveProgress}) async {
+    // TODO: somehow if I just register, then uuid and access token will be null even I have put it to box
     String path =
         await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
     // String path = await HttpWidget.downloadFile(from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);

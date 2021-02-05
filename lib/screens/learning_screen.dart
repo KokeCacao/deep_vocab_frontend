@@ -9,7 +9,6 @@ import 'package:fsearch/fsearch.dart';
 import 'package:provider/provider.dart';
 
 class LearningScreen extends StatefulWidget {
-  bool random = false;
   int _index = 2;
 
   @override
@@ -52,13 +51,6 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
               // TODO: 提示显示记忆力最低的单词?
               // TODO: finish initializing a proper controller
               controller: FSearchController(),
-            ),
-            LearningSelectionBar(
-              random: widget.random,
-              onChanged: (bool value) {
-                widget.random = !widget.random;
-                setState(() {});
-              },
             ),
             widget._index == 2
                 ? Container(

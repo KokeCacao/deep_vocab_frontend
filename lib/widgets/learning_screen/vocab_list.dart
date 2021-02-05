@@ -5,6 +5,7 @@ import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/dismissible_vocab_row.dart';
 import 'package:deep_vocab/widgets/learning_screen/selection_panel.dart';
+import 'package:deep_vocab/widgets/learning_screen/vocab_list_with_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
@@ -85,7 +86,7 @@ class VocabList extends StatelessWidget {
     ));
   }
 
-  static Widget task(BuildContext context) {
+  static Widget task(BuildContext context, {bool random = false}) {
     if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
       // TODO: implement a button that takes user to log in screen
       return Expanded(
@@ -102,63 +103,52 @@ class VocabList extends StatelessWidget {
 
     // TODO: buggy onTwoLevel
     return StreamBuilder(
-          stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(pushedMark: true),
-          builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
-            if (snapshot.data == null) return SizedBox.shrink();
-            VocabListModel data = snapshot.data;
-            List<VocabModel> list = data.vocabs;
-            return VocabList(
-              refreshable: true,
-              itemCount: list.length,
-              onRefresh: _onRefresh,
-              onTwoLevel: _onRefresh,
-              itemBuilder: (context, i) => DismissibleVocabRow(
-                vocab: list[i],
-              ),
-            );
-          },
+      stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(pushedMark: true),
+      builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+        if (snapshot.data == null) return SizedBox.shrink();
+        VocabListModel data = snapshot.data;
+        return VocabListWithHeader(
+          list: data.vocabs,
+          refreshable: true,
+          onRefresh: _onRefresh,
+          onTwoLevel: _onRefresh,
         );
+      },
+    );
   }
 
   // TODO: fix but that memorized() and task() share the same VocabStateController()
-  static Widget memorized(BuildContext context) {
+  static Widget memorized(BuildContext context, {bool random = false}) {
     return StreamBuilder(
-          stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
-          builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
-            if (snapshot.data == null) return SizedBox.shrink();
-            VocabListModel data = snapshot.data;
-            List<VocabModel> list = data.vocabs;
-            return VocabList(
-              refreshable: false,
-              itemCount: list.length,
-              onRefresh: null,
-              onTwoLevel: null,
-              itemBuilder: (context, i) => DismissibleVocabRow(
-                vocab: list[i],
-              ),
-            );
-          },
+      stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
+      builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+        if (snapshot.data == null) return SizedBox.shrink();
+        VocabListModel data = snapshot.data;
+        return VocabListWithHeader(
+          list: data.vocabs,
+          refreshable: false,
+          onRefresh: null,
+          onTwoLevel: null,
         );
+      },
+    );
   }
 
-  static Widget list(BuildContext context) {
+  static Widget list(BuildContext context, {bool random = false}) {
     return StreamBuilder(
-        // TODO: maybe I don't need user defined vocab data here
-        stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
-        builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
-          if (snapshot.data == null) return SizedBox.shrink();
-          VocabListModel data = snapshot.data;
-          List<VocabModel> list = data.vocabs;
-          return VocabList(
-            refreshable: false,
-            itemCount: list.length,
-            onRefresh: null,
-            onTwoLevel: null,
-            itemBuilder: (context, i) => DismissibleVocabRow(
-              vocab: list[i],
-            ),
-          );
-        },
-      );
+      // TODO: maybe I don't need user defined vocab data here
+      stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
+      builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
+        //
+        if (snapshot.data == null) return SizedBox.shrink();
+        VocabListModel data = snapshot.data;
+        return VocabListWithHeader(
+          list: data.vocabs,
+          refreshable: false,
+          onRefresh: null,
+          onTwoLevel: null,
+        );
+      },
+    );
   }
 }

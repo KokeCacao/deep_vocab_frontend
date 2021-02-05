@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (widget._login ? !widget._passwordFieldKey.currentState.validate() : !widget._emailFieldKey.currentState.validate()) return;
           break;
         case 2:
-          if (widget._passwordFieldKey.currentState.validate()) return;
+          if (!widget._passwordFieldKey.currentState.validate()) return;
           break;
       }
 

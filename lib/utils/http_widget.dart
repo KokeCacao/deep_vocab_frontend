@@ -53,7 +53,7 @@ class HttpWidget extends Object {
   static Future<String> secureDownloadFile({@required BuildContext context, @required int listId, @required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
     var appDocDir = await getApplicationDocumentsDirectory();
     try {
-      print("[HttpWidget] Start downloading to ${appDocDir.path}");
+      print("[HttpWidget] Start downloading to ${appDocDir.path} with ");
       AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       await dio.download("${BASE_URL}/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/${listId}/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
         print("[HttpWidget] ${count} / ${total} = ${((count / total) * 100).toStringAsFixed(0) + "%"}");

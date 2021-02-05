@@ -182,20 +182,20 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> _updateWith({String accessToken, String refreshToken, String wxToken, String uuid}) async {
     if (accessToken != null) {
-      print("[Box] put ${accessToken}");
       await _box.put(boxAccessTokenKey, accessToken);
+      print("[Box] put ${accessToken}");
     }
     if (refreshToken != null) {
-      print("[Box] put ${refreshToken}");
       await _box.put(boxRefreshTokenKey, refreshToken);
+      print("[Box] put ${refreshToken}");
     }
     if (wxToken != null) {
-      print("[Box] put ${wxToken}");
       await _box.put(boxWxTokenKey, wxToken);
+      print("[Box] put ${wxToken}");
     }
     if (uuid != null) {
-      print("[Box] put ${uuid}");
       await _box.put(boxUuidKey, uuid);
+      print("[Box] put ${uuid}");
     }
     notifyListeners();
     return Future.value();
