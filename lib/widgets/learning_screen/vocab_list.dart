@@ -1,9 +1,6 @@
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
 import 'package:deep_vocab/models/vocab_list_model.dart';
-import 'package:deep_vocab/models/vocab_model.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/dismissible_vocab_row.dart';
 import 'package:deep_vocab/widgets/learning_screen/selection_panel.dart';
 import 'package:deep_vocab/widgets/learning_screen/vocab_list_with_header.dart';
 import 'package:flutter/cupertino.dart';
@@ -117,7 +114,6 @@ class VocabList extends StatelessWidget {
     );
   }
 
-  // TODO: fix but that memorized() and task() share the same VocabStateController()
   static Widget memorized(BuildContext context, {bool random = false}) {
     return StreamBuilder(
       stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
@@ -136,10 +132,8 @@ class VocabList extends StatelessWidget {
 
   static Widget list(BuildContext context, {bool random = false}) {
     return StreamBuilder(
-      // TODO: maybe I don't need user defined vocab data here
       stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
-        //
         if (snapshot.data == null) return SizedBox.shrink();
         VocabListModel data = snapshot.data;
         return VocabListWithHeader(

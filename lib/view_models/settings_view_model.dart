@@ -18,26 +18,4 @@ class SettingsViewModel extends ChangeNotifier {
 
 
   /// interface
-  // TODO
-  @Deprecated("TODO")
-  fetch() {
-    Map<String, dynamic> map = {
-      "query": "hi",
-      "wowo": "mom",
-    };
-
-    HttpWidget.post(
-        path: "/graphql",
-        data: map,
-        protocol: "POST",
-        onSuccess: (response) {
-          _settingsModel = SettingsModel();
-          notifyListeners();
-        },
-        onFail: (response) {
-          print("[SettingsViewModel] Fetching Failed");
-        },
-        onFinished: (response) {
-        });
-  }
 }
