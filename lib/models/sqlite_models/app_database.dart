@@ -26,6 +26,15 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  Future<void> deleteEverything() {
+    return transaction(() async {
+      await customStatement('PRAGMA foreign_keys = OFF');
+      for (final table in allTables) {
+        await delete(table).go();
+      }
+    });
+  }
+
   @override
   // TODO: implement migration
   MigrationStrategy get migration => MigrationStrategy(

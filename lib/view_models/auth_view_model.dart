@@ -1,8 +1,10 @@
+import 'package:deep_vocab/models/sqlite_models/app_database.dart';
 import 'package:deep_vocab/utils/hive_box.dart';
 import 'package:deep_vocab/utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 class AuthViewModel extends ChangeNotifier {
   /// storage
@@ -41,12 +43,9 @@ class AuthViewModel extends ChangeNotifier {
     return Future.value(exception.message);
   }
 
-  void logout() {
-    // TODO: clear database when logout
-    _box.delete(boxAccessTokenKey);
-    _box.delete(boxUuidKey);
-    _box.delete(boxRefreshTokenKey);
-    _box.delete(boxWxTokenKey);
+  void logout() async {
+    await HiveBox.clear();
+    await Provider.of<AppDatabase>(context, listen: false).deleteEverything();
     notifyListeners();
   }
 
@@ -71,6 +70,7 @@ class AuthViewModel extends ChangeNotifier {
   /// internal functions
   Future<NetworkException> _createAccountHttp({@required String userName, @required String password, @required String email}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+      context: context,
         data: """
           mutation {
               createUser(userName: "$userName", password: "$password", email: "$email") {
@@ -92,6 +92,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<NetworkException> _loginHttp({@required String userName, @required String password}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+      context: context,
         data: """
           mutation {
               auth(userName: "$userName", password: "$password") {
@@ -113,6 +114,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<NetworkException> _refreshAccessTokenHttp({@required String uuid, @required String refreshToken}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+      context: context,
         data: """
           mutation {
               refresh(uuid: "$uuid", refreshToken: "$refreshToken") {

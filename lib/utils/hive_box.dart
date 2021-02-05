@@ -62,5 +62,10 @@ class HiveBox {
   static bool containKey(String boxName, dynamic key) => getBox(boxName).containsKey(key);
   static void put(String boxName, dynamic key, dynamic value)  => getBox(boxName).put(key, value);
   static dynamic get(String boxName, dynamic key, {dynamic defaultValue}) => getBox(boxName).get(key, defaultValue: defaultValue);
-
+  static Future<void> clear() async {
+    await Hive.box(SINGLETON_BOX).clear();
+    await Hive.box(REQUEST_BOX).clear();
+    await Hive.box(VOCAB_LIST_HEADER_BOX).clear();
+    return Future.value();
+  }
 }
