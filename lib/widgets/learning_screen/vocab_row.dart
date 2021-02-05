@@ -65,7 +65,6 @@ class VocabRowState extends State<VocabRow> {
       child: Row(
         children: [
           DragTarget(onWillAccept: (_) {
-            // TODO: 长按全选, 双击反选 (选择时右下角提示此信息以及选中数量/总共)
             widget.checkBox = !widget.checkBox;
             if (widget.checkBox) Provider.of<VocabStateController>(context, listen: false).selectedVocabIdAdd(widget.vocabId);
             else Provider.of<VocabStateController>(context, listen: false).selectedVocabIdRemove(widget.vocabId);

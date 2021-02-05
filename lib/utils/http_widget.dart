@@ -48,18 +48,31 @@ class HttpWidget extends Object {
     return _graphQLClient;
   }
 
-  // TODO: auto refresh token when secure download fail
   // see: https://stackoverflow.com/questions/60761984/flutter-how-to-download-video-and-save-them-to-internal-storage
-  static Future<String> secureDownloadFile({@required BuildContext context, @required int listId, @required String from, @required String to, @required void Function(int count, int total) onReceiveProgress}) async {
+  static Future<String> secureDownloadFile({@required BuildContext context, @required int listId, @required String from, @required String to, @required void Function(int count, int total) onReceiveProgress, bool autoRefreshToken=true}) async {
+    /// return null if there is an error
+    /// return path to file if success
     var appDocDir = await getApplicationDocumentsDirectory();
     try {
       print("[HttpWidget] Start downloading to ${appDocDir.path} with ");
       AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-      await dio.download("${BASE_URL}/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/${listId}/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
+      Response response = await dio.download("${BASE_URL}/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/${listId}/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
         print("[HttpWidget] ${count} / ${total} = ${((count / total) * 100).toStringAsFixed(0) + "%"}");
         if (onReceiveProgress != null) onReceiveProgress(count, total);
       });
     } catch (e) {
+      // TODO: smarter way to check 401 code
+      if (e.toString().contains("[401]")) {
+        AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+        String error = await authViewModel.updateAccessTokenHttp();
+        if (error == null) {
+          print("[HttpWidget] Successfully updated access token, resend request");
+          return secureDownloadFile(context: context, listId: listId, from: from, to: to, onReceiveProgress: onReceiveProgress, autoRefreshToken: false);
+        } else {
+          print("[HttpWidget] Try to refresh access token failed");
+          return Future.value();
+        }
+      }
       print(e);
       return Future.value(null);
     }
@@ -101,7 +114,7 @@ class HttpWidget extends Object {
       if (autoRefreshToken && exception.contains("JWT")) { // TODO: use actual error number to determine
         AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
         String oldToken = authViewModel.accessToken;
-        String error = await authViewModel.updateAccessTokenIfRefreshTokenExists();
+        String error = await authViewModel.updateAccessTokenHttp();
         if (error == null) {
           print("[HttpWidget] Successfully updated access token, resend request");
           data = data.replaceFirst(oldToken, authViewModel.accessToken); // Warning: assume only 1 accessToken provided

@@ -19,7 +19,7 @@ class AuthViewModel extends ChangeNotifier {
   AuthViewModel({@required this.context})
       : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),
         _box = HiveBox.getBox(HiveBox.SINGLETON_BOX) {
-    updateAccessTokenIfRefreshTokenExists();
+    updateAccessTokenHttp();
   }
 
   /// getters
@@ -36,7 +36,7 @@ class AuthViewModel extends ChangeNotifier {
     assert(userName != null && password != null);
     print("[AuthViewModel] try login with userName=${userName} and password=${password}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    NetworkException exception = await _loginOrNull(userName: userName, password: password);
+    NetworkException exception = await _loginHttp(userName: userName, password: password);
     if (exception == null) return Future.value();
     return Future.value(exception.message);
   }
@@ -54,22 +54,22 @@ class AuthViewModel extends ChangeNotifier {
     assert(userName != null && password != null && email != null);
     print("[AuthViewModel] create user with userName=${userName}, password=${password}, and email=${email}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    NetworkException exception = await _createAccountOrNull(userName: userName, password: password, email: email);
+    NetworkException exception = await _createAccountHttp(userName: userName, password: password, email: email);
     if (exception != null) return Future.value(exception.message);
     return Future.value();
   }
 
-  Future<String> updateAccessTokenIfRefreshTokenExists() async {
+  Future<String> updateAccessTokenHttp() async {
     if (uuid == null || refreshToken == null) return Future.value("[AuthViewModel] there is no refresh token or uuid");
     print("[AuthViewModel] detected refresh token, trying to login using that");
-    NetworkException exception = await _refreshAccessTokenOrNull(uuid: uuid, refreshToken: refreshToken);
+    NetworkException exception = await _refreshAccessTokenHttp(uuid: uuid, refreshToken: refreshToken);
     if (exception != null) return Future.value(exception.message);
     return Future.value();
   }
   // TODO: implement login with email, ect
 
   /// internal functions
-  Future<NetworkException> _createAccountOrNull({@required String userName, @required String password, @required String email}) async {
+  Future<NetworkException> _createAccountHttp({@required String userName, @required String password, @required String email}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
@@ -90,7 +90,7 @@ class AuthViewModel extends ChangeNotifier {
     return Future.value();
   }
 
-  Future<NetworkException> _loginOrNull({@required String userName, @required String password}) async {
+  Future<NetworkException> _loginHttp({@required String userName, @required String password}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
@@ -111,7 +111,7 @@ class AuthViewModel extends ChangeNotifier {
     return Future.value();
   }
 
-  Future<NetworkException> _refreshAccessTokenOrNull({@required String uuid, @required String refreshToken}) async {
+  Future<NetworkException> _refreshAccessTokenHttp({@required String uuid, @required String refreshToken}) async {
     Map<String, dynamic> map = await HttpWidget.graphQLMutation(
         data: """
           mutation {
