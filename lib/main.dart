@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
               ),
               ChangeNotifierProvider<VocabStateController>(
                 // to store vocab states for a vocab list
-                create: (ctx) => VocabStateController(),
+                create: (ctx) => VocabStateController(context: ctx),
               ),
             ],
             child: MaterialApp(
