@@ -33,7 +33,7 @@ class DismissibleVocabRow extends StatelessWidget {
         cross: Provider.of<VocabStateController>(context, listen: false).crossedVocabIdContains(vocab.vocabId),
         hide: !Provider.of<VocabStateController>(context, listen: false).unhideVocabIdContains(vocab.vocabId),
         checkBox: Provider.of<VocabStateController>(context, listen: true).selectedVocabIdContains(vocab.vocabId), // listen to selectAll, inverseSelect
-      ), // TODO: improve slider UI - when crossed, slider don't have color and remove instead of replace
+      ),
       builder: (Widget child, MultiDismissibleStatus status) {
         if (status == MultiDismissibleStatus.ON_IDLE) return child;
         VocabRow vocabRow = child;

@@ -30,15 +30,12 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
 
   /// TO GET BOTH ///
   /// get VocabData + UserDefinedData through future
-  @Deprecated("use getAllVocabsWithUser() instead")
-  Future<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> getAllVocabsWithUser() async {
-    List<TypedResult> row = await select(vocabSqliteTable).join([
+  Future<VocabSqliteTableDataWithUserVocabSqliteTableData> getVocabsWithUserById({@required String vocabId}) async {
+    TypedResult row = await (select(vocabSqliteTable)..where((tbl) => tbl.vocabId.equals(vocabId))).join([
       leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId)),
-    ]).get();
-    return Future.value(row
-        .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
-            vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
-        .toList());
+    ]).getSingle();
+    return Future.value(VocabSqliteTableDataWithUserVocabSqliteTableData(
+        vocabSqliteTableData: row.readTable(vocabSqliteTable), userVocabSqliteTableData: row.readTable(userVocabSqliteTable)));
   }
 
   Future<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> getVocabsWithUserWhere(
@@ -50,6 +47,14 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
         .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
             vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
         .toList());
+  }
+
+  Future<VocabSqliteTableDataWithUserVocabSqliteTableData> getMarkedVocabsWithUserById(
+      {@required String vocabId}) async {
+    TypedResult row = await (select(vocabSqliteTable)..where((tbl) => tbl.vocabId.equals(vocabId)))
+        .join([innerJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))]).getSingle();
+    return Future.value(VocabSqliteTableDataWithUserVocabSqliteTableData(
+        vocabSqliteTableData: row.readTable(vocabSqliteTable), userVocabSqliteTableData: row.readTable(userVocabSqliteTable)));
   }
 
   Future<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> getMarkedVocabsWithUserWhere(
@@ -64,15 +69,12 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
   }
 
   /// get VocabData + UserDefinedData through stream
-  /// select all of [VocabSqliteTable] table
-  @Deprecated("use watchVocabsWithUserWhere() instead")
-  Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchAllVocabsWithUser() => select(vocabSqliteTable)
-      .join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))])
-      .watch()
-      .map((rows) => rows
-          .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
-              vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
-          .toList());
+  Stream<VocabSqliteTableDataWithUserVocabSqliteTableData> watchVocabsWithUserById({@required String vocabId}) =>
+      (select(vocabSqliteTable)..where((tbl) => tbl.vocabId.equals(vocabId)))
+          .join([leftOuterJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))])
+          .watchSingle()
+          .map((row) => VocabSqliteTableDataWithUserVocabSqliteTableData(
+              vocabSqliteTableData: row.readTable(vocabSqliteTable), userVocabSqliteTableData: row.readTable(userVocabSqliteTable)));
 
   /// select all of [VocabSqliteTable] table that matches the expression [filter], where [UserVocabSqliteTable] might be null
   Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchVocabsWithUserWhere(
@@ -85,17 +87,25 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
                   vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
               .toList());
 
+  Stream<VocabSqliteTableDataWithUserVocabSqliteTableData> watchMarkedVocabsWithUserById(
+      {@required String vocabId}) =>
+      (select(vocabSqliteTable)..where((tbl) => tbl.vocabId.equals(vocabId)))
+          .join([innerJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId))])
+          .watchSingle()
+          .map((row) => VocabSqliteTableDataWithUserVocabSqliteTableData(
+          vocabSqliteTableData: row.readTable(vocabSqliteTable), userVocabSqliteTableData: row.readTable(userVocabSqliteTable)));
+
   /// select some of [VocabSqliteTable] table that matches [leftFilter] that has a non-null [UserVocabSqliteTable] that matches [rightFilter]
   Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> watchMarkedVocabsWithUserWhere(
-          {@required Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter,
-          @required Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter}) =>
+      {@required Expression<bool> Function($VocabSqliteTableTable tbl) leftFilter,
+        @required Expression<bool> Function($UserVocabSqliteTableTable tbl) rightFilter}) =>
       (select(vocabSqliteTable)..where(leftFilter))
           .join([innerJoin(userVocabSqliteTable, userVocabSqliteTable.vocabId.equalsExp(vocabSqliteTable.vocabId) & rightFilter(userVocabSqliteTable))])
           .watch()
           .map((rows) => rows
-              .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
-                  vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
-              .toList());
+          .map((e) => VocabSqliteTableDataWithUserVocabSqliteTableData(
+          vocabSqliteTableData: e.readTable(vocabSqliteTable), userVocabSqliteTableData: e.readTable(userVocabSqliteTable)))
+          .toList());
 }
 
 /// class for VocabData + UserDefinedData

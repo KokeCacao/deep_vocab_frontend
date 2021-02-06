@@ -29,7 +29,6 @@ class UserViewModel extends ChangeNotifier {
     return Future.value();
   }
 
-  // TODO: fix a serious bug: when login with new account, Box is not updated, user info is still shows old one
   /// interface
   Future<bool> update() async {
     // somehow get uuid

@@ -1,4 +1,3 @@
-import 'package:deep_vocab/models/vocab_list_model.dart';
 import 'package:deep_vocab/models/vocab_model.dart';
 import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/no_transition_dialog.dart';
@@ -16,7 +15,7 @@ class VocabDialog {
         context: context,
         builder: (context) {
           return StreamBuilder(
-            stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(vocabId: vocabId),
+            stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabaseById(vocabId: vocabId),
             builder: (ctx, snapshot) {
               if (snapshot.data == null)
                 return VocabPanel(
@@ -40,12 +39,7 @@ class VocabDialog {
                   ),
                 );
               else {
-                VocabListModel list = snapshot.data;
-                // TODO: use .first when database extract
-                // TODO: separate .get and .filter into different function, one returns a list, one an object
-                print("length: ${list.vocabs.length}");
-                assert(list.vocabs.length == 1);
-                VocabModel vocab = list.vocabs[0];
+                VocabModel vocab = snapshot.data;
                 return VocabPanel(panelController: panelController,vocabModel: vocab);
               }
             },

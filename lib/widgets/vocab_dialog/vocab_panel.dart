@@ -65,7 +65,7 @@ class VocabPanel extends StatelessWidget {
                   TwoStateButton(
                       value: vocabModel.pinMark,
                       onPressed: (bool value) => Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, pinMark: value)
-                      , // TODO
+                      ,
                       trueIcon: Icon(
                         Icons.push_pin,
                         color: Colors.blueGrey,
