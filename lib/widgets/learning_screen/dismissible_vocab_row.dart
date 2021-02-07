@@ -59,15 +59,16 @@ class DismissibleVocabRow extends StatelessWidget {
         }
         Provider.of<VocabListViewModel>(context, listen: false)
             .addMarkColor(vocabId: vocab.vocabId, originals: markColors, color: color, replaceLast: replaceLast)
-            .then((exception) => {
-                  if (exception == null)
-                    Provider.of<VocabStateController>(context, listen: false).crossedVocabIdAdd(vocab.vocabId)
-                  else
-                    print("[DismissibleVocabRow] ${exception.message}")
-                });
-        // TODO: this builder only builds after query send, before query recieve, or when 400 error
+            .then((exception) {
+          if (exception == null) {
+            Provider.of<VocabStateController>(context, listen: false).crossedVocabIdAdd(vocab.vocabId);
+          } else {
+            print("[DismissibleVocabRow] ${exception.message}");
+            Provider.of<VocabStateController>(context, listen: false).crossedVocabIdRemove(vocab.vocabId);
+          }
+        });
         return vocabRow.copyWith(
-          // cross: !vocabRow.cross,
+          cross: !vocabRow.cross,
           // hide: vocabRow.hide,
           // checkBox: !vocabRow.checkBox,
         );

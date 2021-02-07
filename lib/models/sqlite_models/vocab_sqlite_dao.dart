@@ -15,6 +15,12 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
 
   /// get VocabData through stream
   Stream<List<VocabSqliteTableData>> watchAllVocabs() => select(vocabSqliteTable).watch();
+
+
+  Future upsertAllVocab(List<Insertable<VocabSqliteTableData>> vocabSqliteTableData) =>
+      batch((batch) => batch.insertAllOnConflictUpdate(vocabSqliteTable, vocabSqliteTableData));
+  Future insertAllVocab(List<Insertable<VocabSqliteTableData>> vocabSqliteTableData) =>
+      batch((batch) => batch.insertAll(vocabSqliteTable, vocabSqliteTableData));
   Future upsertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) =>
       into(vocabSqliteTable).insert(vocabSqliteTableData, onConflict: DoUpdate((_) => vocabSqliteTableData));
   Future insertVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => into(vocabSqliteTable).insert(vocabSqliteTableData);
@@ -22,6 +28,11 @@ class VocabSqliteDao extends DatabaseAccessor<AppDatabase> with _$VocabSqliteDao
   Future deleteVocab(Insertable<VocabSqliteTableData> vocabSqliteTableData) => delete(vocabSqliteTable).delete(vocabSqliteTableData);
 
   /// TO GET USER VOCAB DATA ///
+  // TODO: use insertAllOnConflictUpdate instead of insert
+  Future upsertAllUserVocab(List<Insertable<UserVocabSqliteTableData>> userVocabSqliteTableData) =>
+      batch((batch) => batch.insertAllOnConflictUpdate(userVocabSqliteTable, userVocabSqliteTableData));
+  Future insertAllUserVocab(List<Insertable<UserVocabSqliteTableData>> userVocabSqliteTableData) =>
+      batch((batch) => batch.insertAll(userVocabSqliteTable, userVocabSqliteTableData));
   Future upsertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) =>
       into(userVocabSqliteTable).insert(userVocabSqliteTableData, onConflict: DoUpdate((_) => userVocabSqliteTableData));
   Future insertUserVocab(Insertable<UserVocabSqliteTableData> userVocabSqliteTableData) => into(userVocabSqliteTable).insert(userVocabSqliteTableData);

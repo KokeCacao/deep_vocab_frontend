@@ -246,7 +246,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       RaisedButton(
                         padding: EdgeInsets.all(10),
-                        child: Text(widget._login ? "Login" : "Create Account",
+                        child: Text(
+                            widget._login ? (widget._index == 1 ? "Login": "Next") : (widget._index == 2 ? "Create Account": "Next"),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,

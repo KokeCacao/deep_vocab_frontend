@@ -19,7 +19,8 @@ class HttpWidget extends Object {
 
   static Dio get dio {
     if (_dio == null) {
-      _dio = Dio(BaseOptions(connectTimeout: 10000, receiveTimeout: 10000, sendTimeout: 10000, baseUrl: BASE_URL, responseType: ResponseType.json));
+      // TODO: somehow downloading takes a lot of connectTimeout
+      _dio = Dio(BaseOptions(connectTimeout: 100000, receiveTimeout: 100000, sendTimeout: 100000, baseUrl: BASE_URL, responseType: ResponseType.json));
     }
     return _dio;
   }

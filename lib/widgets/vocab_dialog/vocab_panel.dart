@@ -64,8 +64,8 @@ class VocabPanel extends StatelessWidget {
                 children: [
                   TwoStateButton(
                       value: vocabModel.pinMark,
-                      onPressed: (bool value) => Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, pinMark: value)
-                      ,
+                      onPressed: (bool value) =>
+                          Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, pinMark: value),
                       trueIcon: Icon(
                         Icons.push_pin,
                         color: Colors.blueGrey,
@@ -77,10 +77,10 @@ class VocabPanel extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: BookmarkButton(
-                      number: vocabModel.nthWord,
-                      bookmarked: vocabModel.bookMarked,
-                      onChangeBookmarked: (bool value) => Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, bookMarked: value)
-                    ),
+                        number: vocabModel.nthWord,
+                        bookmarked: vocabModel.bookMarked,
+                        onChangeBookmarked: (bool value) =>
+                            Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, bookMarked: value)),
                   ),
                   Container(
                     padding: EdgeInsets.all(10),
@@ -101,7 +101,7 @@ class VocabPanel extends StatelessWidget {
                               child: SizedBox(),
                             ),
                             AutoSizeText(
-                              vocabModel.mainTranslation,
+                              vocabModel.mainTranslation ?? "",
                               maxFontSize: 32,
                               minFontSize: 16,
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -132,11 +132,12 @@ class VocabPanel extends StatelessWidget {
                       spacing: 4,
                       children: [
                         // TODO: List.generate(data.currentPerson.tags.length, (index) => toBadge(data.currentPerson.tags.elementAt(index)))
-                        for (String translation in vocabModel.otherTranslation)
-                          VocabBadge(
-                            text: translation,
-                            color: Colors.blueGrey[700],
-                          ),
+                        if (vocabModel.otherTranslation != null)
+                          for (String translation in vocabModel.otherTranslation)
+                            VocabBadge(
+                              text: translation,
+                              color: Colors.blueGrey[700],
+                            ),
                         Icon(
                           Icons.add_box,
                           color: Colors.blueGrey[700],
@@ -146,8 +147,8 @@ class VocabPanel extends StatelessWidget {
                     Separator(
                       color: Colors.transparent,
                     ),
-                    Text("英译: ${vocabModel.englishTranslation}"),
-                    Text("例句: ${vocabModel.exampleSentences[0]}")
+                    if (vocabModel.englishTranslation != null) Text("英译: ${vocabModel.englishTranslation}"),
+                    if (vocabModel.exampleSentences != null && vocabModel.exampleSentences.length > 1) Text("例句: ${vocabModel.exampleSentences[0]}")
                   ],
                 ),
               ),
@@ -171,7 +172,7 @@ class VocabPanel extends StatelessWidget {
                           Separator(
                             color: Colors.transparent,
                           ),
-                          Text(vocabModel.memTips),
+                          if (vocabModel.memTips != null) Text(vocabModel.memTips),
                         ],
                       ),
                     ),
@@ -186,7 +187,8 @@ class VocabPanel extends StatelessWidget {
                           Separator(
                             color: Colors.transparent,
                           ),
-                          for (String confusing in vocabModel.confusingWords) Text(confusing),
+                          if (vocabModel.confusingWords != null)
+                            for (String confusing in vocabModel.confusingWords) Text(confusing),
                         ],
                       ),
                     )

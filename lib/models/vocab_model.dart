@@ -146,7 +146,13 @@ class VocabModel {
 // so only append type AFTER the values, not in the middle
 
 enum VocabType {
-  noun,
+  n,
+  pron,
+  v,
   adj,
   adv,
+  prep,
+  conj,
+  interj,
+  art,
 }

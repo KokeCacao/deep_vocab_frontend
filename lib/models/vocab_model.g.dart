@@ -108,7 +108,13 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$VocabTypeEnumMap = {
-  VocabType.noun: 'noun',
+  VocabType.n: 'n',
+  VocabType.pron: 'pron',
+  VocabType.v: 'v',
   VocabType.adj: 'adj',
   VocabType.adv: 'adv',
+  VocabType.prep: 'prep',
+  VocabType.conj: 'conj',
+  VocabType.interj: 'interj',
+  VocabType.art: 'art',
 };

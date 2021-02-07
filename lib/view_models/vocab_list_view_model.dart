@@ -47,18 +47,12 @@ class VocabListViewModel {
     print("[VocabListViewModel] store to HiveBox success");
 
     // store vocabs to Moor
-    for (VocabModel vocab in vocabListModel.vocabs) {
-      VocabSqliteTableDataWithUserVocabSqliteTableData vocabSqliteTableDataWithUserVocabSqliteTableData = vocab.toCombinedSqlite();
-      VocabSqliteTableData vocabSqliteTableData = vocabSqliteTableDataWithUserVocabSqliteTableData.vocabSqliteTableData;
-      UserVocabSqliteTableData userVocabSqliteTableData = vocabSqliteTableDataWithUserVocabSqliteTableData.userVocabSqliteTableData;
-
-      // must insertUserVocab before insertVocab
-      try {
-        await _dao.upsertUserVocab(userVocabSqliteTableData);
-        await _dao.upsertVocab(vocabSqliteTableData);
-      } on SqfliteDatabaseException catch (e) {
-        print("[VocabListViewModel] Warning: ${e.message}");
-      }
+    var list = vocabListModel.vocabs.map((e) => e.toCombinedSqlite());
+    try {
+      await _dao.upsertAllUserVocab(list.map((e) => e.userVocabSqliteTableData).toList());
+      await _dao.upsertAllVocab(list.map((e) => e.vocabSqliteTableData).toList());
+    } on SqfliteDatabaseException catch (e) {
+      print("[VocabListViewModel] Warning: ${e.message}");
     }
     print("[VocabListViewModel] store to Moor success");
 
@@ -68,8 +62,7 @@ class VocabListViewModel {
   }
 
   Future<VocabModel> getFromDatabaseById({@required String vocabId}) async {
-    if (vocabId != null)
-      return Future.value(VocabModel.fromCombinedSqlite(await _dao.getMarkedVocabsWithUserById(vocabId: vocabId)));
+    if (vocabId != null) return Future.value(VocabModel.fromCombinedSqlite(await _dao.getMarkedVocabsWithUserById(vocabId: vocabId)));
   }
 
   Future<VocabListModel> getFromDatabase({int listId, String vocabId, bool memorized, bool pushedMark}) async {
@@ -98,11 +91,8 @@ class VocabListViewModel {
         header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null), vocabs: list.map((e) => VocabModel.fromCombinedSqlite(e)).toList()));
   }
 
-
   Stream<VocabModel> watchFromDatabaseById({@required String vocabId}) {
-    if (vocabId != null)
-      return _dao.watchMarkedVocabsWithUserById(vocabId: vocabId).map((stream) =>
-          VocabModel.fromCombinedSqlite(stream));
+    if (vocabId != null) return _dao.watchMarkedVocabsWithUserById(vocabId: vocabId).map((stream) => VocabModel.fromCombinedSqlite(stream));
   }
 
   /// This function access the database that select specific [listId] and [vocabId] and returns a stream
