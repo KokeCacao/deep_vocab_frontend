@@ -66,7 +66,8 @@ class VocabList extends StatelessWidget {
               else _refreshController.refreshCompleted()
             }, // TODO: refresh failure?
             onLoading: _refreshController.loadComplete,
-            onTwoLevel: onTwoLevel == null ? () => onRefresh(_refreshController) : () => onRefresh(_refreshController),
+            // Not sure what the argument `isOpen` means
+            onTwoLevel: onTwoLevel == null ? (isOpen) => onRefresh(_refreshController) : () => onRefresh(_refreshController),
             child: result,
           )
         : result;

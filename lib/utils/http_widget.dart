@@ -5,7 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:deep_vocab/utils/file_manager.dart';
 import 'package:deep_vocab/view_models/auth_view_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:graphql/client.dart' hide BaseOptions;
+import 'package:graphql/client.dart' hide BaseOptions, Response;
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -28,22 +28,23 @@ class HttpWidget extends Object {
   static GraphQLClient get graphQLClient {
     if (_graphQLClient == null) {
       _graphQLClient = GraphQLClient(
-          cache: InMemoryCache(),
-          link: HttpLink(
-            uri: 'http://10.0.2.2:5000/graphql',
-          ),
+          cache: GraphQLCache(),
+          link: HttpLink('http://10.0.2.2:5000/graphql'),
           defaultPolicies: DefaultPolicies(
               watchQuery: Policies.safe(
                 FetchPolicy.networkOnly, // so that no cache is saved
                 ErrorPolicy.all, // so that all error present
+                CacheRereadPolicy.ignoreAll, // TODO: not sure what exactly this will do, but it seems like it will obtain original behavior before upgrade
               ),
               query: Policies.safe(
                 FetchPolicy.networkOnly,
                 ErrorPolicy.all,
+                CacheRereadPolicy.ignoreAll,
               ),
               mutate: Policies.safe(
                 FetchPolicy.networkOnly,
                 ErrorPolicy.all,
+                CacheRereadPolicy.ignoreAll,
               )));
     }
     return _graphQLClient;
@@ -103,7 +104,7 @@ class HttpWidget extends Object {
 
     // send request
     HiveBox.put(HiveBox.REQUEST_BOX, hash, data);
-    QueryResult response = await graphQLClient.query(QueryOptions(documentNode: gql(data)));
+    QueryResult response = await graphQLClient.query(QueryOptions(document: gql(data)));
     HiveBox.deleteFrom(HiveBox.REQUEST_BOX, hash);
 
     // process request

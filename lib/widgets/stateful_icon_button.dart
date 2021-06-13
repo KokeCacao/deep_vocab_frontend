@@ -11,8 +11,8 @@ class TwoStateButton extends StatefulWidget {
   TwoStateButton(
       {Key key,
       this.onPressed,
-      @required this.trueIcon,
-      @required this.falseIcon,
+      required this.trueIcon,
+      required this.falseIcon,
       this.value = false,
       this.optimistic = false})
       : super(key: key);

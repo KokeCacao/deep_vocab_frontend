@@ -18,46 +18,48 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^4.0.0 # provider
+  provider: ^5.0.0 # provider
   auto_size_text: ^2.1.0 # text
-  badges: ^1.1.1 # badge
+  badges: ^2.0.1 # badge
   bottom_navigation_badge: ^1.0.3 # navigation
-  intl: ^0.15.8
-  dio: 3.0.10 # http
-  http: ^0.12.0+2
-  cached_network_image: ^2.3.1
-  uuid: 2.2.2 # for uuid
-  graphql: ^3.1.0 # for http
-  flutter_screenutil: ^4.0.2+1 # for resizing screen
-  hive: ^1.4.4+1 # for hive database
-  hive_flutter: ^0.3.1 # for hive database
-  path_provider: ^1.6.24 # for RESTFUL download
-  crypto: ^2.1.5 # for encryption
-  pull_to_refresh: ^1.6.3 # for slider refresh
-  google_nav_bar: ^3.2.0 # for top tab bar
+  intl: ^0.17.0
+  dio: ^4.0.0 # for http, depends on http
+  http: ^0.13.3
+  cached_network_image: ^3.0.0
+  uuid: ^3.0.4 # for uuid
+  graphql: ^5.0.0 # for http
+  flutter_screenutil: ^5.0.0+2 # for resizing screen
+  hive: ^2.0.4 # for hive database
+  hive_flutter: ^1.0.0 # for hive database
+  path_provider: ^2.0.2 # for RESTFUL download
+  crypto: ^3.0.1 # for encryption
+  pull_to_refresh: ^2.0.0 # for slider refresh
+  google_nav_bar: ^5.0.5 # for top tab bar
   fsearch: ^1.0.1 # for search bar
-  sliding_up_panel: ^1.0.2 # for sliding up panel
-  moor: ^3.4.0 # for sqlite database
-  sqlite3_flutter_libs: ^0.3.0 # for sqlite database
-  json_annotation: ^3.1.1 # for sqlite database and json serialization
-
+  sliding_up_panel: ^2.0.0+1 # for sliding up panel
+  moor: ^4.3.2 # for sqlite database
+  sqlite3_flutter_libs: ^0.5.0 # for sqlite database
+  # Version 4.0.1 does not include Null Safety, don't use version above 4.0
+  # Version ^4.0.1 for `json_annotation` and ^4.1.0 for `json_serializable recommended
+  # See: https://stackoverflow.com/questions/66477445/generator-cannot-target-libraries-that-have-not-been-migrated-to-null-safety
+  json_annotation: ^4.0.1 # for sqlite database and json serialization.
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  cupertino_icons: ^1.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  hive_generator: ^0.8.2 # for hive database code generation
-  moor_generator: ^3.4.1 # for moor database code generation
-  json_serializable: ^3.5.1 # for json code generation
+  hive_generator: ^1.1.0 # for hive database code generation
+  moor_generator: ^4.3.1 # for moor database code generation
+  json_serializable: ^4.0.1 # for json code generation
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
