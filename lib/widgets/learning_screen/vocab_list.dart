@@ -61,7 +61,10 @@ class VocabList extends StatelessWidget {
               },
             ),
             controller: _refreshController,
-            onRefresh: () => onRefresh(_refreshController),
+            onRefresh: () => { // Only Refresh When There is a function passed in
+              if (onRefresh != null) onRefresh(_refreshController) // TODO: design refresh behavior for all refreshables
+              else _refreshController.refreshCompleted()
+            }, // TODO: refresh failure?
             onLoading: _refreshController.loadComplete,
             onTwoLevel: onTwoLevel == null ? () => onRefresh(_refreshController) : () => onRefresh(_refreshController),
             child: result,
