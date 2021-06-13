@@ -185,6 +185,7 @@ class VocabListViewModel {
     for (String vocabId in vocabIds) {
       updateUserVocab(vocabId: vocabId, pushedMark: true);
       vocabStateController.crossedVocabIdRemove(vocabId);
+      vocabStateController.unhideVocabIdRemove(vocabId);
     }
     return Future.value();
   }
