@@ -1,7 +1,7 @@
-import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
-import 'package:deep_vocab/utils/constants.dart';
-import 'package:deep_vocab/screens/learning_screen.dart';
-import 'package:deep_vocab/screens/user_screen.dart';
+// import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import '/utils/constants.dart';
+import '/screens/learning_screen.dart';
+import '/screens/user_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  List<Map<String, Object>> _pages;
+  late List<Map<String, Object>> _pages;
 
   @override
   void initState() {
@@ -47,15 +47,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _screen = _pages[widget.pageIndex]['screen'];
-    String _title = _pages[widget.pageIndex]['appBar_title'];
+    Widget _screen = _pages[widget.pageIndex]['screen'] as Widget;
+    String? _title = _pages[widget.pageIndex]['appBar_title'] as String?;
 
-    BottomNavigationBadge _badger = new BottomNavigationBadge(
-        backgroundColor: Colors.red,
-        badgeShape: BottomNavigationBadgeShape.circle,
-        textColor: Colors.white,
-        position: BottomNavigationBadgePosition.topRight,
-        textSize: 8);
+    // BottomNavigationBadge _badger = new BottomNavigationBadge(
+    //     backgroundColor: Colors.red,
+    //     badgeShape: BottomNavigationBadgeShape.circle,
+    //     textColor: Colors.white,
+    //     position: BottomNavigationBadgePosition.topRight,
+    //     textSize: 8);
 
     List<BottomNavigationBarItem> _navItem = [
       BottomNavigationBarItem(
@@ -87,7 +87,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
     // by extension BottomNavigationBarItemBadge
     // see https://github.com/westdabestdb/bottom_navigation_badge/issues/8
-    _navItem = _badger.setBadge(_navItem, "1", 0);
+    // _navItem = _badger.setBadge(_navItem, "1", 0);
 
     // TODO: try AnnotatedRegion<SystemUiOverlayStyle>
     // TODO: Hero animation
@@ -96,7 +96,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       appBar: _title == ""
           ? null
           : AppBar(
-              title: Text(_title),
+              title: Text(_title!),
             ),
 //      drawer: Drawer(),
       body: SafeArea(child: _screen),

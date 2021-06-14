@@ -1,6 +1,6 @@
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
-import 'package:deep_vocab/models/vocab_list_model.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
+import '/controllers/vocab_state_controller.dart';
+import '/models/vocab_list_model.dart';
+import '/view_models/vocab_list_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class SelectionPanel extends StatelessWidget {
   final int itemCount;
 
-  const SelectionPanel({Key key, @required this.itemCount}) : super(key: key);
+  const SelectionPanel({Key? key, required this.itemCount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +58,9 @@ class SelectionPanel extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   VocabListModel vocabListModel = await Provider.of<VocabListViewModel>(context, listen: false).getFromDatabase(listId: 0);
-                  Set<String> selectedIds = vocabStateController.getSelectedVocabId(vocabListModel.vocabs.map((e) => e.vocabId).cast<String>().toSet());
+                  Set<String?> selectedIds = vocabStateController.getSelectedVocabId(vocabListModel.vocabs!.map((e) => e.vocabId).cast<String>().toSet());
                   // TODO: combine them into a single query, you can do that with graphql
-                  for (String selectedId in selectedIds)
+                  for (String? selectedId in selectedIds)
                     await Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: selectedId, addedMark: true);
                   vocabStateController.noneSelect();
                 },

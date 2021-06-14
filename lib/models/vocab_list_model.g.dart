@@ -11,10 +11,9 @@ VocabListModel _$VocabListModelFromJson(Map<String, dynamic> json) {
     header: json['header'] == null
         ? null
         : VocabHeaderModel.fromJson(json['header'] as Map<String, dynamic>),
-    vocabs: (json['vocabs'] as List)
-        ?.map((e) =>
-            e == null ? null : VocabModel.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    vocabs: (json['vocabs'] as List<dynamic>?)
+        ?.map((e) => VocabModel.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 

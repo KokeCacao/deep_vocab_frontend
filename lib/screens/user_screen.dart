@@ -1,11 +1,11 @@
-import 'package:deep_vocab/models/hive_models/user_model.dart';
-import 'package:deep_vocab/view_models/auth_view_model.dart';
-import 'package:deep_vocab/view_models/user_view_model.dart';
-import 'package:deep_vocab/widgets/user_screen/avatar_card.dart';
-import 'package:deep_vocab/widgets/user_screen/avatar_info.dart';
-import 'package:deep_vocab/widgets/separator.dart';
-import 'package:deep_vocab/widgets/user_screen/setting_tab.dart';
-import 'package:deep_vocab/widgets/user_screen/xp_bar.dart';
+import '/models/hive_models/user_model.dart';
+import '/view_models/auth_view_model.dart';
+import '/view_models/user_view_model.dart';
+import '/widgets/user_screen/avatar_card.dart';
+import '/widgets/user_screen/avatar_info.dart';
+import '/widgets/separator.dart';
+import '/widgets/user_screen/setting_tab.dart';
+import '/widgets/user_screen/xp_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +32,7 @@ class UserScreen extends StatelessWidget {
                 : model.avatarUrl,
             userName: model.userName,
             uuid: model.uuid,
-            xpBar: _xpBar);
+            xpBar: _xpBar as XpBar?);
       } else {
         // user not logged in
         Widget _xpBar = XpBar(level: 233, xp: _maxXp, maxXp: _maxXp);
@@ -42,7 +42,7 @@ class UserScreen extends StatelessWidget {
             avatarUrl: "http://via.placeholder.com/350x150",
             userName: "Click to Log in",
             uuid: "You have not logged in-",
-            xpBar: _xpBar);
+            xpBar: _xpBar as XpBar?);
       }
     });
 

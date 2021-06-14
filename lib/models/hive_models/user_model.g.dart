@@ -17,11 +17,11 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserModel(
-      uuid: fields[4] as String,
-      userName: fields[3] as String,
-      avatarUrl: fields[2] as String,
-      level: fields[1] as int,
-      xp: fields[0] as int,
+      uuid: fields[4] as String?,
+      userName: fields[3] as String?,
+      avatarUrl: fields[2] as String?,
+      level: fields[1] as int?,
+      xp: fields[0] as int?,
     );
   }
 
@@ -58,11 +58,11 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return UserModel(
-    uuid: json['uuid'] as String,
-    userName: json['userName'] as String,
-    avatarUrl: json['avatarUrl'] as String,
-    level: json['level'] as int,
-    xp: json['xp'] as int,
+    uuid: json['uuid'] as String?,
+    userName: json['userName'] as String?,
+    avatarUrl: json['avatarUrl'] as String?,
+    level: json['level'] as int?,
+    xp: json['xp'] as int?,
   );
 }
 

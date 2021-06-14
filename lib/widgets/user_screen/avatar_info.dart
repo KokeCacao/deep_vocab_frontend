@@ -1,16 +1,16 @@
-import 'package:deep_vocab/widgets/image_widget.dart';
-import 'package:deep_vocab/widgets/user_screen/xp_bar.dart';
+import '../image_widget.dart';
+import '../user_screen/xp_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AvatarInfo extends StatelessWidget {
 
-  final double avatarRadius;
-  final double borderRadius;
-  final String avatarUrl;
-  final String userName;
-  final String uuid;
-  final XpBar xpBar;
+  final double? avatarRadius;
+  final double? borderRadius;
+  final String? avatarUrl;
+  final String? userName;
+  final String? uuid;
+  final XpBar? xpBar;
 
   AvatarInfo({this.avatarRadius, this.borderRadius, this.avatarUrl, this.userName, this.uuid, this.xpBar});
 
@@ -18,7 +18,7 @@ class AvatarInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConstrainedBox(
         constraints: BoxConstraints.loose(Size(double.infinity,
-            2 * avatarRadius + 2 * borderRadius)), //width, height
+            2 * avatarRadius! + 2 * borderRadius!)), //width, height
         child: Flex(
           crossAxisAlignment: CrossAxisAlignment.center,
           direction: Axis.horizontal,
@@ -27,11 +27,11 @@ class AvatarInfo extends StatelessWidget {
               padding: EdgeInsets.all(5),
               child: ClipRRect(
                   borderRadius:
-                  BorderRadius.all(Radius.circular(borderRadius)),
+                  BorderRadius.all(Radius.circular(borderRadius!)),
                   child: ImageWidget(
                     fit: BoxFit.cover,
-                    height: 2 * avatarRadius,
-                    width: 2 * avatarRadius,
+                    height: 2 * avatarRadius!,
+                    width: 2 * avatarRadius!,
                     imageUrl: avatarUrl,
                   )),
             ),
@@ -44,7 +44,7 @@ class AvatarInfo extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        userName,
+                        userName!,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
@@ -52,7 +52,7 @@ class AvatarInfo extends StatelessWidget {
                       ),
                     ),
                     Text("UID: ${uuid.toString().split('-')[0]}"),
-                    xpBar,
+                    xpBar!,
                   ],
                 ),
               ),

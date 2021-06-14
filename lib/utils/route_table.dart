@@ -1,12 +1,12 @@
-import 'package:deep_vocab/screens/navigation_screen.dart';
-import 'package:deep_vocab/screens/login_screen.dart';
+import '/screens/navigation_screen.dart';
+import '/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class RouteTable extends Object {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    String route = settings.name;
-    Object arguments = settings.arguments;
+    String? route = settings.name;
+    Object? arguments = settings.arguments;
 
     return CupertinoPageRoute(
         builder: (context) {

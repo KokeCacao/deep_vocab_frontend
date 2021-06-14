@@ -5,7 +5,7 @@ class StringListConverter extends TypeConverter<List<String>, String> {
   const StringListConverter();
 
   @override
-  List<String> mapToDart(String fromDb) {
+  List<String>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -15,8 +15,8 @@ class StringListConverter extends TypeConverter<List<String>, String> {
   }
 
   @override
-  String mapToSql(List<String> value) {
-    assert(value.isNotEmpty);
+  String? mapToSql(List<String?>? value) {
+    assert(value!.isNotEmpty);
     if (value == null) {
       return null;
     }
@@ -28,7 +28,7 @@ class IntegerListConverter extends TypeConverter<List<int>, String> {
   const IntegerListConverter();
 
   @override
-  List<int> mapToDart(String fromDb) {
+  List<int>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -38,8 +38,8 @@ class IntegerListConverter extends TypeConverter<List<int>, String> {
   }
 
   @override
-  String mapToSql(List<int> value) {
-    assert(value.isNotEmpty);
+  String? mapToSql(List<int>? value) {
+    assert(value!.isNotEmpty);
     if (value == null) {
       return null;
     }

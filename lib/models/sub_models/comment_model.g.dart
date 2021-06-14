@@ -8,15 +8,15 @@ part of 'comment_model.dart';
 
 CommentModel _$CommentModelFromJson(Map<String, dynamic> json) {
   return CommentModel(
-    uuid: json['uuid'] as String,
-    userName: json['userName'] as String,
+    uuid: json['uuid'] as String?,
+    userName: json['userName'] as String?,
     dateTime: json['dateTime'] == null
         ? null
         : DateTime.parse(json['dateTime'] as String),
-    message: json['message'] as String,
-    avatarUrl: json['avatarUrl'] as String,
-    likes: json['likes'] as int,
-    isLike: json['isLike'] as bool,
+    message: json['message'] as String?,
+    avatarUrl: json['avatarUrl'] as String?,
+    likes: json['likes'] as int?,
+    isLike: json['isLike'] as bool?,
   );
 }
 

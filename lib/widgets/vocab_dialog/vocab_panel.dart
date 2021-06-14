@@ -1,22 +1,22 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
-import 'package:deep_vocab/models/vocab_model.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/separator.dart';
-import 'package:deep_vocab/widgets/stateful_icon_button.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/bookmark_button.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/comment.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/vocab_badge.dart';
+import '/models/sub_models/mark_color_model.dart';
+import '/models/vocab_model.dart';
+import '/view_models/vocab_list_view_model.dart';
+import '../separator.dart';
+import '../stateful_icon_button.dart';
+import '../vocab_dialog/bookmark_button.dart';
+import '../vocab_dialog/comment.dart';
+import '../vocab_dialog/vocab_badge.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class VocabPanel extends StatelessWidget {
-  final VocabModel vocabModel;
+  final VocabModel? vocabModel;
   final PanelController panelController;
 
-  const VocabPanel({Key key, @required this.vocabModel, @required this.panelController}) : super(key: key);
+  const VocabPanel({Key? key, required this.vocabModel, required this.panelController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +47,14 @@ class VocabPanel extends StatelessWidget {
                 borderRadius: border, // same as above
                 child: Flex(
                   direction: Axis.horizontal,
-                  children: vocabModel.markColors == null
+                  children: vocabModel!.markColors == null
                       ? []
                       : [
-                          for (MarkColorModel markColor in vocabModel.markColors)
+                          for (MarkColorModel? markColor in vocabModel!.markColors!)
                             Expanded(
                               child: Container(
                                 height: borderRadius,
-                                color: markColor.color.color,
+                                color: markColor!.color.color,
                               ),
                             )
                         ],
@@ -63,9 +63,9 @@ class VocabPanel extends StatelessWidget {
               Stack(
                 children: [
                   TwoStateButton(
-                      value: vocabModel.pinMark,
+                      value: vocabModel!.pinMark,
                       onPressed: (bool value) =>
-                          Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, pinMark: value),
+                          Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel!.vocabId, pinMark: value),
                       trueIcon: Icon(
                         Icons.push_pin,
                         color: Colors.blueGrey,
@@ -77,10 +77,10 @@ class VocabPanel extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: BookmarkButton(
-                        number: vocabModel.nthWord,
-                        bookmarked: vocabModel.bookMarked,
+                        number: vocabModel!.nthWord,
+                        bookmarked: vocabModel!.bookMarked,
                         onChangeBookmarked: (bool value) =>
-                            Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel.vocabId, bookMarked: value)),
+                            Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel!.vocabId, bookMarked: value)),
                   ),
                   Container(
                     padding: EdgeInsets.all(10),
@@ -88,7 +88,7 @@ class VocabPanel extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AutoSizeText(
-                          vocabModel.vocab,
+                          vocabModel!.vocab,
                           maxFontSize: 64,
                           minFontSize: 42,
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -101,7 +101,7 @@ class VocabPanel extends StatelessWidget {
                               child: SizedBox(),
                             ),
                             AutoSizeText(
-                              vocabModel.mainTranslation ?? "",
+                              vocabModel!.mainTranslation ?? "",
                               maxFontSize: 32,
                               minFontSize: 16,
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -132,8 +132,8 @@ class VocabPanel extends StatelessWidget {
                       spacing: 4,
                       children: [
                         // TODO: List.generate(data.currentPerson.tags.length, (index) => toBadge(data.currentPerson.tags.elementAt(index)))
-                        if (vocabModel.otherTranslation != null)
-                          for (String translation in vocabModel.otherTranslation)
+                        if (vocabModel!.otherTranslation != null)
+                          for (String translation in vocabModel!.otherTranslation!)
                             VocabBadge(
                               text: translation,
                               color: Colors.blueGrey[700],
@@ -147,8 +147,8 @@ class VocabPanel extends StatelessWidget {
                     Separator(
                       color: Colors.transparent,
                     ),
-                    if (vocabModel.englishTranslation != null) Text("英译: ${vocabModel.englishTranslation}"),
-                    if (vocabModel.exampleSentences != null && vocabModel.exampleSentences.length > 1) Text("例句: ${vocabModel.exampleSentences[0]}")
+                    if (vocabModel!.englishTranslation != null) Text("英译: ${vocabModel!.englishTranslation}"),
+                    if (vocabModel!.exampleSentences != null && vocabModel!.exampleSentences!.length > 1) Text("例句: ${vocabModel!.exampleSentences![0]}")
                   ],
                 ),
               ),
@@ -172,7 +172,7 @@ class VocabPanel extends StatelessWidget {
                           Separator(
                             color: Colors.transparent,
                           ),
-                          if (vocabModel.memTips != null) Text(vocabModel.memTips),
+                          if (vocabModel!.memTips != null) Text(vocabModel!.memTips!),
                         ],
                       ),
                     ),
@@ -187,8 +187,8 @@ class VocabPanel extends StatelessWidget {
                           Separator(
                             color: Colors.transparent,
                           ),
-                          if (vocabModel.confusingWords != null)
-                            for (String confusing in vocabModel.confusingWords) Text(confusing),
+                          if (vocabModel!.confusingWords != null)
+                            for (String confusing in vocabModel!.confusingWords!) Text(confusing),
                         ],
                       ),
                     )

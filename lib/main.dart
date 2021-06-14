@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
-import 'package:deep_vocab/models/sqlite_models/app_database.dart';
-import 'package:deep_vocab/utils/hive_box.dart';
-import 'package:deep_vocab/utils/route_table.dart';
-import 'package:deep_vocab/screens/navigation_screen.dart';
-import 'package:deep_vocab/view_models/auth_view_model.dart';
-import 'package:deep_vocab/view_models/settings_view_model.dart';
-import 'package:deep_vocab/view_models/user_view_model.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
+import './controllers/vocab_state_controller.dart';
+import './models/sqlite_models/app_database.dart';
+import './utils/hive_box.dart';
+import './utils/route_table.dart';
+import './screens/navigation_screen.dart';
+import './view_models/auth_view_model.dart';
+import './view_models/settings_view_model.dart';
+import './view_models/user_view_model.dart';
+import './view_models/vocab_list_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';

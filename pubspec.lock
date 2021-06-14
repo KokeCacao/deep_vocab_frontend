@@ -49,7 +49,7 @@ packages:
       name: auto_size_text
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.0-nullsafety.0"
   badges:
     dependency: "direct main"
     description:
@@ -64,13 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  bottom_navigation_badge:
-    dependency: "direct main"
-    description:
-      name: bottom_navigation_badge
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   build:
     dependency: transitive
     description:
@@ -284,13 +277,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  fsearch:
-    dependency: "direct main"
-    description:
-      name: fsearch
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   glob:
     dependency: transitive
     description:

@@ -12,7 +12,7 @@ enum MultiDismissibleStatus {
 }
 
 class MultiDismissible extends StatefulWidget {
-  MultiDismissible({this.child, this.dismissAnimation = false, this.builder});
+  MultiDismissible({required this.child, this.dismissAnimation = false, required this.builder});
 
   Widget child;
   bool dismissAnimation;
@@ -27,7 +27,7 @@ class MultiDismissible extends StatefulWidget {
 
 class MultiDismissibleState extends State<MultiDismissible>
     with SingleTickerProviderStateMixin {
-  AnimationController _horizontalAnimationController;
+  late AnimationController _horizontalAnimationController;
   bool dismissed = false;
   double maxHorizontalSlide = 200.0; // or 200
   bool _canBeDragged = true;
@@ -52,7 +52,7 @@ class MultiDismissibleState extends State<MultiDismissible>
       divisor = divisor > 1 ? divisor : 1;
 
       _horizontalAnimationController.value +=
-          (dragUpdateDetails.primaryDelta / maxHorizontalSlide) / divisor;
+          (dragUpdateDetails.primaryDelta! / maxHorizontalSlide) / divisor;
     }
 
     // 0 === 0.15 === 0.3 === 0.5 === 0.7 === 0.85 === 1

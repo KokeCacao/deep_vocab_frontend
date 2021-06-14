@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class XpBar extends StatelessWidget {
 
-  final int level;
-  final int xp;
-  final int maxXp;
+  final int? level;
+  final int? xp;
+  final int? maxXp;
 
   XpBar({this.level, this.xp, this.maxXp});
 
@@ -24,13 +24,13 @@ class XpBar extends StatelessWidget {
               direction: Axis.horizontal,
               children: [
                 Expanded(
-                  flex: xp,
+                  flex: xp!,
                   child: Container(
                     color: Colors.teal,
                   ),
                 ),
                 Expanded(
-                    flex: maxXp - xp,
+                    flex: maxXp! - xp!,
                     child: Container(
                       color: Colors.black12,
                     )),

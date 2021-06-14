@@ -1,6 +1,6 @@
-import 'package:deep_vocab/models/sqlite_models/app_database.dart';
-import 'package:deep_vocab/utils/hive_box.dart';
-import 'package:deep_vocab/utils/http_widget.dart';
+import '../models/sqlite_models/app_database.dart';
+import '../utils/hive_box.dart';
+import '../utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
@@ -18,7 +18,7 @@ class AuthViewModel extends ChangeNotifier {
   /// store value
 
   /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
-  AuthViewModel({@required this.context})
+  AuthViewModel({required this.context})
       : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),
         _box = HiveBox.getBox(HiveBox.SINGLETON_BOX) {
     updateAccessTokenHttp();
@@ -34,11 +34,11 @@ class AuthViewModel extends ChangeNotifier {
   get wxToken => box.get(boxWxTokenKey, defaultValue: null);
 
   /// interface
-  Future<String> loginWithUsernameIfNeeded(String userName, String password) async {
+  Future<String?> loginWithUsernameIfNeeded(String? userName, String? password) async {
     assert(userName != null && password != null);
     print("[AuthViewModel] try login with userName=${userName} and password=${password}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    NetworkException exception = await _loginHttp(userName: userName, password: password);
+    NetworkException? exception = await _loginHttp(userName: userName, password: password);
     if (exception == null) return Future.value();
     return Future.value(exception.message);
   }
@@ -49,27 +49,27 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> createUser(String userName, String password, String email) async {
+  Future<String?> createUser(String? userName, String? password, String? email) async {
     assert(userName != null && password != null && email != null);
     print("[AuthViewModel] create user with userName=${userName}, password=${password}, and email=${email}");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
-    NetworkException exception = await _createAccountHttp(userName: userName, password: password, email: email);
+    NetworkException? exception = await _createAccountHttp(userName: userName, password: password, email: email);
     if (exception != null) return Future.value(exception.message);
     return Future.value();
   }
 
-  Future<String> updateAccessTokenHttp() async {
+  Future<String?> updateAccessTokenHttp() async {
     if (uuid == null || refreshToken == null) return Future.value("[AuthViewModel] there is no refresh token or uuid");
     print("[AuthViewModel] detected refresh token, trying to login using that");
-    NetworkException exception = await _refreshAccessTokenHttp(uuid: uuid, refreshToken: refreshToken);
+    NetworkException? exception = await _refreshAccessTokenHttp(uuid: uuid, refreshToken: refreshToken);
     if (exception != null) return Future.value(exception.message);
     return Future.value();
   }
   // TODO: implement login with email, ect
 
   /// internal functions
-  Future<NetworkException> _createAccountHttp({@required String userName, @required String password, @required String email}) async {
-    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+  Future<NetworkException?> _createAccountHttp({required String? userName, required String? password, required String? email}) async {
+    Map<String, dynamic>? map = await HttpWidget.graphQLMutation(
       context: context,
         data: """
           mutation {
@@ -81,17 +81,17 @@ class AuthViewModel extends ChangeNotifier {
           }
         """,
         queryName: "createUser",
-        onSuccess: (Map<String, dynamic> response) => response,
+        onSuccess: (Map<String, dynamic>? response) => response,
         onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
-    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
-    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+    if (map == null) return Future.value(NetworkException(message: "duplicated request",uri: null));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"], uri: null));
 
     await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
     return Future.value();
   }
 
-  Future<NetworkException> _loginHttp({@required String userName, @required String password}) async {
-    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+  Future<NetworkException?> _loginHttp({required String? userName, required String? password}) async {
+    Map<String, dynamic>? map = await HttpWidget.graphQLMutation(
       context: context,
         data: """
           mutation {
@@ -103,17 +103,17 @@ class AuthViewModel extends ChangeNotifier {
           }
         """,
         queryName: "auth",
-        onSuccess: (Map<String, dynamic> response) => response,
+        onSuccess: (Map<String, dynamic>? response) => response,
         onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
-    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
-    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+    if (map == null) return Future.value(NetworkException(message: "duplicated request", uri: null));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"], uri: null));
 
     await _updateWith(uuid: map["uuid"], accessToken: map["accessToken"], refreshToken: map["refreshToken"]);
     return Future.value();
   }
 
-  Future<NetworkException> _refreshAccessTokenHttp({@required String uuid, @required String refreshToken}) async {
-    Map<String, dynamic> map = await HttpWidget.graphQLMutation(
+  Future<NetworkException?> _refreshAccessTokenHttp({required String? uuid, required String? refreshToken}) async {
+    Map<String, dynamic>? map = await HttpWidget.graphQLMutation(
       context: context,
         data: """
           mutation {
@@ -123,16 +123,16 @@ class AuthViewModel extends ChangeNotifier {
           }
         """,
         queryName: "refresh",
-        onSuccess: (Map<String, dynamic> response) => response,
+        onSuccess: (Map<String, dynamic>? response) => response,
         onFail: (String exception) => <String, dynamic>{"errorMessage": exception});
-    if (map == null) return Future.value(NetworkException(message: "duplicated request"));
-    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"]));
+    if (map == null) return Future.value(NetworkException(message: "duplicated request", uri: null));
+    if (map.containsKey("errorMessage")) return Future.value(NetworkException(message: map["errorMessage"], uri: null));
 
     await _updateWith(accessToken: map["accessToken"]);
     return Future.value();
   }
 
-  Future<void> _updateWith({String accessToken, String refreshToken, String wxToken, String uuid}) async {
+  Future<void> _updateWith({String? accessToken, String? refreshToken, String? wxToken, String? uuid}) async {
     if (accessToken != null) {
       await _box.put(boxAccessTokenKey, accessToken);
       print("[Box] put ${accessToken}");

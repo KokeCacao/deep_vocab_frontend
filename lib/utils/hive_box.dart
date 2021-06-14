@@ -1,6 +1,6 @@
-import 'package:deep_vocab/models/hive_models/settings_model.dart';
-import 'package:deep_vocab/models/hive_models/user_model.dart';
-import 'package:deep_vocab/models/hive_models/vocab_header_model.dart';
+import '/models/hive_models/settings_model.dart';
+import '/models/hive_models/user_model.dart';
+import '/models/hive_models/vocab_header_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -46,9 +46,6 @@ class HiveBox {
     Box<dynamic> vocabListBox = await Hive.openBox<dynamic>(HiveBox.VOCAB_LIST_HEADER_BOX);
     print("[HiveBox] initialize ${HiveBox.VOCAB_LIST_HEADER_BOX} box");
 
-    assert(Hive.box(HiveBox.SINGLETON_BOX) != null);
-    assert(Hive.box(HiveBox.REQUEST_BOX) != null);
-    assert(Hive.box(HiveBox.VOCAB_LIST_HEADER_BOX) != null);
     print("[HiveBox] Initialization successful");
 
     return Future.value();

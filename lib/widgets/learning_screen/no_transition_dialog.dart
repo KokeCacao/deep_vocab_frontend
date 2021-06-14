@@ -1,17 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<T> showNoTransitionDialog<T>({
-  @required BuildContext context,
-  WidgetBuilder builder,
+Future<T?> showNoTransitionDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
   bool barrierDismissible = true,
-  Color barrierColor,
+  Color? barrierColor,
   bool useRootNavigator = true,
-  RouteSettings routeSettings,
+  RouteSettings? routeSettings,
 }) {
-  assert(builder != null);
-  assert(barrierDismissible != null);
-  assert(useRootNavigator != null);
   assert(debugCheckHasMaterialLocalizations(context));
 
   final ThemeData theme = Theme.of(context);

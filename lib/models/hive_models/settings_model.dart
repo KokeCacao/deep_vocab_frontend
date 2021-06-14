@@ -5,19 +5,19 @@ part 'settings_model.g.dart';
 @HiveType(typeId: 1)
 class SettingsModel {
   @HiveField(0)
-  final bool darkMode;
+  final bool? darkMode;
   @HiveField(1)
-  final bool wifiDownload;
+  final bool? wifiDownload;
   @HiveField(2)
-  final String language;
+  final String? language;
   @HiveField(3)
-  final int fontSize;
+  final int? fontSize;
   @HiveField(4)
-  final String font;
+  final String? font;
   @HiveField(5)
-  final bool devMode;
+  final bool? devMode;
   @HiveField(6)
-  final bool soundOff;
+  final bool? soundOff;
 
   const SettingsModel(
       {this.darkMode = false,

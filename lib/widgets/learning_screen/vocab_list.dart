@@ -1,8 +1,8 @@
-import 'package:deep_vocab/models/vocab_list_model.dart';
-import 'package:deep_vocab/view_models/auth_view_model.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/selection_panel.dart';
-import 'package:deep_vocab/widgets/learning_screen/vocab_list_with_header.dart';
+import '/models/vocab_list_model.dart';
+import '/view_models/auth_view_model.dart';
+import '/view_models/vocab_list_view_model.dart';
+import '/widgets/learning_screen/selection_panel.dart';
+import '/widgets/learning_screen/vocab_list_with_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
@@ -19,16 +19,16 @@ class VocabList extends StatelessWidget {
 // class VocabListState extends State<VocabList> {
   final bool refreshable;
   final int itemCount;
-  final void Function(RefreshController controller) onRefresh;
-  final void Function(RefreshController controller) onTwoLevel;
+  final void Function(RefreshController controller)? onRefresh;
+  final void Function(RefreshController controller)? onTwoLevel;
   final Widget Function(BuildContext context, int index) itemBuilder;
 
-  VocabList({Key key, this.refreshable = true, @required this.itemCount, @required this.onRefresh, this.onTwoLevel, @required this.itemBuilder})
+  VocabList({Key? key, this.refreshable = true, required this.itemCount, required this.onRefresh, this.onTwoLevel, required this.itemBuilder})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    RefreshController _refreshController = refreshable ? RefreshController(initialRefresh: false) : null;
+    RefreshController? _refreshController = refreshable ? RefreshController(initialRefresh: false) : null;
 
     Widget result = ListView.builder(
       physics: BouncingScrollPhysics(),
@@ -53,21 +53,21 @@ class VocabList extends StatelessWidget {
               idleText: "下拉刷新",
             ),
             footer: CustomFooter(
-              builder: (BuildContext context, LoadStatus mode) {
+              builder: (BuildContext context, LoadStatus? mode) {
                 return Container(
                   height: 55.0,
                   child: Center(child: Text("没有了哦")),
                 );
               },
             ),
-            controller: _refreshController,
+            controller: _refreshController!,
             onRefresh: () => { // Only Refresh When There is a function passed in
-              if (onRefresh != null) onRefresh(_refreshController) // TODO: design refresh behavior for all refreshables
+              if (onRefresh != null) onRefresh!(_refreshController) // TODO: design refresh behavior for all refreshables
               else _refreshController.refreshCompleted()
             }, // TODO: refresh failure?
             onLoading: _refreshController.loadComplete,
             // Not sure what the argument `isOpen` means
-            onTwoLevel: onTwoLevel == null ? (isOpen) => onRefresh(_refreshController) : () => onRefresh(_refreshController),
+            onTwoLevel: onTwoLevel == null ? (isOpen) => onRefresh!(_refreshController) : (isOpen) => onRefresh!(_refreshController),
             child: result,
           )
         : result;
@@ -95,7 +95,7 @@ class VocabList extends StatelessWidget {
       );
 
     void _onRefresh(RefreshController controller) async {
-      NetworkException exception = await Provider.of<VocabListViewModel>(context, listen: false).refreshVocab(context);
+      NetworkException? exception = await Provider.of<VocabListViewModel>(context, listen: false).refreshVocab(context);
       if (exception == null)
         controller.refreshCompleted();
       else
@@ -107,7 +107,7 @@ class VocabList extends StatelessWidget {
       stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(pushedMark: true),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
         if (snapshot.data == null) return SizedBox.shrink();
-        VocabListModel data = snapshot.data;
+        VocabListModel data = snapshot.data!;
         return VocabListWithHeader(
           list: data.vocabs,
           refreshable: true,
@@ -123,7 +123,7 @@ class VocabList extends StatelessWidget {
       stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
         if (snapshot.data == null) return SizedBox.shrink();
-        VocabListModel data = snapshot.data;
+        VocabListModel data = snapshot.data!;
         return VocabListWithHeader(
           list: data.vocabs,
           refreshable: false,
@@ -139,7 +139,7 @@ class VocabList extends StatelessWidget {
       stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(listId: 0),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
         if (snapshot.data == null) return SizedBox.shrink();
-        VocabListModel data = snapshot.data;
+        VocabListModel data = snapshot.data!;
         return VocabListWithHeader(
           list: data.vocabs,
           refreshable: false,

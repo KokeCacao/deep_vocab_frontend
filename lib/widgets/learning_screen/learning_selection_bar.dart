@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LearningSelectionBar extends StatelessWidget {
-  final bool random;
-  final Function(bool value) onChanged;
+  final bool? random;
+  final Function(bool value)? onChanged;
 
-  const LearningSelectionBar({Key key, this.random, this.onChanged})
+  const LearningSelectionBar({Key? key, this.random, this.onChanged})
       : super(key: key);
 
   @override
@@ -75,7 +75,7 @@ class LearningSelectionBar extends StatelessWidget {
 //                          fontWeight: FontWeight.bold,
                         )),
                     Switch(
-                      value: random,
+                      value: random!,
                       onChanged: onChanged,
                     ),
                   ],

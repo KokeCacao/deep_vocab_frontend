@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/widgets/user_screen/avatar_info.dart';
+import './avatar_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AvatarCard extends StatelessWidget {
 
-  final Widget avatarInfo;
-  final VoidCallback onPressed;
+  final Widget? avatarInfo;
+  final VoidCallback? onPressed;
 
   AvatarCard({this.avatarInfo, this.onPressed});
 
@@ -20,7 +20,7 @@ class AvatarCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            avatarInfo,
+            avatarInfo!,
             Padding(
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
               child: AutoSizeText(

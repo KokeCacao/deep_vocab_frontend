@@ -22,7 +22,7 @@ class FileManager {
   static Future<Map<String, dynamic>> filePathToJson(String path) async {
     String s = await new File(path).readAsString();
     print("[FileManager] read:\n${s}");
-    return Future.value(json.decode(s) as Map<String, dynamic>);
+    return Future.value(json.decode(s) as Map<String, dynamic>?);
   }
 
   static Future<void> deteleFile(String path) async {

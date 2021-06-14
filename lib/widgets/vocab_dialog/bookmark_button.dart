@@ -1,19 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/bookmark_shape.dart';
+import './bookmark_shape.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BookmarkButton extends StatefulWidget {
-  final int number;
-  final void Function(bool bookmarked) onChangeBookmarked;
+  final int? number;
+  final void Function(bool bookmarked)? onChangeBookmarked;
   final bool optimiztic;
 
-  bool bookmarked;
+  bool? bookmarked;
 
   BookmarkButton(
-      {Key key,
-      @required this.number,
-      @required this.bookmarked,
+      {Key? key,
+      required this.number,
+      required this.bookmarked,
       this.onChangeBookmarked, this.optimiztic=false})
       : super(key: key);
 
@@ -25,7 +25,7 @@ class BookmarkButton extends StatefulWidget {
 
 class BookmarkButtonState extends State<BookmarkButton>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -49,8 +49,8 @@ class BookmarkButtonState extends State<BookmarkButton>
         _animationController.reverse();
 
         if (widget.onChangeBookmarked != null)
-          widget.onChangeBookmarked(!widget.bookmarked);
-        if (widget.optimiztic) widget.bookmarked = !widget.bookmarked;
+          widget.onChangeBookmarked!(!widget.bookmarked!);
+        if (widget.optimiztic) widget.bookmarked = !widget.bookmarked!;
         setState(() {});
       },
       child: AnimatedBuilder(
@@ -71,7 +71,7 @@ class BookmarkButtonState extends State<BookmarkButton>
                   style: TextStyle(
                       color: Colors.white70, fontWeight: FontWeight.bold),
                 ),
-                widget.bookmarked
+                widget.bookmarked!
                     ? Icon(
                         Icons.star,
                         color: Colors.yellow[300],

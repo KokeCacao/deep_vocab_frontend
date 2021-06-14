@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingTab extends StatelessWidget {
-  final String textFront;
-  final IconData icon;
-  final String textBack;
-  final VoidCallback onPressed;
+  final String? textFront;
+  final IconData? icon;
+  final String? textBack;
+  final VoidCallback? onPressed;
 
   SettingTab({this.textFront, this.icon, this.textBack, this.onPressed});
 

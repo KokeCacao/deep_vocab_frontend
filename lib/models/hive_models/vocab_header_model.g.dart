@@ -17,10 +17,10 @@ class VocabHeaderModelAdapter extends TypeAdapter<VocabHeaderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return VocabHeaderModel(
-      name: fields[0] as String,
-      listId: fields[1] as int,
-      edition: fields[2] as DateTime,
-      vocabIds: (fields[3] as List)?.cast<String>(),
+      name: fields[0] as String?,
+      listId: fields[1] as int?,
+      edition: fields[2] as DateTime?,
+      vocabIds: (fields[3] as List?)?.cast<String>(),
     );
   }
 
@@ -55,12 +55,13 @@ class VocabHeaderModelAdapter extends TypeAdapter<VocabHeaderModel> {
 
 VocabHeaderModel _$VocabHeaderModelFromJson(Map<String, dynamic> json) {
   return VocabHeaderModel(
-    name: json['name'] as String,
-    listId: json['listId'] as int,
+    name: json['name'] as String?,
+    listId: json['listId'] as int?,
     edition: json['edition'] == null
         ? null
         : DateTime.parse(json['edition'] as String),
-    vocabIds: (json['vocabIds'] as List)?.map((e) => e as String)?.toList(),
+    vocabIds:
+        (json['vocabIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
   );
 }
 

@@ -1,4 +1,4 @@
-import 'package:deep_vocab/models/sqlite_models/primitive_list_converter.dart';
+import '../sqlite_models/primitive_list_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moor/moor.dart';
 import 'dart:convert';
@@ -7,22 +7,22 @@ part 'comment_model.g.dart';
 
 @JsonSerializable()
 class CommentModel {
-  String uuid;
-  String userName;
-  DateTime dateTime;
-  String message;
-  String avatarUrl;
-  int likes;
-  bool isLike;
+  String? uuid;
+  String? userName;
+  DateTime? dateTime;
+  String? message;
+  String? avatarUrl;
+  int? likes;
+  bool? isLike;
 
   CommentModel(
-      {@required this.uuid,
-      @required this.userName,
-      @required this.dateTime,
-      @required this.message,
-      @required this.avatarUrl,
-      @required this.likes,
-      @required this.isLike});
+      {required this.uuid,
+      required this.userName,
+      required this.dateTime,
+      required this.message,
+      required this.avatarUrl,
+      required this.likes,
+      required this.isLike});
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
   Map<String, dynamic> toJson() => _$CommentModelToJson(this);
@@ -31,7 +31,7 @@ class CommentModel {
 class CommentModelConverter extends TypeConverter<CommentModel, String> {
   const CommentModelConverter();
   @override
-  CommentModel mapToDart(String fromDb) {
+  CommentModel? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -39,7 +39,7 @@ class CommentModelConverter extends TypeConverter<CommentModel, String> {
   }
 
   @override
-  String mapToSql(CommentModel value) {
+  String? mapToSql(CommentModel? value) {
     if (value == null) {
       return null;
     }
@@ -47,21 +47,21 @@ class CommentModelConverter extends TypeConverter<CommentModel, String> {
   }
 }
 
-class CommentModelListConverter extends TypeConverter<List<CommentModel>, String> {
+class CommentModelListConverter extends TypeConverter<List<CommentModel?>, String> {
   const CommentModelListConverter();
 
   @override
-  List<CommentModel> mapToDart(String fromDb) {
+  List<CommentModel?>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
-    assert(StringListConverter().mapToDart(fromDb).map((e) => CommentModelConverter().mapToDart(e)).isNotEmpty);
-    return StringListConverter().mapToDart(fromDb).map((e) => CommentModelConverter().mapToDart(e)).toList();
+    assert(StringListConverter().mapToDart(fromDb)!.map((e) => CommentModelConverter().mapToDart(e)).isNotEmpty);
+    return StringListConverter().mapToDart(fromDb)!.map((e) => CommentModelConverter().mapToDart(e)).toList();
   }
 
   @override
-  String mapToSql(List<CommentModel> value) {
-    assert(value.isNotEmpty);
+  String? mapToSql(List<CommentModel?>? value) {
+    assert(value!.isNotEmpty);
     if (value == null) {
       return null;
     }

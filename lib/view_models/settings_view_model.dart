@@ -1,5 +1,5 @@
-import 'package:deep_vocab/models/hive_models/settings_model.dart';
-import 'package:deep_vocab/utils/http_widget.dart';
+import '/models/hive_models/settings_model.dart';
+import '/utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 class SettingsViewModel extends ChangeNotifier {
@@ -7,9 +7,9 @@ class SettingsViewModel extends ChangeNotifier {
   final BuildContext context;
 
   /// store value
-  SettingsModel _settingsModel;
+  SettingsModel? _settingsModel;
 
-  SettingsViewModel({@required this.context});
+  SettingsViewModel({required this.context});
 
   /// getters
   get settingsModel {

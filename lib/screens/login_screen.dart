@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/view_models/auth_view_model.dart';
-import 'package:deep_vocab/widgets/separator.dart';
+import '../view_models/auth_view_model.dart';
+import '../widgets/separator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +19,9 @@ class LoginScreen extends StatefulWidget {
   final _emailFieldKey = GlobalKey<FormFieldState>();
   final _passwordFieldKey = GlobalKey<FormFieldState>();
 
-  String _userName;
-  String _email;
-  String _password;
+  String? _userName;
+  String? _email;
+  String? _password;
 
   @override
   State<StatefulWidget> createState() {
@@ -30,7 +30,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _passwordVisible;
+  late bool _passwordVisible;
 
   @override
   void initState() {
@@ -52,13 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
       // stop submit if the current field is wrong
       switch (widget._index) {
         case 0:
-          if (!widget._usernameFieldKey.currentState.validate()) return;
+          if (!widget._usernameFieldKey.currentState!.validate()) return;
           break;
         case 1:
-          if (widget._login ? !widget._passwordFieldKey.currentState.validate() : !widget._emailFieldKey.currentState.validate()) return;
+          if (widget._login ? !widget._passwordFieldKey.currentState!.validate() : !widget._emailFieldKey.currentState!.validate()) return;
           break;
         case 2:
-          if (!widget._passwordFieldKey.currentState.validate()) return;
+          if (!widget._passwordFieldKey.currentState!.validate()) return;
           break;
       }
 
@@ -83,10 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       // start submit
-      if (!widget._formKey.currentState.validate()) return;
-      widget._formKey.currentState.save();
+      if (!widget._formKey.currentState!.validate()) return;
+      widget._formKey.currentState!.save();
 
-      widget._scaffoldKey.currentState.showSnackBar(SnackBar(
+      widget._scaffoldKey.currentState!.showSnackBar(SnackBar(
         duration: Duration(seconds: 4),
         content: Row(
           children: <Widget>[CircularProgressIndicator(), Text(widget._login ? "    Signing In ..." : "    Creating Account ...")],
@@ -94,11 +94,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
       AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
-      String errorMessage = widget._login
+      String? errorMessage = widget._login
           ? await authViewModel.loginWithUsernameIfNeeded(widget._userName, widget._password)
           : await authViewModel.createUser(widget._userName, widget._password, widget._email);
 
-      widget._scaffoldKey.currentState.hideCurrentSnackBar();
+      widget._scaffoldKey.currentState!.hideCurrentSnackBar();
 
       if (errorMessage == null) {
         Navigator.of(context).pop();
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
         // userViewModel.updateIfNeeded();
       } else
-        widget._scaffoldKey.currentState.showSnackBar(SnackBar(
+        widget._scaffoldKey.currentState!.showSnackBar(SnackBar(
           duration: Duration(seconds: 4),
           content: Padding(
             padding: EdgeInsets.symmetric(horizontal: 2),
@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       focusNode: widget._userNameNode,
       validator: (value) {
-        if (value.isEmpty) return "Please enter your username";
+        if (value!.isEmpty) return "Please enter your username";
         if (value.length > 64) return "Username needs to be shorter than 64 characters";
         return null;
       },
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       focusNode: widget._emailNode,
       validator: (value) {
-        if (value.isEmpty) return "Please enter your email address";
+        if (value!.isEmpty) return "Please enter your email address";
         return null;
       },
       onSaved: (value) {
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.done,
       focusNode: widget._passwordNode,
       validator: (value) {
-        if (value.isEmpty) return "Please enter your password";
+        if (value!.isEmpty) return "Please enter your password";
         if (value.length < 6 && value.length > 64) return "Password should be between 7 and 63 characters";
         if (int.tryParse(value) != null) return "Password should not be just numbers";
         return null;

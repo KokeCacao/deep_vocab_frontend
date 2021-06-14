@@ -1,14 +1,14 @@
-import 'package:deep_vocab/models/vocab_model.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/no_transition_dialog.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/vocab_panel.dart';
+import '/models/vocab_model.dart';
+import '/view_models/vocab_list_view_model.dart';
+import '/widgets/learning_screen/no_transition_dialog.dart';
+import '/widgets/vocab_dialog/vocab_panel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class VocabDialog {
-  static Future showVocabDialog({@required String vocabId, @required String vocab, @required BuildContext context}) {
+  static Future showVocabDialog({required String vocabId, required String? vocab, required BuildContext context}) {
     // PanelController must be initialized here for future builder
     PanelController panelController = PanelController();
     return showNoTransitionDialog(
@@ -39,7 +39,7 @@ class VocabDialog {
                   ),
                 );
               else {
-                VocabModel vocab = snapshot.data;
+                VocabModel? vocab = snapshot.data as VocabModel?;
                 return VocabPanel(panelController: panelController,vocabModel: vocab);
               }
             },

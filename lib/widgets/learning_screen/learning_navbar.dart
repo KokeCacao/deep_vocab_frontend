@@ -1,41 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fsearch/fsearch.dart';
+// import 'package:fsearch/fsearch.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class LearningNavbar extends StatelessWidget {
 
-  final Function(int index) onTabChange;
-  final int selectedIndex;
-  final FSearchController controller;
+  final Function(int index)? onTabChange;
+  final int? selectedIndex;
+  // final FSearchController controller;
 
-  const LearningNavbar({Key key, this.onTabChange, this.selectedIndex, this.controller}) : super(key: key);
+  const LearningNavbar({Key? key, this.onTabChange, this.selectedIndex
+    // , this.controller
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-          child: FSearch(
-            controller: controller,
-            center: false,
-            height: 30.0,
-            width: 200,
-            corner: FSearchCorner.all(10),
-            strokeColor: Colors.blueGrey,
-            strokeWidth: 2.0,
-            backgroundColor: Colors.white,
-            cursorColor: Colors.blueGrey,
-            cursorWidth: 4.0,
-            cursorRadius: 2.0,
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            margin: EdgeInsets.all(10),
-            hints: ["搜索单词"],
-            stopHintSwitchOnFocus: true,
-            hintPrefix: Icon(Icons.search),
-          ),
-        ),
+        // Expanded(
+        //   child: FSearch(
+        //     controller: controller,
+        //     center: false,
+        //     height: 30.0,
+        //     width: 200,
+        //     corner: FSearchCorner.all(10),
+        //     strokeColor: Colors.blueGrey,
+        //     strokeWidth: 2.0,
+        //     backgroundColor: Colors.white,
+        //     cursorColor: Colors.blueGrey,
+        //     cursorWidth: 4.0,
+        //     cursorRadius: 2.0,
+        //     padding: EdgeInsets.symmetric(horizontal: 5),
+        //     margin: EdgeInsets.all(10),
+        //     hints: ["搜索单词"],
+        //     stopHintSwitchOnFocus: true,
+        //     hintPrefix: Icon(Icons.search),
+        //   ),
+        // ),
         GNav(
             curve: Curves.fastOutSlowIn, // tab animation curves
             duration: Duration(milliseconds: 400), // tab animation duration
@@ -47,7 +49,7 @@ class LearningNavbar extends StatelessWidget {
                 .withOpacity(0.1), // selected tab background color
             tabMargin: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             padding: EdgeInsets.all(5), // navigation bar padding
-            selectedIndex: selectedIndex,
+            selectedIndex: selectedIndex!,
             onTabChange: onTabChange,
             tabs: [
               GButton(

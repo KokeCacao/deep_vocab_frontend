@@ -1,11 +1,10 @@
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/learning_navbar.dart';
-import 'package:deep_vocab/widgets/learning_screen/learning_selection_bar.dart';
-import 'package:deep_vocab/widgets/learning_screen/vocab_list.dart';
+import '../controllers/vocab_state_controller.dart';
+import '../view_models/vocab_list_view_model.dart';
+import '../widgets/learning_screen/learning_navbar.dart';
+import '../widgets/learning_screen/vocab_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fsearch/fsearch.dart';
+// import 'package:fsearch/fsearch.dart';
 import 'package:provider/provider.dart';
 
 class LearningScreen extends StatefulWidget {
@@ -50,7 +49,7 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
               // TODO: add controller
               // TODO: 提示显示记忆力最低的单词?
               // TODO: finish initializing a proper controller
-              controller: FSearchController(),
+              // controller: FSearchController(),
             ),
             widget._index == 2
                 ? Container(

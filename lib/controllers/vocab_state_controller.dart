@@ -4,15 +4,15 @@ import 'package:flutter/foundation.dart';
 class VocabStateController extends ChangeNotifier {
   /// storage
   final BuildContext context;
-  final Set<String> _crossedVocabId;
-  final Set<String> _selectedVocabId;
-  final Set<String> _unhideVocabId;
+  final Set<String?> _crossedVocabId;
+  final Set<String?> _selectedVocabId;
+  final Set<String?> _unhideVocabId;
 
   bool _inverseCross;
   bool _inverseSelect;
   bool _inverseUnhide;
 
-  VocabStateController({@required this.context})
+  VocabStateController({required this.context})
       : this._crossedVocabId = {},
         this._selectedVocabId = {},
         this._unhideVocabId = {},
@@ -77,54 +77,54 @@ class VocabStateController extends ChangeNotifier {
     return _inverseUnhide;
   }
 
-  bool crossedVocabIdContains(String s) => _inverseCross ? !_crossedVocabId.contains(s) : _crossedVocabId.contains(s);
-  bool selectedVocabIdContains(String s) => _inverseSelect ? !_selectedVocabId.contains(s) : _selectedVocabId.contains(s);
-  bool unhideVocabIdContains(String s) => _inverseUnhide ? !_unhideVocabId.contains(s) : _unhideVocabId.contains(s);
+  bool crossedVocabIdContains(String? s) => _inverseCross ? !_crossedVocabId.contains(s) : _crossedVocabId.contains(s);
+  bool selectedVocabIdContains(String? s) => _inverseSelect ? !_selectedVocabId.contains(s) : _selectedVocabId.contains(s);
+  bool unhideVocabIdContains(String? s) => _inverseUnhide ? !_unhideVocabId.contains(s) : _unhideVocabId.contains(s);
 
   int getCrossedVocabIdLength(int totalVocab) => _inverseCross ? totalVocab-_crossedVocabId.length : _crossedVocabId.length;
   int getSelectedVocabIdLength(int totalVocab) => _inverseSelect ? totalVocab - _selectedVocabId.length: _selectedVocabId.length;
   int getUnhideVocabIdLength(int totalVocab) => _inverseUnhide ? totalVocab - _unhideVocabId.length : _unhideVocabId.length;
 
-  Set<String> getCrossedVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_crossedVocabId) : _crossedVocabId.intersection(allVocabId);
-  Set<String> getSelectedVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_selectedVocabId) : _selectedVocabId.intersection(allVocabId);
-  Set<String> getUnhideVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_unhideVocabId) : _unhideVocabId.intersection(allVocabId);
+  Set<String?> getCrossedVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_crossedVocabId) : _crossedVocabId.intersection(allVocabId);
+  Set<String?> getSelectedVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_selectedVocabId) : _selectedVocabId.intersection(allVocabId);
+  Set<String?> getUnhideVocabId(Set<String> allVocabId) =>_inverseCross ? allVocabId.difference(_unhideVocabId) : _unhideVocabId.intersection(allVocabId);
 
-  bool crossedVocabIdAdd(String s, {bool regardlessInverse = false}) {
+  bool crossedVocabIdAdd(String? s, {bool regardlessInverse = false}) {
     if (_inverseCross && !regardlessInverse) return crossedVocabIdRemove(s, regardlessInverse: true);
     bool b = _crossedVocabId.add(s);
     notifyListeners();
     return b;
   }
 
-  bool selectedVocabIdAdd(String s, {bool regardlessInverse = false}) {
+  bool selectedVocabIdAdd(String? s, {bool regardlessInverse = false}) {
     if (_inverseSelect && !regardlessInverse) return selectedVocabIdRemove(s, regardlessInverse: true);
     bool b = _selectedVocabId.add(s);
     notifyListeners();
     return b;
   }
 
-  bool unhideVocabIdAdd(String s, {bool regardlessInverse = false}) {
+  bool unhideVocabIdAdd(String? s, {bool regardlessInverse = false}) {
     if (_inverseUnhide && !regardlessInverse) return unhideVocabIdRemove(s, regardlessInverse: true);
     bool b = _unhideVocabId.add(s);
     notifyListeners();
     return b;
   }
 
-  bool crossedVocabIdRemove(String s, {bool regardlessInverse = false}) {
+  bool crossedVocabIdRemove(String? s, {bool regardlessInverse = false}) {
     if (_inverseCross && !regardlessInverse) return crossedVocabIdAdd(s, regardlessInverse: true);
     bool b = _crossedVocabId.remove(s);
     notifyListeners();
     return b;
   }
 
-  bool selectedVocabIdRemove(String s, {bool regardlessInverse = false}) {
+  bool selectedVocabIdRemove(String? s, {bool regardlessInverse = false}) {
     if (_inverseSelect && !regardlessInverse) return selectedVocabIdAdd(s, regardlessInverse: true);
     bool b = _selectedVocabId.remove(s);
     notifyListeners();
     return b;
   }
 
-  bool unhideVocabIdRemove(String s, {bool regardlessInverse = false}) {
+  bool unhideVocabIdRemove(String? s, {bool regardlessInverse = false}) {
     if (_inverseUnhide && !regardlessInverse) return unhideVocabIdAdd(s, regardlessInverse: true);
     bool b = _unhideVocabId.remove(s);
     notifyListeners();

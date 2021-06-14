@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // by https://cloud.tencent.com/developer/article/1423927
 class Toast {
-  static void show(BuildContext context, String message, {int duration}) {
+  static void show(BuildContext context, String message, {int? duration}) {
     OverlayEntry entry = OverlayEntry(builder: (context) {
       return Container(
         color: Colors.transparent,
@@ -27,7 +27,7 @@ class Toast {
       );
     });
 
-    Overlay.of(context).insert(entry);
+    Overlay.of(context)!.insert(entry);
     Future.delayed(Duration(seconds: duration ?? 2)).then((value) {
       // 移除层可以通过调用OverlayEntry的remove方法。
       entry.remove();

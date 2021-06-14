@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,17 +10,17 @@ part 'user_model.g.dart';
 @HiveType(typeId: 0)
 class UserModel {
   @HiveField(0)
-  final int xp;
+  final int? xp;
   @HiveField(1)
-  final int level;
+  final int? level;
   @HiveField(2)
-  final String avatarUrl;
+  final String? avatarUrl;
   @HiveField(3)
-  final String userName;
+  final String? userName;
   @HiveField(4)
-  final String uuid;
+  final String? uuid;
 
-  const UserModel({@required this.uuid, @required this.userName, @required this.avatarUrl, @required this.level, @required this.xp});
+  const UserModel({required this.uuid, required this.userName, required this.avatarUrl, required this.level, required this.xp});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserModelToJson(this);

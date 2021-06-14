@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
-import 'package:deep_vocab/screens/vocab_dialog.dart';
-import 'package:deep_vocab/widgets/separator.dart';
-import 'package:deep_vocab/widgets/vocab_dialog/bookmark_shape.dart';
+import '/controllers/vocab_state_controller.dart';
+import '/screens/vocab_dialog.dart';
+import '/widgets/separator.dart';
+import '/widgets/vocab_dialog/bookmark_shape.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +12,12 @@ class VocabRow extends StatefulWidget {
   bool cross;
   bool checkBox;
 
-  final void Function(bool value) onSelect;
-  final void Function(bool value) onHide;
+  final void Function(bool value)? onSelect;
+  final void Function(bool value)? onHide;
   final String vocabId;
-  final String vocab;
-  final String translation;
-  final bool bookMarked;
+  final String? vocab;
+  final String? translation;
+  final bool? bookMarked;
 
   VocabRow(
       {this.hide = true,
@@ -25,9 +25,9 @@ class VocabRow extends StatefulWidget {
       this.checkBox = false,
       this.onSelect,
       this.onHide,
-      @required this.vocabId,
-      @required this.vocab,
-      @required this.translation,
+      required this.vocabId,
+      required this.vocab,
+      required this.translation,
       this.bookMarked = false});
 
   @override
@@ -35,7 +35,7 @@ class VocabRow extends StatefulWidget {
     return VocabRowState();
   }
 
-  VocabRow copyWith({bool hide, bool cross, bool checkBox, void Function(bool value) onSelect, String vocab, String translation, bool bookMarked}) {
+  VocabRow copyWith({bool? hide, bool? cross, bool? checkBox, void Function(bool value)? onSelect, String? vocab, String? translation, bool? bookMarked}) {
     return VocabRow(
       vocabId: this.vocabId,
       vocab: this.vocab,
@@ -64,12 +64,12 @@ class VocabRowState extends State<VocabRow> {
       width: double.infinity,
       child: Row(
         children: [
-          DragTarget(onWillAccept: (_) {
+          DragTarget(onWillAccept: (dynamic _) {
             widget.checkBox = !widget.checkBox;
             if (widget.checkBox) Provider.of<VocabStateController>(context, listen: false).selectedVocabIdAdd(widget.vocabId);
             else Provider.of<VocabStateController>(context, listen: false).selectedVocabIdRemove(widget.vocabId);
 
-            if (widget.onSelect != null) widget.onSelect(widget.checkBox);
+            if (widget.onSelect != null) widget.onSelect!(widget.checkBox);
             setState(() {});
             return false;
           }, builder: (ctx, candidateData, rejectedData) {
@@ -82,11 +82,11 @@ class VocabRowState extends State<VocabRow> {
                       Checkbox(
                         value: widget.checkBox,
                         onChanged: (bool) {
-                          widget.checkBox = bool;
+                          widget.checkBox = bool!;
                           if (widget.checkBox) Provider.of<VocabStateController>(context, listen: false).selectedVocabIdAdd(widget.vocabId);
                           else Provider.of<VocabStateController>(context, listen: false).selectedVocabIdRemove(widget.vocabId);
 
-                          if (widget.onSelect != null) widget.onSelect(widget.checkBox);
+                          if (widget.onSelect != null) widget.onSelect!(widget.checkBox);
                           setState(() {});
                         },
                       )
@@ -102,7 +102,7 @@ class VocabRowState extends State<VocabRow> {
                 Expanded(
                     child: GestureDetector(
                   onTap: () => VocabDialog.showVocabDialog(vocabId: widget.vocabId, vocab: widget.vocab, context: context),
-                  child: AutoSizeText(widget.vocab,
+                  child: AutoSizeText(widget.vocab!,
                       minFontSize: 12,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
@@ -116,7 +116,7 @@ class VocabRowState extends State<VocabRow> {
                     if (widget.hide) Provider.of<VocabStateController>(context, listen: false).unhideVocabIdRemove(widget.vocabId);
                     else Provider.of<VocabStateController>(context, listen: false).unhideVocabIdAdd(widget.vocabId);
 
-                    if (widget.onHide != null) widget.onHide(widget.hide);
+                    if (widget.onHide != null) widget.onHide!(widget.hide);
                     setState(() {});
                   },
                   child: IndexedStack(
@@ -124,7 +124,7 @@ class VocabRowState extends State<VocabRow> {
                     index: widget.hide ? 1 : 0,
                     children: [
                       AutoSizeText(
-                        widget.translation,
+                        widget.translation!,
                         minFontSize: 12,
                         overflow: TextOverflow.fade,
                         maxLines: 2,
@@ -178,8 +178,8 @@ class VocabRowState extends State<VocabRow> {
                     height: 20, // half of vocab row
                     width: 8,
                     borderRadius: 0,
-                    color: widget.bookMarked ? Colors.red[700] : Colors.transparent,
-                    borderColor: widget.bookMarked ? Colors.red[900] : Colors.transparent,
+                    color: widget.bookMarked! ? Colors.red[700] : Colors.transparent,
+                    borderColor: widget.bookMarked! ? Colors.red[900] : Colors.transparent,
                   ),
                 )
               ],

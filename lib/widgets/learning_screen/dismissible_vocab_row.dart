@@ -1,9 +1,9 @@
-import 'package:deep_vocab/controllers/vocab_state_controller.dart';
-import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
-import 'package:deep_vocab/models/vocab_model.dart';
-import 'package:deep_vocab/utils/hive_box.dart';
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/vocab_row.dart';
+import '/controllers/vocab_state_controller.dart';
+import '/models/sub_models/mark_color_model.dart';
+import '/models/vocab_model.dart';
+import '/utils/hive_box.dart';
+import '/view_models/vocab_list_view_model.dart';
+import './vocab_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,7 @@ class DismissibleVocabRow extends StatelessWidget {
 // class DismissibleVocabRowState extends State<DismissibleVocabRow> {
   final VocabModel vocab;
 
-  const DismissibleVocabRow({Key key, @required this.vocab}) : super(key: key);
+  const DismissibleVocabRow({Key? key, required this.vocab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +36,11 @@ class DismissibleVocabRow extends StatelessWidget {
       ),
       builder: (Widget child, MultiDismissibleStatus status) {
         if (status == MultiDismissibleStatus.ON_IDLE) return child;
-        VocabRow vocabRow = child;
+        VocabRow vocabRow = child as VocabRow;
         bool replaceLast = vocabRow.cross;
-        List<MarkColorModel> markColors = vocab.markColors ?? [];
+        List<MarkColorModel?> markColors = vocab.markColors ?? [];
 
-        ColorModel color;
+        ColorModel? color;
         switch (status) {
           case MultiDismissibleStatus.ON_IDLE:
             return child;

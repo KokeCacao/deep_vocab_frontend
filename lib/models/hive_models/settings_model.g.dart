@@ -17,13 +17,13 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SettingsModel(
-      darkMode: fields[0] as bool,
-      wifiDownload: fields[1] as bool,
-      language: fields[2] as String,
-      fontSize: fields[3] as int,
-      font: fields[4] as String,
-      devMode: fields[5] as bool,
-      soundOff: fields[6] as bool,
+      darkMode: fields[0] as bool?,
+      wifiDownload: fields[1] as bool?,
+      language: fields[2] as String?,
+      fontSize: fields[3] as int?,
+      font: fields[4] as String?,
+      devMode: fields[5] as bool?,
+      soundOff: fields[6] as bool?,
     );
   }
 

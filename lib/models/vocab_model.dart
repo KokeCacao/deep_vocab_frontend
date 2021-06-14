@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-import 'package:deep_vocab/models/sub_models/comment_model.dart';
-import 'package:deep_vocab/models/sub_models/mark_color_model.dart';
-import 'package:deep_vocab/models/sqlite_models/app_database.dart';
-import 'package:deep_vocab/models/sqlite_models/vocab_sqlite_dao.dart';
-import 'package:flutter/cupertino.dart';
+import './sub_models/comment_model.dart';
+import './sub_models/mark_color_model.dart';
+import './sqlite_models/app_database.dart';
+import './sqlite_models/vocab_sqlite_dao.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'vocab_model.g.dart';
@@ -17,34 +16,34 @@ class VocabModel {
   DateTime edition;
   List<int> listIds;
   String vocab;
-  VocabType type;
-  String mainTranslation;
-  List<String> otherTranslation;
-  String mainSound;
-  List<String> otherSound;
-  String englishTranslation;
-  List<CommentModel> comments;
-  List<String> confusingWords;
-  String memTips;
-  List<String> exampleSentences;
+  VocabType? type;
+  String? mainTranslation;
+  List<String>? otherTranslation;
+  String? mainSound;
+  List<String>? otherSound;
+  String? englishTranslation;
+  List<CommentModel?>? comments;
+  List<String>? confusingWords;
+  String? memTips;
+  List<String>? exampleSentences;
 
   // below are user defined and need to be saved
   int nthWord = 0;
   int nthAppear = 0;
-  List<MarkColorModel> markColors = [];
-  String editedMeaning;
+  List<MarkColorModel?>? markColors = [];
+  String? editedMeaning;
   bool bookMarked = false;
   bool questionMark = false;
   bool starMark = false;
   bool pinMark = false;
   bool addedMark = false;
-  bool pushedMark = false;
+  bool? pushedMark = false;
 
   VocabModel({
-    @required this.vocabId,
-    @required this.edition,
-    @required this.listIds,
-    @required this.vocab,
+    required this.vocabId,
+    required this.edition,
+    required this.listIds,
+    required this.vocab,
     this.type,
     this.mainTranslation,
     this.otherTranslation,

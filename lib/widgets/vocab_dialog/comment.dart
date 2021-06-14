@@ -8,19 +8,19 @@ class Comment extends StatefulWidget {
   final String message;
   final int likes;
   bool isLike;
-  final Function(bool isLike) isLikeCallback;
+  final Function(bool isLike)? isLikeCallback;
   final String avatarUrl;
-  final Function(String userName, String uuid) avatarCallback;
+  final Function(String userName, String uuid)? avatarCallback;
 
   Comment(
-      {Key key,
-      @required this.uuid,
-      @required this.userName,
-      @required this.dateTime,
-      @required this.message,
-      @required this.likes,
-      @required this.isLike,
-      @required this.avatarUrl,
+      {Key? key,
+      required this.uuid,
+      required this.userName,
+      required this.dateTime,
+      required this.message,
+      required this.likes,
+      required this.isLike,
+      required this.avatarUrl,
       this.isLikeCallback,
       this.avatarCallback})
       : super(key: key);
@@ -45,7 +45,7 @@ class CommentState extends State<Comment> {
               GestureDetector(
                 onTap: () {
                   if (widget.avatarCallback != null)
-                    widget.avatarCallback(widget.userName, widget.uuid);
+                    widget.avatarCallback!(widget.userName, widget.uuid);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class CommentState extends State<Comment> {
                   widget.isLike = !widget.isLike;
                   setState(() {});
                   if (widget.isLikeCallback != null)
-                    widget.isLikeCallback(widget.isLike);
+                    widget.isLikeCallback!(widget.isLike);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
