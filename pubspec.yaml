@@ -26,7 +26,8 @@ dependencies:
   provider: ^5.0.0 # provider
   auto_size_text: ^3.0.0-nullsafety.0 # text
   badges: ^2.0.1 # badge
-#  bottom_navigation_badge: ^1.0.3 # navigation
+  bottom_navigation_badge:
+    path: ../bottom_navigation_badge
   intl: ^0.17.0
   dio: ^4.0.0 # for http, depends on http
   http: ^0.13.3
@@ -40,7 +41,7 @@ dependencies:
   crypto: ^3.0.1 # for encryption
   pull_to_refresh: ^2.0.0 # for slider refresh
   google_nav_bar: ^5.0.5 # for top tab bar
-#  fsearch: ^1.0.1 # for search bar
+  fsearch: ^1.0.1 # for search bar
   sliding_up_panel: ^2.0.0+1 # for sliding up panel
   moor: ^4.3.2 # for sqlite database
   sqlite3_flutter_libs: ^0.5.0 # for sqlite database
@@ -48,6 +49,7 @@ dependencies:
   # Version ^4.0.1 for `json_annotation` and ^4.1.0 for `json_serializable recommended
   # See: https://stackoverflow.com/questions/66477445/generator-cannot-target-libraries-that-have-not-been-migrated-to-null-safety
   json_annotation: ^4.0.1 # for sqlite database and json serialization.
+  fl_chart: ^0.36.1 # for charts graphing
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
