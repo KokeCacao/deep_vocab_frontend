@@ -1,4 +1,12 @@
+<!-- Added by Koke_Cacao
+     This file is edited based on: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-ANDROID.md
+     while installing [flutter_background_fetch] package.
+     The following 2 lines were added:
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:label"
+     I have no idea what they do. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="me.kokecacao.deep_vocab">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -6,6 +14,7 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
+        tools:replace="android:label"
         android:name="io.flutter.app.FlutterApplication"
         android:label="deep_vocab"
         android:icon="@mipmap/ic_launcher">

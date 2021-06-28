@@ -1,12 +1,40 @@
+// Added by Koke_Cacao
+// This file is edited based on: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-ANDROID.md
+// while installing [flutter_background_fetch] package.
+// The following 3 lines were added:
+//      maven {
+//          // [required] background_fetch
+//          url "${project(':background_fetch').projectDir}/libs"
+//      }
+// The following lines were changed from
+//      ext.kotlin_version = '1.3.50'
+// To
+//      ext.kotlin_version = '1.5.20'
+//      ext {
+//         compileSdkVersion   = 30 // lower means more support for more old device
+//         targetSdkVersion    = 30 // what version you have tested on, if not specified, default to minSdkVersion
+//         appCompatVersion    = "1.1.0" // AppCompat is a library to add additional unsupported feature to old device below compileSdkVersion
+//      }
+// I have no idea what they do.
+
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.5.20'
+    ext {
+        compileSdkVersion   = 30 // lower means more support for more old device
+        targetSdkVersion    = 28 // what version you have tested on, if not specified, default to minSdkVersion
+        appCompatVersion    = "1.1.0" // AppCompat is a library to add additional unsupported feature to old device below compileSdkVersion
+    }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+//        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        // gradle plugin for android studio
+        // See: https://developer.android.com/studio/releases/gradle-plugin
+        classpath 'com.android.tools.build:gradle:4.2.1'
+        // See: https://services.gradle.org/distributions/
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -14,7 +42,12 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+//        jcenter()
+        maven {
+            // [required] background_fetch
+            url "${project(':background_fetch').projectDir}/libs"
+        }
     }
 }
 
