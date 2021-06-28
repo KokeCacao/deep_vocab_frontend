@@ -1,5 +1,6 @@
 import '../controllers/vocab_state_controller.dart';
 import '../view_models/vocab_list_view_model.dart';
+import '../view_models/http_sync_view_model.dart';
 import '../widgets/learning_screen/learning_navbar.dart';
 import '../widgets/learning_screen/vocab_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,7 @@ import 'package:fsearch/fsearch.dart';
 import 'package:provider/provider.dart';
 
 class LearningScreen extends StatefulWidget {
-  int _index = 2;
+  int _index = 0;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +33,13 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+
+    // force user to enter task list if there is task
+    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: false).navigationLearningBadgeCount;
+    if (badgeNumber > 0) {
+      widget._index = 0;
+    }
+
     return Container(
         height: double.infinity,
         width: double.infinity,

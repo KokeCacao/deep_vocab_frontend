@@ -1,4 +1,7 @@
+import 'package:provider/provider.dart';
+
 import '/utils/constants.dart';
+import '/view_models/http_sync_view_model.dart';
 import '/screens/learning_screen.dart';
 import '/screens/user_screen.dart';
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
@@ -85,9 +88,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
           label: Constants.NAVIGATION_USER_LABEL),
     ];
 
-    // by extension BottomNavigationBarItemBadge
-    // see https://github.com/westdabestdb/bottom_navigation_badge/issues/8
-    _navItem = _badger.setBadge(_navItem, "1", 0) as List<BottomNavigationBarItem>;
+    // TODO: it will be great if this call to ChangeNotifierProvider does not refresh the whole widget
+    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: true).navigationLearningBadgeCount;
+    if (badgeNumber > 0) {
+      _navItem = _badger.setBadge(_navItem, badgeNumber.toString(), 0);
+    }
 
     // TODO: try AnnotatedRegion<SystemUiOverlayStyle>
     // TODO: Hero animation

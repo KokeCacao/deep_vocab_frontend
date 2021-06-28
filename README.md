@@ -91,10 +91,12 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2021/06/27: :art: change refactor BottomNavigationBadge
             :boom: fully upgrade to support null-safety
             :books: documentation for README.md and code
+            :sparkles: now alert user if there are task
 ```
 </details>
 
 ## TODO
+- [ ] Add: automatically direct user to download vocab when opening the learning tab
 - [ ] Add: Vocab count in [已完成] section
 - [ ] Add: Stats (something like App usage in IOS) (See: https://ft-interactive.github.io/visual-vocabulary/) (vocab/time, how-many-in-7-days, how-long-does-it-take-to-remember-1-vocab, )
 - [ ] Add: search bar

@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import 'view_models/http_sync_view_model.dart';
+
 /*
   learn more about shortcuts: https://medium.com/flutter-community/flutter-ide-shortcuts-for-faster-development-2ef45c51085b
  */
@@ -103,6 +105,9 @@ class _MyAppState extends State<MyApp> {
                 // to store vocab states for a vocab list
                 create: (ctx) => VocabStateController(context: ctx),
               ),
+              ChangeNotifierProvider<HttpSyncViewModel>(
+                create: (ctx) => HttpSyncViewModel(context: ctx),
+              )
             ],
             child: MaterialApp(
               title: "Deep Vocab",

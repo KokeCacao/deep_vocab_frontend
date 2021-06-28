@@ -10,6 +10,7 @@ import '../utils/hive_box.dart';
 import '../utils/http_widget.dart';
 import '../utils/util.dart';
 import './auth_view_model.dart';
+import './http_sync_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
@@ -165,6 +166,7 @@ class VocabListViewModel {
   }
 
   /// Update all local vocabs in [VocabStateController] based on server feedback
+  /// and update [HttpSyncViewModel] accordingly for [navigationLearningBadgeCount]
   Future<NetworkException?> refreshVocab(BuildContext context) async {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
@@ -188,6 +190,8 @@ class VocabListViewModel {
 
     List<Map<String, dynamic>> vocabList = map["vocabs"].cast<Map<String, dynamic>>();
     List<String> vocabIds = vocabList.map((e) => e["vocabId"]).cast<String>().toList();
+
+    Provider.of<HttpSyncViewModel>(context, listen: false).setNavigationLearningBadgeCount(vocabIds.length);
 
     VocabStateController vocabStateController = Provider.of<VocabStateController>(context, listen: false);
     // set back all pushMarked=true to pushMarked=false, and non-crossMark
