@@ -106,6 +106,9 @@ class VocabModel {
   factory VocabModel.fromCombinedSqlite(VocabSqliteTableDataWithUserVocabSqliteTableData vocabWithUserVocab) {
     return VocabModel.fromSqlite(vocabWithUserVocab.vocabSqliteTableData, vocabWithUserVocab.userVocabSqliteTableData);
   }
+
+  /// convert [this] to [VocabSqliteTableDataWithUserVocabSqliteTableData]
+  /// which contain [UserVocabSqliteTableData] and [VocabSqliteTableData]
   VocabSqliteTableDataWithUserVocabSqliteTableData toCombinedSqlite() {
     return VocabSqliteTableDataWithUserVocabSqliteTableData(
         vocabSqliteTableData: VocabSqliteTableData(

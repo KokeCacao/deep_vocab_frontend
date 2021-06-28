@@ -31,6 +31,14 @@ class VocabListViewModel {
   /// getters
 
   /// interface
+
+  /// Download and store vocabs
+  /// 1. Download [user_vocab_db] and [vocab_db] from server (comes in 1 file)
+  /// 2. Transform json to [VocabListModel]
+  /// 3. Store [vocabListModel.header] into Hive's [VOCAB_LIST_HEADER_BOX]
+  /// 4. For each [VocabModel] in [VocabListModel], convert to [VocabSqliteTableDataWithUserVocabSqliteTableData]
+  /// which contain [UserVocabSqliteTableData] and [VocabSqliteTableData]
+  /// 5. Save them to [UserVocabSqliteTable] and [VocabSqliteTable]
   Future<bool> downloadVocab({void Function(int count, int total)? onReceiveProgress}) async {
     String? path =
         await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
@@ -61,10 +69,14 @@ class VocabListViewModel {
     return Future.value(true);
   }
 
+  /// Get [VocabModel] by [vocabId] from combined [VocabSqliteTable] and [UserVocabSqliteTable]
   Future<VocabModel> getFromDatabaseById({required String vocabId}) async {
     return Future.value(VocabModel.fromCombinedSqlite(await _dao.getMarkedVocabsWithUserById(vocabId: vocabId)));
   }
 
+  /// Get [VocabListModel] = ([VocabModel]s and [VocabHeaderModel]) by predicates (if not null)
+  /// from Hive's [VOCAB_LIST_HEADER_BOX]
+  /// and from combined [VocabSqliteTable] and [UserVocabSqliteTable]
   Future<VocabListModel> getFromDatabase({int? listId, String? vocabId, bool? memorized, bool? pushedMark}) async {
     if (vocabId != null)
       return Future.value(VocabListModel(
@@ -95,9 +107,9 @@ class VocabListViewModel {
     return _dao.watchMarkedVocabsWithUserById(vocabId: vocabId).map((stream) => VocabModel.fromCombinedSqlite(stream));
   }
 
-  /// This function access the database that select specific [listId] and [vocabId] and returns a stream
-  /// If [listId] is not provided as an argument, the function selects all variants of [listId]
-  /// If [vocabId] is not provided as an argument, the function selects all variants of [vocabId]
+  /// Get [VocabListModel] = ([VocabModel]s and [VocabHeaderModel]) by predicates (if not null)
+  /// from Hive's [VOCAB_LIST_HEADER_BOX]
+  /// and from combined [VocabSqliteTable] and [UserVocabSqliteTable]
   Stream<VocabListModel> watchFromDatabase({int? listId, String? vocabId, bool? memorized, bool? pushedMark}) {
     if (vocabId != null)
       return _dao.watchMarkedVocabsWithUserById(vocabId: vocabId).map((stream) =>
@@ -124,7 +136,10 @@ class VocabListViewModel {
         header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null), vocabs: stream.map((e) => VocabModel.fromCombinedSqlite(e)).toList()));
   }
 
-  Future<NetworkException?> addMarkColor({required String? vocabId, List<MarkColorModel?>? originals, ColorModel? color, bool replaceLast = false}) async {
+  /// Tell server to insert [color] for [vocabId]
+  /// if success, update [UserVocabTable] with modified [originals]
+  /// [replaceLast] specify whether to add one [MarkColor] or change the last [MarkColor]
+  Future<NetworkException?> addMarkColor({required String vocabId, List<MarkColorModel?>? originals, ColorModel? color, bool replaceLast = false}) async {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     Map<String, dynamic>? map = await HttpWidget.graphQLMutation(
@@ -149,6 +164,7 @@ class VocabListViewModel {
     return Future.value();
   }
 
+  /// Update all local vocabs in [VocabStateController] based on server feedback
   Future<NetworkException?> refreshVocab(BuildContext context) async {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
@@ -190,8 +206,9 @@ class VocabListViewModel {
     return Future.value();
   }
 
+  /// Update server's [user_vocab_db] for one [vocabId]
   Future<NetworkException?> editUserVocab(
-      {required String? vocabId, String? editedMeaning, bool? bookMarked, bool? questionMark, bool? starMark, bool? pinMark, bool? addedMark}) async {
+      {String? vocabId, String? editedMeaning, bool? bookMarked, bool? questionMark, bool? starMark, bool? pinMark, bool? addedMark}) async {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     String query = "";
@@ -247,8 +264,10 @@ class VocabListViewModel {
     return Future.value();
   }
 
+  /// Upsert to [UserVocabTable] by [vocabId]
+  /// Null arguments means no change
   Future<dynamic> updateUserVocab({
-    required String? vocabId,
+    String? vocabId,
     int? nthWord,
     int? nthAppear,
     List<MarkColorModel?>? markColors,
