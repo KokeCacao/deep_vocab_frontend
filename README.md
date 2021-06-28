@@ -92,6 +92,9 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :boom: fully upgrade to support null-safety
             :books: documentation for README.md and code
             :sparkles: now alert user if there are task
+            :arrow_up: upgrade to android API 30
+            :arrow_up: upgrade gradle, gradle-wrapper and kotlin plugin
+            :arrow_up: add background_fetch package
 ```
 </details>
 
