@@ -24,15 +24,17 @@ class DismissibleVocabRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    VocabStateController vocabStateController = Provider.of<VocabStateController>(context, listen: true);
     return MultiDismissible(
       child: VocabRow(
         vocabId: vocab.vocabId,
         vocab: vocab.vocab,
         translation: vocab.mainTranslation,
         bookMarked: vocab.bookMarked,
-        cross: Provider.of<VocabStateController>(context, listen: false).crossedVocabIdContains(vocab.vocabId),
-        hide: !Provider.of<VocabStateController>(context, listen: false).unhideVocabIdContains(vocab.vocabId),
-        checkBox: Provider.of<VocabStateController>(context, listen: true).selectedVocabIdContains(vocab.vocabId), // listen to selectAll, inverseSelect
+        cross: vocabStateController.crossedVocabIdContains(vocab.vocabId),
+        hide: !vocabStateController.unhideVocabIdContains(vocab.vocabId),
+        checkBox: vocabStateController.selectedVocabIdContains(vocab.vocabId), // listen to selectAll, inverseSelect
+        triangle: vocab.addedMark,
       ),
       builder: (Widget child, MultiDismissibleStatus status) {
         if (status == MultiDismissibleStatus.ON_IDLE) return child;

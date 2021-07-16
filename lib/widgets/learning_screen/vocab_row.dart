@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import '../vocab_dialog/triangle_shape.dart';
 import '/controllers/vocab_state_controller.dart';
 import '/screens/vocab_dialog.dart';
 import '/widgets/separator.dart';
@@ -18,6 +19,7 @@ class VocabRow extends StatefulWidget {
   final String? vocab;
   final String? translation;
   final bool? bookMarked;
+  final bool? triangle;
 
   VocabRow(
       {this.hide = true,
@@ -28,14 +30,15 @@ class VocabRow extends StatefulWidget {
       required this.vocabId,
       required this.vocab,
       required this.translation,
-      this.bookMarked = false});
+      this.bookMarked = false,
+      this.triangle = false});
 
   @override
   State<StatefulWidget> createState() {
     return VocabRowState();
   }
 
-  VocabRow copyWith({bool? hide, bool? cross, bool? checkBox, void Function(bool value)? onSelect, String? vocab, String? translation, bool? bookMarked}) {
+  VocabRow copyWith({bool? hide, bool? cross, bool? checkBox, void Function(bool value)? onSelect, String? vocab, String? translation, bool? bookMarked, bool? triangle}) {
     return VocabRow(
       vocabId: this.vocabId,
       vocab: this.vocab,
@@ -45,6 +48,7 @@ class VocabRow extends StatefulWidget {
       checkBox: checkBox ?? this.checkBox,
       onSelect: onSelect ?? this.onSelect,
       bookMarked: bookMarked ?? this.bookMarked,
+      triangle: triangle ?? this.triangle,
     );
   }
 }
@@ -172,16 +176,30 @@ class VocabRowState extends State<VocabRow> {
                   axis: Axis.vertical,
                   color: Colors.transparent,
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: BookmarkShape(
-                    height: 20, // half of vocab row
-                    width: 8,
-                    borderRadius: 0,
-                    color: widget.bookMarked! ? Colors.red[700] : Colors.transparent,
-                    borderColor: widget.bookMarked! ? Colors.red[900] : Colors.transparent,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: BookmarkShape(
+                      height: 15, // half of vocab row
+                      width: 8,
+                      borderRadius: 0,
+                      color: widget.bookMarked! ? Colors.red[700] : Colors.transparent,
+                      borderColor: widget.bookMarked! ? Colors.red[900] : Colors.transparent,
+                    ),
                   ),
-                )
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TriangleShape(
+                      height: 12, // half of vocab row
+                      width: 8,
+                      borderRadius: 0,
+                      color: widget.triangle! ? Colors.blue[700] : Colors.transparent,
+                      borderColor: widget.triangle! ? Colors.blue[900] : Colors.transparent,
+                    ),
+                  ),
+                ],)
               ],
             ),
           )
