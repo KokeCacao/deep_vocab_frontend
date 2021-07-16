@@ -78,7 +78,7 @@ class VocabListViewModel {
   /// Get [VocabListModel] = ([VocabModel]s and [VocabHeaderModel]) by predicates (if not null)
   /// from Hive's [VOCAB_LIST_HEADER_BOX]
   /// and from combined [VocabSqliteTable] and [UserVocabSqliteTable]
-  Future<VocabListModel> getFromDatabase({int? listId, String? vocabId, bool? memorized, bool? pushedMark}) async {
+  Future<VocabListModel> getFromDatabase({int? listId, String? vocabId, bool? memorized, bool? addedMark, bool? pushedMark}) async {
     if (vocabId != null)
       return Future.value(VocabListModel(
           header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null),
@@ -91,12 +91,13 @@ class VocabListViewModel {
         (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
 
     List<VocabSqliteTableDataWithUserVocabSqliteTableData> list;
-    if (memorized == null && pushedMark == null)
+    if (memorized == null && pushedMark == null && addedMark == null)
       list = await _dao.getVocabsWithUserWhere(filter: leftFilter);
     else {
       Expression<bool?> Function($UserVocabSqliteTableTable tbl) rightFilter = (tbl) =>
           (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors))) &
-          (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
+          (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark)) &
+          (addedMark == null ? Variable<bool>(true) : tbl.addedMark.equals(addedMark));
       list = await _dao.getMarkedVocabsWithUserWhere(leftFilter: leftFilter, rightFilter: rightFilter);
     }
 
@@ -111,7 +112,7 @@ class VocabListViewModel {
   /// Get [VocabListModel] = ([VocabModel]s and [VocabHeaderModel]) by predicates (if not null)
   /// from Hive's [VOCAB_LIST_HEADER_BOX]
   /// and from combined [VocabSqliteTable] and [UserVocabSqliteTable]
-  Stream<VocabListModel> watchFromDatabase({int? listId, String? vocabId, bool? memorized, bool? pushedMark}) {
+  Stream<VocabListModel> watchFromDatabase({int? listId, String? vocabId, bool? memorized, bool? addedMark, bool? pushedMark}) {
     if (vocabId != null)
       return _dao.watchMarkedVocabsWithUserById(vocabId: vocabId).map((stream) =>
           VocabListModel(header: HiveBox.get(HiveBox.VOCAB_LIST_HEADER_BOX, listId, defaultValue: null), vocabs: [VocabModel.fromCombinedSqlite(stream)]));
@@ -124,12 +125,13 @@ class VocabListViewModel {
         (vocabId == null ? Variable<bool>(true) : tbl.vocabId.equals(vocabId));
 
     Stream<List<VocabSqliteTableDataWithUserVocabSqliteTableData>> stream;
-    if (memorized == null && pushedMark == null)
+    if (memorized == null && pushedMark == null && addedMark == null)
       stream = _dao.watchVocabsWithUserWhere(filter: leftFilter);
     else {
       Expression<bool?> Function($UserVocabSqliteTableTable tbl) rightFilter = (tbl) =>
           (memorized == null ? Variable<bool>(true) : (memorized ? isNotNull(tbl.markColors) : isNull(tbl.markColors))) &
-          (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark));
+          (pushedMark == null ? Variable<bool>(true) : tbl.pushedMark.equals(pushedMark)) &
+          (addedMark == null ? Variable<bool>(true) : tbl.addedMark.equals(addedMark));
       stream = _dao.watchMarkedVocabsWithUserWhere(leftFilter: leftFilter, rightFilter: rightFilter);
     }
 

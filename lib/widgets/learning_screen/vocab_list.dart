@@ -120,7 +120,7 @@ class VocabList extends StatelessWidget {
 
   static Widget memorized(BuildContext context, {bool random = false}) {
     return StreamBuilder(
-      stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(memorized: true),
+      stream: Provider.of<VocabListViewModel>(context, listen: false).watchFromDatabase(addedMark: true),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
         if (snapshot.data == null) return SizedBox.shrink();
         VocabListModel data = snapshot.data!;

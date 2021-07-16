@@ -59,6 +59,10 @@ class DismissibleVocabRow extends StatelessWidget {
             color = ColorModel.green;
             break;
         }
+        // automatically add to remember plan if not added
+        if (!vocab.addedMark) Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocab.vocabId, addedMark: true);
+
+        // add markColor
         Provider.of<VocabListViewModel>(context, listen: false)
             .addMarkColor(vocabId: vocab.vocabId, originals: markColors, color: color, replaceLast: replaceLast)
             .then((exception) {
