@@ -1,7 +1,7 @@
 class Constants {
   static const LEARNING_SCREEN_NAME = "";
   static const EXPLORE_SCREEN_NAME = "Explore";
-  static const STATS_SCREEN_NAME = "Stats";
+  static const STATS_SCREEN_NAME = "";
   static const USER_SCREEN_NAME = "";
 
   static const NAVIGATION_LEARNING_LABEL = "Learn";

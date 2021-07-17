@@ -99,6 +99,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :arrow_up: upgrade fl_chart package
             :racehorse: add empty screen for initialization after provider
             :bug: fix notifyListeners() error after dispose() on ViewModels
+            :sparkles: add stats screen and 3 plots
 
 ```
 </details>
