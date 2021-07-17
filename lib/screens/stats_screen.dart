@@ -15,7 +15,6 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
-
     Color cardColor = Colors.white70;
     double cardElevation = 0;
 
@@ -40,35 +39,6 @@ class _StatsScreenState extends State<StatsScreen> {
                 ],
                 mainText: "本周单词统计",
                 date: DateTime.now(),
-              )),
-          Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18)),
-              color: cardColor,
-              elevation: cardElevation,
-              child: VocabStats(
-                vocabStatsModels: [
-                  VocabStatsModel(
-                      x: DateTime(2020, 7, 17, 06, 49),
-                      y: 87.1,
-                      color: ColorModel.black),
-                  VocabStatsModel(
-                      x: DateTime(2020, 7, 17, 07, 20),
-                      y: 37.398,
-                      color: ColorModel.red),
-                  VocabStatsModel(
-                      x: DateTime(2020, 7, 17, 21, 36),
-                      y: 84.2,
-                      color: ColorModel.green),
-                  VocabStatsModel(
-                      x: DateTime(2020, 7, 18, 03, 29),
-                      y: 92.8219,
-                      color: ColorModel.red),
-                  VocabStatsModel(
-                      x: DateTime(2020, 7, 19, 03, 29),
-                      y: 95.8219,
-                      color: ColorModel.yellow),
-                ],
               )),
           Card(
               shape: RoundedRectangleBorder(

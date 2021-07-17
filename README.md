@@ -102,6 +102,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: add stats screen and 3 plots
             :art: README image created using mockuphone.com with "Google Pixel 4 Just Black"
             :art: fix README, rename init_callback
+            :sparkles: add line chart to individual vocab; remove from stats
 
 ```
 </details>

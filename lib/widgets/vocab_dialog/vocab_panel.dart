@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import '../stats_screen/vocab_stats.dart';
 import '/models/sub_models/mark_color_model.dart';
 import '/models/vocab_model.dart';
 import '/view_models/vocab_list_view_model.dart';
@@ -16,12 +17,15 @@ class VocabPanel extends StatelessWidget {
   final VocabModel? vocabModel;
   final PanelController panelController;
 
-  const VocabPanel({Key? key, required this.vocabModel, required this.panelController}) : super(key: key);
+  const VocabPanel(
+      {Key? key, required this.vocabModel, required this.panelController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10;
-    BorderRadius border = BorderRadius.vertical(top: Radius.circular(borderRadius));
+    BorderRadius border =
+        BorderRadius.vertical(top: Radius.circular(borderRadius));
 
     return SlidingUpPanel(
       color: Colors.white70,
@@ -50,7 +54,8 @@ class VocabPanel extends StatelessWidget {
                   children: vocabModel!.markColors == null
                       ? []
                       : [
-                          for (MarkColorModel? markColor in vocabModel!.markColors!)
+                          for (MarkColorModel? markColor
+                              in vocabModel!.markColors!)
                             Expanded(
                               child: Container(
                                 height: borderRadius,
@@ -65,7 +70,10 @@ class VocabPanel extends StatelessWidget {
                   TwoStateButton(
                       value: vocabModel!.pinMark,
                       onPressed: (bool value) =>
-                          Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel!.vocabId, pinMark: value),
+                          Provider.of<VocabListViewModel>(context,
+                                  listen: false)
+                              .editUserVocab(
+                                  vocabId: vocabModel!.vocabId, pinMark: value),
                       trueIcon: Icon(
                         Icons.push_pin,
                         color: Colors.blueGrey,
@@ -80,7 +88,11 @@ class VocabPanel extends StatelessWidget {
                         number: vocabModel!.nthWord,
                         bookmarked: vocabModel!.bookMarked,
                         onChangeBookmarked: (bool value) =>
-                            Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocabModel!.vocabId, bookMarked: value)),
+                            Provider.of<VocabListViewModel>(context,
+                                    listen: false)
+                                .editUserVocab(
+                                    vocabId: vocabModel!.vocabId,
+                                    bookMarked: value)),
                   ),
                   Container(
                     padding: EdgeInsets.all(10),
@@ -110,7 +122,8 @@ class VocabPanel extends StatelessWidget {
                               child: Align(
                                 // so that its on the right side of centered widget
                                 alignment: Alignment.centerLeft,
-                                child: IconButton(icon: Icon(Icons.edit), onPressed: () {}),
+                                child: IconButton(
+                                    icon: Icon(Icons.edit), onPressed: () {}),
                               ),
                             )
                           ],
@@ -133,7 +146,8 @@ class VocabPanel extends StatelessWidget {
                       children: [
                         // TODO: List.generate(data.currentPerson.tags.length, (index) => toBadge(data.currentPerson.tags.elementAt(index)))
                         if (vocabModel!.otherTranslation != null)
-                          for (String translation in vocabModel!.otherTranslation!)
+                          for (String translation
+                              in vocabModel!.otherTranslation!)
                             VocabBadge(
                               text: translation,
                               color: Colors.blueGrey[700],
@@ -147,8 +161,11 @@ class VocabPanel extends StatelessWidget {
                     Separator(
                       color: Colors.transparent,
                     ),
-                    if (vocabModel!.englishTranslation != null) Text("英译: ${vocabModel!.englishTranslation}"),
-                    if (vocabModel!.exampleSentences != null && vocabModel!.exampleSentences!.length > 1) Text("例句: ${vocabModel!.exampleSentences![0]}")
+                    if (vocabModel!.englishTranslation != null)
+                      Text("英译: ${vocabModel!.englishTranslation}"),
+                    if (vocabModel!.exampleSentences != null &&
+                        vocabModel!.exampleSentences!.length > 1)
+                      Text("例句: ${vocabModel!.exampleSentences![0]}")
                   ],
                 ),
               ),
@@ -167,12 +184,14 @@ class VocabPanel extends StatelessWidget {
                         children: [
                           Text(
                             "联想空间",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Separator(
                             color: Colors.transparent,
                           ),
-                          if (vocabModel!.memTips != null) Text(vocabModel!.memTips!),
+                          if (vocabModel!.memTips != null)
+                            Text(vocabModel!.memTips!),
                         ],
                       ),
                     ),
@@ -182,19 +201,38 @@ class VocabPanel extends StatelessWidget {
                         children: [
                           Text(
                             "混淆单词",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Separator(
                             color: Colors.transparent,
                           ),
                           if (vocabModel!.confusingWords != null)
-                            for (String confusing in vocabModel!.confusingWords!) Text(confusing),
+                            for (String confusing
+                                in vocabModel!.confusingWords!)
+                              Text(confusing),
                         ],
                       ),
                     )
                   ],
                 ),
               ),
+              if (vocabModel!.markColors != null &&
+                  vocabModel!.markColors!.isNotEmpty)
+                Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.all(10),
+                    color: Colors.white60,
+                    child: VocabStats(
+                      vocabStatsModels: vocabModel!.markColors!
+                          .map((e) => VocabStatsModel(
+                              // TODO: better calculation with inclution of actual LTM
+                              x: e!.time!,
+                              y: ((e.color!.index + 1) * 20).toDouble(),
+                              color: e.color!))
+                          .toList(),
+                    )),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 5),
@@ -205,7 +243,8 @@ class VocabPanel extends StatelessWidget {
                   children: [
                     Text(
                       "吐槽空间",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Separator(
                       color: Colors.transparent,
