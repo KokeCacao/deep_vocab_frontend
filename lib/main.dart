@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:deep_vocab/widgets/InitCallback.dart';
+import 'widgets/Init_callback.dart';
 import 'package:graphql/client.dart';
 
 import './controllers/vocab_state_controller.dart';
@@ -119,6 +119,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    MaterialApp emptyApp = MaterialApp(
+      home: Scaffold(
+        body: Center(
+            child: Column(
+              children: [
+                // TODO: costomization
+                PhysicalModel(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(80.0),
+                  clipBehavior: Clip.antiAlias,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
+                    value: 0.5,
+                    valueColor: AlwaysStoppedAnimation(Colors.amber),
+                  ),
+                )
+              ],
+            )),
+      ),
+    );
+
     return FutureBuilder(
         // future builder here to separate pages
         future:
@@ -126,26 +147,7 @@ class _MyAppState extends State<MyApp> {
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             print("[Init] initializing");
-            return MaterialApp(
-              home: Scaffold(
-                body: Center(
-                    child: Column(
-                  children: [
-                    // TODO: costomization
-                    PhysicalModel(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(80.0),
-                      clipBehavior: Clip.antiAlias,
-                      child: LinearProgressIndicator(
-                        backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
-                        value: 0.5,
-                        valueColor: AlwaysStoppedAnimation(Colors.amber),
-                      ),
-                    )
-                  ],
-                )),
-              ),
-            );
+            return emptyApp;
           }
           // getting initialized data
           Map<String, dynamic> data = snapshot.data;
@@ -184,6 +186,7 @@ class _MyAppState extends State<MyApp> {
             child: InitCallback(
                 callBack:
                     initPlatformState, // schedule initPlatformState after build complete
+                temporary: emptyApp,
                 child: MaterialApp(
                   title: "Deep Vocab",
                   debugShowCheckedModeBanner: false, // disable debug banner
