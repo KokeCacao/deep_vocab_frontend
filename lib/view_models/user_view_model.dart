@@ -13,6 +13,22 @@ class UserViewModel extends ChangeNotifier {
   final Box<dynamic> _box;
   final boxKey = HiveBox.USER_SINGLETON_INDEX;
 
+  /// tracking if widget is disposed already
+  /// Used to remove issue: Unhandled Exception: A UserViewModel was used after being disposed.
+  /// Once you have called dispose() on a UserViewModel, it can no longer be used.
+  bool _disposed = false;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
   /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
   UserViewModel({required this.context, required connectionStatus})
       : assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX)),

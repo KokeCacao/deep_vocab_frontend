@@ -98,6 +98,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2021/06/28: :sparkles: auto-refresh every 15 min
             :arrow_up: upgrade fl_chart package
             :racehorse: add empty screen for initialization after provider
+            :bug: fix notifyListeners() error after dispose() on ViewModels
 
 ```
 </details>

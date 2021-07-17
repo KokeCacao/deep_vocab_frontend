@@ -15,7 +15,21 @@ class AuthViewModel extends ChangeNotifier {
   final boxRefreshTokenKey = HiveBox.USER_SINGLETON_REFRESH_TOKEN;
   final boxWxTokenKey = HiveBox.USER_SINGLETON_WX_TOKEN; // TODO: un-initialize it and implement it. change updateAccessTokenIfNull() as needed
 
-  /// store value
+  /// tracking if widget is disposed already
+  /// Used to remove issue: Unhandled Exception: A UserViewModel was used after being disposed.
+  /// Once you have called dispose() on a UserViewModel, it can no longer be used.
+  bool _disposed = false;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
 
   /// @requires assert(Hive.isBoxOpen(HiveBox.SINGLETON_BOX));
   AuthViewModel({required this.context})
