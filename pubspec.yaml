@@ -49,7 +49,7 @@ dependencies:
   # Version ^4.0.1 for `json_annotation` and ^4.1.0 for `json_serializable recommended
   # See: https://stackoverflow.com/questions/66477445/generator-cannot-target-libraries-that-have-not-been-migrated-to-null-safety
   json_annotation: ^4.0.1 # for sqlite database and json serialization.
-  fl_chart: ^0.36.1 # for charts graphing
+  fl_chart: ^0.36.2 # for charts graphing
 
   # See IOS setup guide: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-IOS.md
   # See Android setup guide: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-ANDROID.md
