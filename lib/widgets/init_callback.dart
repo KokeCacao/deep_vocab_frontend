@@ -11,10 +11,7 @@ class InitCallback extends StatelessWidget {
   Widget build(BuildContext context) {
     if (callBack == null) return child;
     return FutureBuilder(
-      future: () async {
-        await this.callBack!(context);
-        return Future.value();
-      }(),
+      future: this.callBack!(context),
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return temporary;

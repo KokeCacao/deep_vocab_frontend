@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'widgets/Init_callback.dart';
+import 'widgets/init_callback.dart';
 import 'package:graphql/client.dart';
 
 import './controllers/vocab_state_controller.dart';

@@ -94,12 +94,14 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: now alert user if there are task
             :arrow_up: upgrade to android API 30
             :arrow_up: upgrade gradle, gradle-wrapper and kotlin plugin
-            :arrow_up: add background_fetch package
-2021/06/28: :sparkles: auto-refresh every 15 min
+2021/07/17: :arrow_up: add background_fetch package
+2021/07/18: :sparkles: auto-refresh every 15 min
             :arrow_up: upgrade fl_chart package
             :racehorse: add empty screen for initialization after provider
             :bug: fix notifyListeners() error after dispose() on ViewModels
             :sparkles: add stats screen and 3 plots
+            :art: README image created using mockuphone.com with "Google Pixel 4 Just Black"
+            :art: fix README, rename init_callback
 
 ```
 </details>
