@@ -15,7 +15,7 @@ class HttpWidget extends Object {
   static Dio? _dio;
   static GraphQLClient? _graphQLClient;
   static const String BASE_URL =
-      "http://10.0.2.2:5000"; // TODO: baseUrl, 10.0.2.2 for android emulator, see https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
+      "http://152.70.106.215:5000"; // TODO: baseUrl, 10.0.2.2 for android emulator, see https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
 
   static Dio? get dio {
     if (_dio == null) {
@@ -29,7 +29,7 @@ class HttpWidget extends Object {
     if (_graphQLClient == null) {
       _graphQLClient = GraphQLClient(
           cache: GraphQLCache(),
-          link: HttpLink('http://10.0.2.2:5000/graphql'),
+          link: HttpLink(BASE_URL + '/graphql'),
           defaultPolicies: DefaultPolicies(
               watchQuery: Policies.safe(
                 FetchPolicy.networkOnly, // so that no cache is saved
