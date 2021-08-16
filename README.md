@@ -103,14 +103,43 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :art: README image created using mockuphone.com with "Google Pixel 4 Just Black"
             :art: fix README, rename init_callback
             :sparkles: add line chart to individual vocab; remove from stats
-
+2021/08/15: :bug: fix display after refresh
+            :sparkles: add arguments to backends
+            :sparkles: deploy on remote server
+            :books: simplify environment.yml by remove build info
 ```
 </details>
 
-## TODO
+## TODO 后端 (for v0.0.1 milestone)
+- [ ] Add: Documentation
+- [ ] Add: Allow user modify password, if success, try logout user
+- [ ] Add: [Large] fetch stats
+- [ ] Add: [Large] app log and upload log
+- [ ] Add: [Large] remind user to update app when there is new
+
+## TODO 美术 (for v0.0.1 milestone)
+- [ ] Add: better avatar
+- [ ] Add: better download screen design
+- [ ] Fix: improve UI
+
+## TODO 前端 (for v0.0.1 milestone)
+CHECK YOUR EMAIL
+- [ ] Add: Documentation
+- [ ] Add: [Large] fetch stats
+- [ ] Add: Dark Mode
+- [ ] Add: xp system by active time
+- [ ] Add: filter by star/pin
+- [ ] Fix: vocab translation has `\n`
+- [ ] Add: [Large] app notification
+- [ ] Add: [Large] app log and upload log
+- [ ] Add: [Large] remind user to update app when there is new
+- [ ] Add: [Large] password changing by email and email verification
+- [ ] Add: [Large] wechat login / binding
+
+## TODO (less important)
 - [ ] Add: automatically direct user to download vocab when opening the learning tab
 - [ ] Add: Vocab count in [已完成] section
-- [ ] Add: Stats (something like App usage in IOS) (See: https://ft-interactive.github.io/visual-vocabulary/) (vocab/time, how-many-in-7-days, how-long-does-it-take-to-remember-1-vocab, )
+- [ ] Add: Stats (something like App usage in IOS) (See: https://ft-interactive.github.io/visual-vocabulary/) (vocab/time, how-long-does-it-take-to-remember-1-vocab, )
 - [ ] Add: search bar
 - [ ] Add: notification for unsuccessful refresh due to internet connection
 - [ ] Fix: login screen button to always shown above keyboard

@@ -17,7 +17,8 @@ class LearningScreen extends StatefulWidget {
   }
 }
 
-class _LearningScreenState extends State<LearningScreen> with SingleTickerProviderStateMixin {
+class _LearningScreenState extends State<LearningScreen>
+    with SingleTickerProviderStateMixin {
   Widget _buildList() {
     switch (widget._index) {
       case 0:
@@ -32,14 +33,17 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
 
     // force user to enter task list if there is task
-    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: false).navigationLearningBadgeCount;
-    if (badgeNumber > 0) {
-      widget._index = 0;
-    }
+    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: false)
+        .navigationLearningBadgeCount;
+    if (badgeNumber > 0) widget._index = 0;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
         height: double.infinity,
         width: double.infinity,
@@ -49,7 +53,8 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
             LearningNavbar(
               onTabChange: (index) {
                 widget._index = index;
-                Provider.of<VocabStateController>(context, listen: false).clear();
+                Provider.of<VocabStateController>(context, listen: false)
+                    .clear();
                 setState(() {});
               },
               selectedIndex: widget._index,
@@ -67,8 +72,12 @@ class _LearningScreenState extends State<LearningScreen> with SingleTickerProvid
                         Text("Barron3500"),
                         RaisedButton(
                           onPressed: () async {
-                            bool success = await Provider.of<VocabListViewModel>(context, listen: false).downloadVocab();
-                            print("[LearningScreen] update vocab list ${success ? "Success!" : "Failed."}");
+                            bool success =
+                                await Provider.of<VocabListViewModel>(context,
+                                        listen: false)
+                                    .downloadVocab();
+                            print(
+                                "[LearningScreen] update vocab list ${success ? "Success!" : "Failed."}");
                           },
                           child: Text("Download"),
                         )
