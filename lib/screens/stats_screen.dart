@@ -24,14 +24,16 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    List<CalendarStatsModel> calendarModels = List<CalendarStatsModel>.generate(widget.howManyDays, (i) => CalendarStatsModel(black: 0, red: 0, yellow: 0, green: 0)); // 7 day stats
-    CalendarStatsModel totalModel = CalendarStatsModel(black: 0, red: 0, yellow: 0, green: 0); // total stats
 
     return FutureBuilder(
       future: Provider.of<VocabListViewModel>(context, listen: false).getFromDatabase(addedMark: true),
       builder: (BuildContext context, AsyncSnapshot<VocabListModel> snapshot) {
-        if (snapshot.data == null) return getEmpty();
+        if (snapshot.data == null || snapshot.data!.vocabs == null || snapshot.data!.vocabs!.isEmpty) return getEmpty();
+
+        DateTime now = DateTime.now();
+        List<CalendarStatsModel> calendarModels = List<CalendarStatsModel>.generate(widget.howManyDays, (i) => CalendarStatsModel(black: 0, red: 0, yellow: 0, green: 0)); // 7 day stats
+        CalendarStatsModel totalModel = CalendarStatsModel(black: 0, red: 0, yellow: 0, green: 0); // total stats
+
         VocabListModel data = snapshot.data!;
         for (VocabModel vocab in data.vocabs!) {
           if (vocab.markColors != null && vocab.markColors!.last != null) {
