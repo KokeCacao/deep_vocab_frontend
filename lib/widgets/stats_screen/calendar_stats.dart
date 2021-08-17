@@ -206,7 +206,7 @@ class _CalendarStatsState extends State<CalendarStats> {
     CalendarStatsModel calendarModel,
     double maxValue, {
     bool isTouched = false,
-    Color barColor = Colors.white,
+    Color barColor = Colors.transparent, // when there is 1 in data, it will show background color
     double width = 22,
     List<int> showTooltips = const [],
   }) {

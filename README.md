@@ -107,6 +107,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: add arguments to backends
             :sparkles: deploy on remote server
             :books: simplify environment.yml by remove build info
+2021/08/17: :sparkles: remove stats http handling, calculated locally
+            :bug: make calendar stats transparent
 ```
 </details>
 
@@ -137,6 +139,7 @@ CHECK YOUR EMAIL
 - [ ] Add: [Large] wechat login / binding
 
 ## TODO (less important)
+- [ ] Fix: datetime should be consistent and use universal timestamp and convert to local time when appropriate. but user display should display according to local time zone (especially in stats)
 - [ ] Add: automatically direct user to download vocab when opening the learning tab
 - [ ] Add: Vocab count in [已完成] section
 - [ ] Add: Stats (something like App usage in IOS) (See: https://ft-interactive.github.io/visual-vocabulary/) (vocab/time, how-long-does-it-take-to-remember-1-vocab, )
