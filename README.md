@@ -110,6 +110,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2021/08/17: :sparkles: remove stats http handling, calculated locally
             :bug: make calendar stats transparent
             :bug: fix stats chart when not logged in
+            :sparkles: add icon
 ```
 </details>
 
