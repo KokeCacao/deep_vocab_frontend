@@ -6,15 +6,15 @@
 <h4 align="center">最科学的记忆方式</h4>
 
 <p align="center">
-  <img src="https://img.shields.io/appveyor/build/kokecacao/deep_vocab_frontend">
-  <img src="https://img.shields.io/github/v/release/kokecacao/deep_vocab_frontend?include_prereleases">
-  <img src="https://img.shields.io/github/last-commit/kokecacao/deep_vocab_frontend">
+  <img src="https://img.shields.io/appveyor/build/kokecacao/deep_vocab">
+  <img src="https://img.shields.io/github/v/release/kokecacao/deep_vocab?include_prereleases">
+  <img src="https://img.shields.io/github/last-commit/kokecacao/deep_vocab">
   <img src="https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Fwww.kokecacao.me">
 </p>
 
 ## 特性: Features
 
-深度单词 Deep Vocab 致力于打造第一款信息时代的单词记忆软件. 其运用机器学习算法为您实时推荐快要忘记的单词, 已达到最省时间, 最高效的记忆.
+深度单词 Deep Vocab 致力于打造第一款信息时代的单词记忆软件. 其运用机器学习算法为您实时推送快要忘记的单词, 已达到最省时间, 最高效的记忆.
 
 <p align="center">
   <img src="https://github.kokecacao.me/chenhanke.me/assets/images/deep_vocab_01.png" height="400">
@@ -71,7 +71,6 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: complete most UI elements.
             :bug: fix password obscure.
 2020/01/13: :art: adjust code structure
-2020/01/14: naming failure, next name: "深度残差", "深度玻尔兹曼", "深度二叉", "深度卷积图", "深度全卷积", "基于深度学习的", "深度图", "深度调参", "初春"
 2020/01/21: :sparkles: first write json for vocab
 2020/01/22: :sparkles: json serialization and database
 2020/01/23: :construction: connect database to actual screen
@@ -114,6 +113,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: add .jks to gitignore
             :sparkles: add key.properties to gitignore
             :sparkles: prepare for release
+2021/08/18: :fire: remove fsearch
+            :sparkles: support more android ISA
 ```
 </details>
 
