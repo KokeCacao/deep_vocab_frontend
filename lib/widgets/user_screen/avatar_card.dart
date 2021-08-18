@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import './avatar_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class AvatarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return TextButton(
       onPressed: onPressed,
       child: Padding(
         padding: EdgeInsets.all(20),

@@ -151,12 +151,10 @@ class _MyAppState extends State<MyApp> {
           }
           // getting initialized data
           Map<String, dynamic> data = snapshot.data;
-          HiveBox hiveBox = data["HiveBox"];
           AppDatabase appDatabase = data["AppDatabase"];
 
           return MultiProvider(
             providers: [
-              // Provider<HiveBox>.value(value: hiveBox), // TODO: figure out why do I need this provider, if not, delete
               Provider<AppDatabase>.value(value: appDatabase),
               ChangeNotifierProvider<AuthViewModel>(
                 create: (ctx) => AuthViewModel(context: ctx),

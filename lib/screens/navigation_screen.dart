@@ -89,7 +89,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ];
 
     // TODO: it will be great if this call to ChangeNotifierProvider does not refresh the whole widget
-    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: true).navigationLearningBadgeCount;
+    int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: true)
+        .navigationLearningBadgeCount;
     if (badgeNumber > 0) {
       _navItem = _badger.setBadge(_navItem, badgeNumber.toString(), 0);
     }

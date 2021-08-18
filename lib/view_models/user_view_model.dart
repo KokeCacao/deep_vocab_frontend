@@ -56,7 +56,7 @@ class UserViewModel extends ChangeNotifier {
     }
     NetworkException? exception = await _updateUser(uuid: authViewModel.uuid);
     if (exception != null) {
-      print("[UserViewModel] Exception: ${exception}");
+      print("[UserViewModel] Exception: $exception");
       return Future.value(false);
     }
     print("[UserViewModel] updated ${userModel.userName} as my username");

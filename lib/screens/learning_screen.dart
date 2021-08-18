@@ -5,12 +5,9 @@ import '../widgets/learning_screen/learning_navbar.dart';
 import '../widgets/learning_screen/vocab_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fsearch/fsearch.dart';
 import 'package:provider/provider.dart';
 
 class LearningScreen extends StatefulWidget {
-  int _index = 0;
-
   @override
   State<StatefulWidget> createState() {
     return _LearningScreenState();
@@ -19,8 +16,11 @@ class LearningScreen extends StatefulWidget {
 
 class _LearningScreenState extends State<LearningScreen>
     with SingleTickerProviderStateMixin {
+
+  int _index = 0;
+
   Widget _buildList() {
-    switch (widget._index) {
+    switch (_index) {
       case 0:
         return VocabList.task(context);
       case 1:
@@ -28,7 +28,7 @@ class _LearningScreenState extends State<LearningScreen>
       case 2:
         return VocabList.list(context);
       default:
-        throw Exception("There is no ${widget._index}-th tab in GNav");
+        throw Exception("There is no $_index-th tab in GNav");
     }
   }
 
@@ -39,7 +39,7 @@ class _LearningScreenState extends State<LearningScreen>
     // force user to enter task list if there is task
     int badgeNumber = Provider.of<HttpSyncViewModel>(context, listen: false)
         .navigationLearningBadgeCount;
-    if (badgeNumber > 0) widget._index = 0;
+    if (badgeNumber > 0) _index = 0;
   }
 
   @override
@@ -52,25 +52,25 @@ class _LearningScreenState extends State<LearningScreen>
           children: [
             LearningNavbar(
               onTabChange: (index) {
-                widget._index = index;
+                _index = index;
                 Provider.of<VocabStateController>(context, listen: false)
                     .clear();
                 setState(() {});
               },
-              selectedIndex: widget._index,
+              selectedIndex: _index,
               // TODO: more customize, see https://github.com/Fliggy-Mobile/fsearch/blob/master/README_CN.md
               // TODO: add controller
               // TODO: 提示显示记忆力最低的单词?
               // TODO: finish initializing a proper controller
-              controller: FSearchController(),
+              // controller: FSearchController(),
             ),
-            widget._index == 2
+            _index == 2
                 ? Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text("Barron3500"),
-                        RaisedButton(
+                        ElevatedButton(
                           onPressed: () async {
                             bool success =
                                 await Provider.of<VocabListViewModel>(context,

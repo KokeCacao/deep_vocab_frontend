@@ -14,7 +14,7 @@ class XpBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("LV.${level} "),
+        Text("LV.$level "),
         Expanded(
           // for "double infinity" to work
           child: Container(

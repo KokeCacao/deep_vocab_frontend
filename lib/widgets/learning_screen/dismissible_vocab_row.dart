@@ -1,7 +1,6 @@
 import '/controllers/vocab_state_controller.dart';
 import '/models/sub_models/mark_color_model.dart';
 import '/models/vocab_model.dart';
-import '/utils/hive_box.dart';
 import '/view_models/vocab_list_view_model.dart';
 import './vocab_row.dart';
 import 'package:flutter/cupertino.dart';

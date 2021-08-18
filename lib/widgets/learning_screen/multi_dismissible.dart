@@ -71,7 +71,7 @@ class MultiDismissibleState extends State<MultiDismissible>
 
   void _onDragEnd(DragEndDetails dragEndDetails) {
     if (!_canBeDragged) return;
-    double value = _horizontalAnimationController.value;
+    // double value = _horizontalAnimationController.value;
 
     switch(_layerIndex) {
       case 0:

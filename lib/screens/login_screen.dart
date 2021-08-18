@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  bool _login = true;
-  int _index = 0;
-
   final FocusNode _userNameNode = FocusNode();
   final FocusNode _emailNode = FocusNode();
   final FocusNode _passwordNode = FocusNode();
@@ -19,10 +16,6 @@ class LoginScreen extends StatefulWidget {
   final _emailFieldKey = GlobalKey<FormFieldState>();
   final _passwordFieldKey = GlobalKey<FormFieldState>();
 
-  String? _userName;
-  String? _email;
-  String? _password;
-
   @override
   State<StatefulWidget> createState() {
     return _LoginScreenState();
@@ -31,31 +24,40 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late bool _passwordVisible;
+  bool _login = true;
+  int _index = 0;
+
+  String? _userName;
+  String? _email;
+  String? _password;
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
   }
 
   @override
   Widget build(BuildContext context) {
     void onBack() {
-      if (widget._index == 0) {
+      if (_index == 0) {
         Navigator.of(context).maybePop();
       } else {
-        widget._index--;
+        _index--;
         setState(() {});
       }
     }
 
     void submit() async {
       // stop submit if the current field is wrong
-      switch (widget._index) {
+      switch (_index) {
         case 0:
           if (!widget._usernameFieldKey.currentState!.validate()) return;
           break;
         case 1:
-          if (widget._login ? !widget._passwordFieldKey.currentState!.validate() : !widget._emailFieldKey.currentState!.validate()) return;
+          if (_login
+              ? !widget._passwordFieldKey.currentState!.validate()
+              : !widget._emailFieldKey.currentState!.validate()) return;
           break;
         case 2:
           if (!widget._passwordFieldKey.currentState!.validate()) return;
@@ -63,16 +65,19 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       // stop submit if it is not the last field
-      int maxStack = widget._login ? 1 : 2;
-      if (widget._index != maxStack) {
-        FocusScope.of(context).unfocus(); // stop user from editing previous field
-        widget._index++;
-        switch (widget._index) {
+      int maxStack = _login ? 1 : 2;
+      if (_index != maxStack) {
+        FocusScope.of(context)
+            .unfocus(); // stop user from editing previous field
+        _index++;
+        switch (_index) {
           case 0:
             widget._userNameNode.requestFocus();
             break;
           case 1:
-            widget._login ? widget._passwordNode.requestFocus() : widget._emailNode.requestFocus();
+            _login
+                ? widget._passwordNode.requestFocus()
+                : widget._emailNode.requestFocus();
             break;
           case 2:
             widget._passwordNode.requestFocus();
@@ -89,14 +94,18 @@ class _LoginScreenState extends State<LoginScreen> {
       widget._scaffoldKey.currentState!.showSnackBar(SnackBar(
         duration: Duration(seconds: 4),
         content: Row(
-          children: <Widget>[CircularProgressIndicator(), Text(widget._login ? "    Signing In ..." : "    Creating Account ...")],
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text(_login ? "    Signing In ..." : "    Creating Account ...")
+          ],
         ),
       ));
-      AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      AuthViewModel authViewModel =
+          Provider.of<AuthViewModel>(context, listen: false);
 
-      String? errorMessage = widget._login
-          ? await authViewModel.loginWithUsernameIfNeeded(widget._userName, widget._password)
-          : await authViewModel.createUser(widget._userName, widget._password, widget._email);
+      String? errorMessage = _login
+          ? await authViewModel.loginWithUsernameIfNeeded(_userName, _password)
+          : await authViewModel.createUser(_userName, _password, _email);
 
       widget._scaffoldKey.currentState!.hideCurrentSnackBar();
 
@@ -120,8 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void switchLogin() {
-      widget._login = !widget._login;
-      widget._index = 0;
+      _login = !_login;
+      _index = 0;
       setState(() {});
     }
 
@@ -132,11 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
       focusNode: widget._userNameNode,
       validator: (value) {
         if (value!.isEmpty) return "Please enter your username";
-        if (value.length > 64) return "Username needs to be shorter than 64 characters";
+        if (value.length > 64)
+          return "Username needs to be shorter than 64 characters";
         return null;
       },
       onSaved: (value) {
-        widget._userName = value;
+        _userName = value;
       },
     );
 
@@ -150,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null;
       },
       onSaved: (value) {
-        widget._email = value;
+        _email = value;
       },
     );
 
@@ -172,12 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
       focusNode: widget._passwordNode,
       validator: (value) {
         if (value!.isEmpty) return "Please enter your password";
-        if (value.length < 6 && value.length > 64) return "Password should be between 7 and 63 characters";
-        if (int.tryParse(value) != null) return "Password should not be just numbers";
+        if (value.length < 6 && value.length > 64)
+          return "Password should be between 7 and 63 characters";
+        if (int.tryParse(value) != null)
+          return "Password should not be just numbers";
         return null;
       },
       onSaved: (value) {
-        widget._password = value;
+        _password = value;
       },
       onFieldSubmitted: (string) => submit(),
     );
@@ -206,16 +218,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     shrinkWrap: true,
                     children: [
                       Text(
-                        widget._login ? "Login" : "Register",
-                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                        _login ? "Login" : "Register",
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.bold),
                       ),
                       // TODO: advanced validation on email(email format) and password(safety), and maybe on username to prevent special characters
                       IndexedStack(
-                        index: widget._index,
+                        index: _index,
                         children: [
                           usernameField,
-                          widget._login ? passwordField : emailField,
-                          widget._login
+                          _login ? passwordField : emailField,
+                          _login
                               ? Separator(
                                   height: 0,
                                   color: Colors.transparent,
@@ -226,17 +239,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget._login ? "Don't have an account? " : "Already have an account? ",
+                          Text(
+                              _login
+                                  ? "Don't have an account? "
+                                  : "Already have an account? ",
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 color: Colors.blueGrey,
                               )),
-                          FlatButton(
+                          TextButton(
                               onPressed: switchLogin,
                               child: Text(
-                                widget._login ? "Create Account" : "Log in",
+                                _login ? "Create Account" : "Log in",
                                 textAlign: TextAlign.left,
-                                style: TextStyle(color: Colors.blueGrey, decoration: TextDecoration.underline),
+                                style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    decoration: TextDecoration.underline),
                               ))
                         ],
                       ),
@@ -244,15 +262,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 20,
                         color: Colors.transparent,
                       ),
-                      RaisedButton(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                            widget._login ? (widget._index == 1 ? "Login": "Next") : (widget._index == 2 ? "Create Account": "Next"),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            )),
+                      ElevatedButton(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                              _login
+                                  ? (_index == 1 ? "Login" : "Next")
+                                  : (_index == 2 ? "Create Account" : "Next"),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
                         onPressed: submit,
                       )
                     ],

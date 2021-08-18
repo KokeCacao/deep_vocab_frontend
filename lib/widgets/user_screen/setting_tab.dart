@@ -18,7 +18,7 @@ class SettingTab extends StatelessWidget {
               top: BorderSide(width: 1, color: Colors.black12))),
       height: 60,
       width: double.infinity,
-      child: FlatButton(
+      child: TextButton(
         onPressed: () {},
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
@@ -31,13 +31,13 @@ class SettingTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(icon),
-                  Text("  ${textFront}"),
+                  Text("  $textFront"),
                 ],
               ),
               Row(
                 children: [
                   Text(
-                    "${textBack}",
+                    "$textBack",
                     style: TextStyle(color: Colors.black54),
                   ),
                   Icon(

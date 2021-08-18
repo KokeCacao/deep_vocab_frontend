@@ -39,11 +39,11 @@ class HiveBox {
 
     // open box: dynamic here is the store type. They have to be dynamic
     // open box cannot be stored somewhere, otherwise it will cause infinite loading time
-    Box<dynamic> singletonBox = await Hive.openBox<dynamic>(HiveBox.SINGLETON_BOX);
+    await Hive.openBox<dynamic>(HiveBox.SINGLETON_BOX);
     print("[HiveBox] initialize ${HiveBox.SINGLETON_BOX} box");
-    Box<dynamic> requestBox = await Hive.openBox<dynamic>(HiveBox.REQUEST_BOX)..clear();
+    await Hive.openBox<dynamic>(HiveBox.REQUEST_BOX)..clear();
     print("[HiveBox] initialize ${HiveBox.REQUEST_BOX} box (cleared)");
-    Box<dynamic> vocabListBox = await Hive.openBox<dynamic>(HiveBox.VOCAB_LIST_HEADER_BOX);
+    await Hive.openBox<dynamic>(HiveBox.VOCAB_LIST_HEADER_BOX);
     print("[HiveBox] initialize ${HiveBox.VOCAB_LIST_HEADER_BOX} box");
 
     print("[HiveBox] Initialization successful");

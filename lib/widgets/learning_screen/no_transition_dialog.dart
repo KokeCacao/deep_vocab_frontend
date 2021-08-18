@@ -19,9 +19,7 @@ Future<T?> showNoTransitionDialog<T>({
       final Widget pageChild = Builder(builder: builder);
       Widget dialog = Builder(
           builder: (BuildContext context) {
-            return theme != null
-                ? Theme(data: theme, child: pageChild)
-                : pageChild;
+            return Theme(data: theme, child: pageChild);
           }
       );
       return SafeArea(child: dialog);

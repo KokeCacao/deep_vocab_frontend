@@ -48,7 +48,7 @@ class VocabListViewModel {
       print("[VocabListViewModel] error downloading file, user not logged in?"); // TODO: direct user to log in first
       return Future.value(false);
     }
-    print("[VocabListViewModel] downloaded to path ${path}");
+    print("[VocabListViewModel] downloaded to path $path");
     VocabListModel vocabListModel = VocabListModel.fromJson(await FileManager.filePathToJson(path));
 
     // store vocab list header to HiveBox
@@ -149,7 +149,7 @@ class VocabListViewModel {
       context: context,
       data: """
       mutation {
-          markColor(uuid: "${authViewModel.uuid}", accessToken: "${authViewModel.accessToken}", vocabId: "${vocabId}", index: ${replaceLast ? originals!.length - 1 : originals!.length}, color: ${Util.enumToString(color)}, time: "${DateTime.now().toIso8601String()}") {
+          markColor(uuid: "${authViewModel.uuid}", accessToken: "${authViewModel.accessToken}", vocabId: "$vocabId", index: ${replaceLast ? originals!.length - 1 : originals!.length}, color: ${Util.enumToString(color)}, time: "${DateTime.now().toIso8601String()}") {
               index
               color
               time
@@ -218,12 +218,12 @@ class VocabListViewModel {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     String query = "";
-    if (editedMeaning != null) query += ", editedMeaning: ${editedMeaning}";
-    if (bookMarked != null) query += ", bookMarked: ${bookMarked}";
-    if (questionMark != null) query += ", questionMark: ${questionMark}";
-    if (starMark != null) query += ", starMark: ${starMark}";
-    if (pinMark != null) query += ", pinMark: ${pinMark}";
-    if (addedMark != null) query += ", addedMark: ${addedMark}";
+    if (editedMeaning != null) query += ", editedMeaning: $editedMeaning";
+    if (bookMarked != null) query += ", bookMarked: $bookMarked";
+    if (questionMark != null) query += ", questionMark: $questionMark";
+    if (starMark != null) query += ", starMark: $starMark";
+    if (pinMark != null) query += ", pinMark: $pinMark";
+    if (addedMark != null) query += ", addedMark: $addedMark";
 
     String result = "";
     if (editedMeaning != null) result += " editedMeaning";
@@ -237,11 +237,11 @@ class VocabListViewModel {
       context: context,
       data: """
       mutation {
-          userVocab(uuid: "${authViewModel.uuid}", accessToken: "${authViewModel.accessToken}", vocabId: "${vocabId}"${query}) {
+          userVocab(uuid: "${authViewModel.uuid}", accessToken: "${authViewModel.accessToken}", vocabId: "$vocabId"$query) {
               vocabId
               nthWord
               nthAppear
-              ${result}
+              $result
           }
       }
       """,

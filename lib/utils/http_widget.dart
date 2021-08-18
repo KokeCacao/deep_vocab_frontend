@@ -58,10 +58,11 @@ class HttpWidget extends Object {
     try {
       print("[HttpWidget] Start downloading to ${appDocDir.path} with ");
       AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-      Response response = await dio!.download("${BASE_URL}/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/${listId}/${from}", "${appDocDir.path}/${to}", onReceiveProgress: (int count, int total) {
-        print("[HttpWidget] ${count} / ${total} = ${((count / total) * 100).toStringAsFixed(0) + "%"}");
+      Response response = await dio!.download("$BASE_URL/secure_download/${authViewModel.accessToken}/${authViewModel.uuid}/$listId/$from", "${appDocDir.path}/$to", onReceiveProgress: (int count, int total) {
+        print("[HttpWidget] $count / $total = ${((count / total) * 100).toStringAsFixed(0) + "%"}");
         if (onReceiveProgress != null) onReceiveProgress(count, total);
       });
+      if (response.statusCode != 200) print("[HttpWidget] downloading to ${appDocDir.path} failed with status code ${response.statusCode} : ${response.statusMessage}");
     } catch (e) {
       // TODO: smarter way to check 401 code
       if (e.toString().contains("[401]")) {
@@ -80,7 +81,7 @@ class HttpWidget extends Object {
     }
     print("[HttpWidget] Download completed.");
     FileManager.printDir(appDocDir);
-    return Future.value("${appDocDir.path}/${to}");
+    return Future.value("${appDocDir.path}/$to");
   }
 
 
@@ -98,7 +99,7 @@ class HttpWidget extends Object {
 
     // don't send another request if there is one processing
     if (HiveBox.containKey(HiveBox.REQUEST_BOX, hash)) {
-      print("[HttpWidget] duplicate request detected: ${data}");
+      print("[HttpWidget] duplicate request detected: $data");
       return Future.value();
     }
 

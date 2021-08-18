@@ -30,7 +30,7 @@ class SelectionPanel extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "${selectedCount}|${itemCount}",
+                "$selectedCount|$itemCount",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.blueGrey),
               ),

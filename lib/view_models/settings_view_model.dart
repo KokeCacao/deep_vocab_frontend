@@ -1,5 +1,4 @@
 import '/models/hive_models/settings_model.dart';
-import '/utils/http_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 class SettingsViewModel extends ChangeNotifier {
