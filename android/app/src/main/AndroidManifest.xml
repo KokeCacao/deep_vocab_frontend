@@ -53,4 +53,11 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- Added by Koke_Cacao
+    See: https://www.cnblogs.com/fnlingnzb-learner/p/7239614.html
+         and https://developer.android.com/guide/topics/manifest/uses-permission-element -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 </manifest>

@@ -111,6 +111,9 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: make calendar stats transparent
             :bug: fix stats chart when not logged in
             :sparkles: add icon
+            :sparkles: add .jks to gitignore
+            :sparkles: add key.properties to gitignore
+            :sparkles: prepare for release
 ```
 </details>
 
