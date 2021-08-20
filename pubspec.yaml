@@ -27,7 +27,7 @@ dependencies:
   auto_size_text: ^3.0.0-nullsafety.0 # text
   badges: ^2.0.1 # badge
   bottom_navigation_badge:
-    path: ../bottom_navigation_badge
+    path: submodule/bottom_navigation_badge
   intl: ^0.17.0
   dio: ^4.0.0 # for http, depends on http
   http: ^0.13.3

@@ -115,6 +115,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: prepare for release
 2021/08/18: :fire: remove fsearch
             :sparkles: support more android ISA
+2021/08/20: :sparkles: add bottom_navigation_badge as submodule
 ```
 </details>
 

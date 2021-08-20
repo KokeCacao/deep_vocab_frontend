@@ -74,7 +74,7 @@ packages:
   bottom_navigation_badge:
     dependency: "direct main"
     description:
-      path: "../bottom_navigation_badge"
+      path: "submodule/bottom_navigation_badge"
       relative: true
     source: path
     version: "1.0.3"
