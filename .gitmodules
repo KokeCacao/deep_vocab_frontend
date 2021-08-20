@@ -1,0 +1,3 @@
+[submodule "bottom_navigation_badge"]
+	path = submodule/bottom_navigation_badge
+	url = git@github.com:KokeCacao/bottom_navigation_badge.git
