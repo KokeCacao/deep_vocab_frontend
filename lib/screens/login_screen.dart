@@ -4,6 +4,8 @@ import '../widgets/separator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   final FocusNode _userNameNode = FocusNode();
@@ -189,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null;
       },
       onSaved: (value) {
-        _password = value;
+        _password = sha256.convert(utf8.encode(value!)).toString();
       },
       onFieldSubmitted: (string) => submit(),
     );
