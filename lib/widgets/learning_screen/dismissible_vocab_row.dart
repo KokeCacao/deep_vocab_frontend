@@ -5,6 +5,7 @@ import '/view_models/vocab_list_view_model.dart';
 import './vocab_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:graphql/client.dart';
 
 import 'multi_dismissible.dart';
 
@@ -23,7 +24,8 @@ class DismissibleVocabRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VocabStateController vocabStateController = Provider.of<VocabStateController>(context, listen: true);
+    VocabStateController vocabStateController =
+        Provider.of<VocabStateController>(context, listen: true);
     return MultiDismissible(
       child: VocabRow(
         vocabId: vocab.vocabId,
@@ -32,7 +34,8 @@ class DismissibleVocabRow extends StatelessWidget {
         bookMarked: vocab.bookMarked,
         cross: vocabStateController.crossedVocabIdContains(vocab.vocabId),
         hide: !vocabStateController.unhideVocabIdContains(vocab.vocabId),
-        checkBox: vocabStateController.selectedVocabIdContains(vocab.vocabId), // listen to selectAll, inverseSelect
+        checkBox: vocabStateController.selectedVocabIdContains(
+            vocab.vocabId), // listen to selectAll, inverseSelect
         triangle: vocab.addedMark,
       ),
       builder: (Widget child, MultiDismissibleStatus status) {
@@ -58,25 +61,56 @@ class DismissibleVocabRow extends StatelessWidget {
             color = ColorModel.green;
             break;
         }
-        // automatically add to remember plan if not added
-        if (!vocab.addedMark) Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: vocab.vocabId, addedMark: true);
 
-        // add markColor
-        Provider.of<VocabListViewModel>(context, listen: false)
-            .addMarkColor(vocabId: vocab.vocabId, originals: markColors, color: color, replaceLast: replaceLast)
-            .then((exception) {
-          if (exception == null) {
-            Provider.of<VocabStateController>(context, listen: false).crossedVocabIdAdd(vocab.vocabId);
-          } else {
-            print("[DismissibleVocabRow] ${exception.message}");
-            Provider.of<VocabStateController>(context, listen: false).crossedVocabIdRemove(vocab.vocabId);
-          }
-        });
+        // automatically add to remember plan if not added
+        if (!vocab.addedMark)
+          Provider.of<VocabListViewModel>(context, listen: false)
+              .editUserVocab(vocabId: vocab.vocabId, addedMark: true)
+              .then((NetworkException? exception) {
+            if (exception == null)
+              // add markColor
+              Provider.of<VocabListViewModel>(context, listen: false)
+                  .addMarkColor(
+                      vocabId: vocab.vocabId,
+                      originals: markColors,
+                      color: color,
+                      replaceLast: replaceLast)
+                  .then((NetworkException? exception) {
+                if (exception == null) {
+                  Provider.of<VocabStateController>(context, listen: false)
+                      .crossedVocabIdAdd(vocab.vocabId);
+                } else {
+                  print("[DismissibleVocabRow] ${exception.message}");
+                  Provider.of<VocabStateController>(context, listen: false)
+                      .crossedVocabIdRemove(vocab.vocabId);
+                }
+              });
+          });
+        else {
+          // add markColor
+          Provider.of<VocabListViewModel>(context, listen: false)
+              .addMarkColor(
+                  vocabId: vocab.vocabId,
+                  originals: markColors,
+                  color: color,
+                  replaceLast: replaceLast)
+              .then((NetworkException? exception) {
+            if (exception == null) {
+              Provider.of<VocabStateController>(context, listen: false)
+                  .crossedVocabIdAdd(vocab.vocabId);
+            } else {
+              print("[DismissibleVocabRow] ${exception.message}");
+              Provider.of<VocabStateController>(context, listen: false)
+                  .crossedVocabIdRemove(vocab.vocabId);
+            }
+          });
+        }
+
         return vocabRow.copyWith(
-          cross: !vocabRow.cross,
-          // hide: vocabRow.hide,
-          // checkBox: !vocabRow.checkBox,
-        );
+            // cross: !vocabRow.cross,
+            // hide: vocabRow.hide,
+            // checkBox: !vocabRow.checkBox,
+            );
       },
     );
   }

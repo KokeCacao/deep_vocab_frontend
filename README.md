@@ -117,8 +117,24 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: support more android ISA
 2021/08/20: :sparkles: add bottom_navigation_badge as submodule
 2021/08/21: :sparkles: fix password security issue. support utf8 password
+2021/08/22: :bug: fix unique columns in database
+            :art: better print message
+            :bug: with_for_update on insert update (flask-sqlitealchemy provides auto rollback last commit on error), implement erase_cache (https://github.com/sqlalchemy/sqlalchemy/issues/4774)
+2021/08/23: :bug: make userVocab and markColor requests sequential to avoid concurrency issue
 ```
 </details>
+
+## Known Issues
+```
+1. in dismissible_vocab_row.dart, in mark_color_mutation.py (re-write it)
+adjust grpahql mutation to create and update sequentially
+
+2. not sure whether "erase_cache" will work with .query.populate_existing().get()
+
+3. lag detected when doing vocab add request by sliding (due to listening to database changes)
+
+
+```
 
 ## TODO 后端 (for v0.0.1 milestone)
 - [ ] Add: Documentation

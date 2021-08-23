@@ -14,8 +14,10 @@ import 'hive_box.dart';
 class HttpWidget extends Object {
   static Dio? _dio;
   static GraphQLClient? _graphQLClient;
+  // static const String BASE_URL =
+  //     "http://152.70.106.215:5000";
   static const String BASE_URL =
-      "http://152.70.106.215:5000"; // TODO: baseUrl, 10.0.2.2 for android emulator, see https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
+      "http://10.0.2.2:5000"; // TODO: baseUrl, 10.0.2.2 for android emulator, see https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
 
   static Dio? get dio {
     if (_dio == null) {
