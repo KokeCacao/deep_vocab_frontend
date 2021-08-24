@@ -124,6 +124,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: fix formating issue in vocab translation
             :sparkles: add log upload feature
             :bug: fix accepting graphql arguments
+2021/08/24: :arrow_up: upgrade snackbar system
 ```
 </details>
 

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:deep_vocab/utils/snack_bar_manager.dart';
 import '../view_models/auth_view_model.dart';
 import '../widgets/separator.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,6 @@ class LoginScreen extends StatefulWidget {
   final FocusNode _emailNode = FocusNode();
   final FocusNode _passwordNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _usernameFieldKey = GlobalKey<FormFieldState>();
   final _emailFieldKey = GlobalKey<FormFieldState>();
@@ -93,15 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!widget._formKey.currentState!.validate()) return;
       widget._formKey.currentState!.save();
 
-      widget._scaffoldKey.currentState!.showSnackBar(SnackBar(
-        duration: Duration(seconds: 4),
-        content: Row(
-          children: <Widget>[
-            CircularProgressIndicator(),
-            Text(_login ? "    Signing In ..." : "    Creating Account ...")
-          ],
-        ),
-      ));
+      SnackBarManager.showPersistentSnackBar(context, _login ? "    Signing In ..." : "    Creating Account ...");
+
       AuthViewModel authViewModel =
           Provider.of<AuthViewModel>(context, listen: false);
 
@@ -109,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ? await authViewModel.loginWithUsernameIfNeeded(_userName, _password)
           : await authViewModel.createUser(_userName, _password, _email);
 
-      widget._scaffoldKey.currentState!.hideCurrentSnackBar();
+      SnackBarManager.hideCurrentSnackBar(context);
 
       if (errorMessage == null) {
         Navigator.of(context).pop();
@@ -117,17 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
         // userViewModel.updateIfNeeded();
       } else
-        widget._scaffoldKey.currentState!.showSnackBar(SnackBar(
-          duration: Duration(seconds: 4),
-          content: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2),
-            child: AutoSizeText(
-              errorMessage,
-              overflow: TextOverflow.fade,
-              maxLines: 1,
-            ),
-          ),
-        ));
+        SnackBarManager.showSnackBar(context, errorMessage);
     }
 
     void switchLogin() {
@@ -197,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-        key: widget._scaffoldKey,
         appBar: CupertinoNavigationBar(
           leading: CupertinoButton(
             child: Icon(Icons.arrow_back_ios),
