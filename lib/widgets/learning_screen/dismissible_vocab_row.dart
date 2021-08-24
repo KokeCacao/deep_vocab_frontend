@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart';
+
 import '/controllers/vocab_state_controller.dart';
 import '/models/sub_models/mark_color_model.dart';
 import '/models/vocab_model.dart';
@@ -80,7 +82,7 @@ class DismissibleVocabRow extends StatelessWidget {
                   Provider.of<VocabStateController>(context, listen: false)
                       .crossedVocabIdAdd(vocab.vocabId);
                 } else {
-                  print("[DismissibleVocabRow] ${exception.message}");
+                  FLog.warning(text: "[DismissibleVocabRow] ${exception.message}");
                   Provider.of<VocabStateController>(context, listen: false)
                       .crossedVocabIdRemove(vocab.vocabId);
                 }
@@ -99,7 +101,7 @@ class DismissibleVocabRow extends StatelessWidget {
               Provider.of<VocabStateController>(context, listen: false)
                   .crossedVocabIdAdd(vocab.vocabId);
             } else {
-              print("[DismissibleVocabRow] ${exception.message}");
+              FLog.warning(text: "[DismissibleVocabRow] ${exception.message}");
               Provider.of<VocabStateController>(context, listen: false)
                   .crossedVocabIdRemove(vocab.vocabId);
             }

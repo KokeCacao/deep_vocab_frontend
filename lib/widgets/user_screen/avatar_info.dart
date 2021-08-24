@@ -16,6 +16,9 @@ class AvatarInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String displayUuid = uuid.toString();
+    if (displayUuid.contains('-')) displayUuid = displayUuid.split('-')[0];
+
     return ConstrainedBox(
         constraints: BoxConstraints.loose(Size(double.infinity,
             2 * avatarRadius! + 2 * borderRadius!)), //width, height
@@ -51,7 +54,7 @@ class AvatarInfo extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text("UID: ${uuid.toString().split('-')[0]}"),
+                    Text("UID: $displayUuid"),
                     xpBar!,
                   ],
                 ),

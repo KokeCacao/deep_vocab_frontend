@@ -41,7 +41,7 @@ class UserScreen extends StatelessWidget {
             borderRadius: _borderRadius,
             avatarUrl: "http://via.placeholder.com/350x150",
             userName: "Click to Log in",
-            uuid: "You have not logged in-",
+            uuid: "You have not logged in",
             xpBar: _xpBar as XpBar?);
       }
     });
@@ -97,7 +97,9 @@ class UserScreen extends StatelessWidget {
             textFront: "调教开发者",
             icon: Icons.developer_mode,
             textBack: "我也是学生党哦",
-            onPressed: () {}),
+            onPressed: () {
+              Navigator.of(context).pushNamed("/debug_screen");
+            }),
         Separator(),
       ],
     );

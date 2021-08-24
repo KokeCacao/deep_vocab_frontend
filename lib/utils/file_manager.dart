@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:f_logs/f_logs.dart';
+
 class FileManager {
   // see: https://stackoverflow.com/questions/14268967/how-do-i-list-the-contents-of-a-directory-with-dart
   static Future<List<FileSystemEntity>> dirContents(Directory dir) {
@@ -21,12 +23,12 @@ class FileManager {
 
   static Future<Map<String, dynamic>> filePathToJson(String path) async {
     String s = await new File(path).readAsString();
-    print("[FileManager] read:\n$s");
+    FLog.info(text: "[FileManager] read:\n$s");
     return Future.value(json.decode(s) as Map<String, dynamic>?);
   }
 
   static Future<void> deteleFile(String path) async {
     await File(path).delete();
-    print("[FileManager] deleted: $path");
+    FLog.info(text: "[FileManager] deleted: $path");
   }
 }

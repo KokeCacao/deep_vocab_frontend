@@ -1,3 +1,4 @@
+import 'package:f_logs/f_logs.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class _StatsScreenState extends State<StatsScreen> {
             }
 
           } else {
-            print("[StatsScreen] Warning: added vocab ${vocab.vocab} does not have MarkColor");
+            FLog.error(text: "[StatsScreen] added vocab ${vocab.vocab} does not have MarkColor");
           }
         }
 

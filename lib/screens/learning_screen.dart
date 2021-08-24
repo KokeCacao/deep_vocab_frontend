@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart';
+
 import '../controllers/vocab_state_controller.dart';
 import '../view_models/vocab_list_view_model.dart';
 import '../view_models/http_sync_view_model.dart';
@@ -76,8 +78,8 @@ class _LearningScreenState extends State<LearningScreen>
                                 await Provider.of<VocabListViewModel>(context,
                                         listen: false)
                                     .downloadVocab();
-                            print(
-                                "[LearningScreen] update vocab list ${success ? "Success!" : "Failed."}");
+                            if (success) FLog.info(text: "[LearningScreen] update vocab list Success!");
+                            else FLog.warning(text: "[LearningScreen] update vocab list Failed!");
                           },
                           child: Text("Download"),
                         )

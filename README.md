@@ -121,6 +121,9 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :art: better print message
             :bug: with_for_update on insert update (flask-sqlitealchemy provides auto rollback last commit on error), implement erase_cache (https://github.com/sqlalchemy/sqlalchemy/issues/4774)
 2021/08/23: :bug: make userVocab and markColor requests sequential to avoid concurrency issue
+            :bug: fix formating issue in vocab translation
+            :sparkles: add log upload feature
+            :bug: fix accepting graphql arguments
 ```
 </details>
 
@@ -133,14 +136,14 @@ adjust grpahql mutation to create and update sequentially
 
 3. lag detected when doing vocab add request by sliding (due to listening to database changes)
 
+4. do not mix mutation and query in front end, start using types and variable (especially fix backend `String` to `UUID`)
+
 
 ```
 
 ## TODO 后端 (for v0.0.1 milestone)
 - [ ] Add: Documentation
 - [ ] Add: Allow user modify password, if success, try logout user
-- [ ] Add: [Large] fetch stats
-- [ ] Add: [Large] app log and upload log
 - [ ] Add: [Large] remind user to update app when there is new
 
 ## TODO 美术 (for v0.0.1 milestone)
@@ -151,13 +154,10 @@ adjust grpahql mutation to create and update sequentially
 ## TODO 前端 (for v0.0.1 milestone)
 CHECK YOUR EMAIL
 - [ ] Add: Documentation
-- [ ] Add: [Large] fetch stats
 - [ ] Add: Dark Mode
 - [ ] Add: xp system by active time
 - [ ] Add: filter by star/pin
-- [ ] Fix: vocab translation has `\n`
 - [ ] Add: [Large] app notification
-- [ ] Add: [Large] app log and upload log
 - [ ] Add: [Large] remind user to update app when there is new
 - [ ] Add: [Large] password changing by email and email verification
 - [ ] Add: [Large] wechat login / binding

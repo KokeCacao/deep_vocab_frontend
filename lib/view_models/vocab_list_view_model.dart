@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart' hide AppDatabase;
+
 import '../controllers/vocab_state_controller.dart';
 import '../models/hive_models/vocab_header_model.dart';
 import '../models/sqlite_models/app_database.dart';
@@ -45,15 +47,15 @@ class VocabListViewModel {
         await HttpWidget.secureDownloadFile(context: context, listId: 0, from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
     // String path = await HttpWidget.downloadFile(from: _tempFileName, to: _tempFileName, onReceiveProgress: onReceiveProgress);
     if (path == null) {
-      print("[VocabListViewModel] error downloading file, user not logged in?"); // TODO: direct user to log in first
+      FLog.warning(text: "[VocabListViewModel] error downloading file, user not logged in?"); // TODO: direct user to log in first
       return Future.value(false);
     }
-    print("[VocabListViewModel] downloaded to path $path");
+    FLog.info(text: "[VocabListViewModel] downloaded to path $path");
     VocabListModel vocabListModel = VocabListModel.fromJson(await FileManager.filePathToJson(path));
 
     // store vocab list header to HiveBox
     HiveBox.put(HiveBox.VOCAB_LIST_HEADER_BOX, vocabListModel.header!.listId, vocabListModel.header);
-    print("[VocabListViewModel] store to HiveBox success");
+    FLog.info(text: "[VocabListViewModel] store to HiveBox success");
 
     // store vocabs to Moor
     var list = vocabListModel.vocabs!.map((e) => e.toCombinedSqlite());
@@ -61,12 +63,12 @@ class VocabListViewModel {
       await _dao.upsertAllUserVocab(list.map((e) => e.userVocabSqliteTableData).toList());
       await _dao.upsertAllVocab(list.map((e) => e.vocabSqliteTableData).toList());
     } on SqfliteDatabaseException catch (e) {
-      print("[VocabListViewModel] Warning: ${e.message}");
+      FLog.fatal(text: "[VocabListViewModel] ${e.message}");
     }
-    print("[VocabListViewModel] store to Moor success");
+    FLog.info(text: "[VocabListViewModel] store to Moor success");
 
     await FileManager.deteleFile(path);
-    print("[VocabListViewModel] delete file success");
+    FLog.info(text: "[VocabListViewModel] delete file success");
     return Future.value(true);
   }
 

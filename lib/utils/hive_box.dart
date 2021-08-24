@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart';
+
 import '/models/hive_models/settings_model.dart';
 import '/models/hive_models/user_model.dart';
 import '/models/hive_models/vocab_header_model.dart';
@@ -22,31 +24,31 @@ class HiveBox {
     // final Directory documentDirectory = await getApplicationDocumentsDirectory();
     // Hive.init(documentDirectory.path);
     await Hive.initFlutter();
-    print("[HiveBox] Finish initialize futter Hivebox instance");
+    FLog.info(text: "[HiveBox] Finish initialize flutter Hivebox instance");
 
     // run flutter build to generate models, registering generated model here
     // below code can't be packaged into one functions with list because they depend on the exact type of adapters
     // otherwise will give errors like: Unhandled Exception: type 'VocabHeaderModel' is not a subtype of type 'UserModel' of 'obj'
     UserModelAdapter userModelAdapter = UserModelAdapter();
     if (!Hive.isAdapterRegistered(userModelAdapter.typeId)) Hive.registerAdapter(userModelAdapter);
-    print("[HiveBox] Finish registered ${userModelAdapter.toString()}; id = ${userModelAdapter.typeId}");
+    FLog.info(text: "[HiveBox] Finish registered ${userModelAdapter.toString()}; id = ${userModelAdapter.typeId}");
     SettingsModelAdapter settingsModelAdapter = SettingsModelAdapter();
     if (!Hive.isAdapterRegistered(settingsModelAdapter.typeId)) Hive.registerAdapter(settingsModelAdapter);
-    print("[HiveBox] Finish registered ${settingsModelAdapter.toString()}; id = ${settingsModelAdapter.typeId}");
+    FLog.info(text: "[HiveBox] Finish registered ${settingsModelAdapter.toString()}; id = ${settingsModelAdapter.typeId}");
     VocabHeaderModelAdapter vocabHeaderModelAdapter = VocabHeaderModelAdapter();
     if (!Hive.isAdapterRegistered(vocabHeaderModelAdapter.typeId)) Hive.registerAdapter(vocabHeaderModelAdapter);
-    print("[HiveBox] Finish registered ${vocabHeaderModelAdapter.toString()}; id = ${vocabHeaderModelAdapter.typeId}");
+    FLog.info(text: "[HiveBox] Finish registered ${vocabHeaderModelAdapter.toString()}; id = ${vocabHeaderModelAdapter.typeId}");
 
     // open box: dynamic here is the store type. They have to be dynamic
     // open box cannot be stored somewhere, otherwise it will cause infinite loading time
     await Hive.openBox<dynamic>(HiveBox.SINGLETON_BOX);
-    print("[HiveBox] initialize ${HiveBox.SINGLETON_BOX} box");
+    FLog.info(text: "[HiveBox] initialize ${HiveBox.SINGLETON_BOX} box");
     await Hive.openBox<dynamic>(HiveBox.REQUEST_BOX)..clear();
-    print("[HiveBox] initialize ${HiveBox.REQUEST_BOX} box (cleared)");
+    FLog.info(text: "[HiveBox] initialize ${HiveBox.REQUEST_BOX} box (cleared)");
     await Hive.openBox<dynamic>(HiveBox.VOCAB_LIST_HEADER_BOX);
-    print("[HiveBox] initialize ${HiveBox.VOCAB_LIST_HEADER_BOX} box");
+    FLog.info(text: "[HiveBox] initialize ${HiveBox.VOCAB_LIST_HEADER_BOX} box");
 
-    print("[HiveBox] Initialization successful");
+    FLog.info(text: "[HiveBox] Initialization successful");
 
     return Future.value();
   }

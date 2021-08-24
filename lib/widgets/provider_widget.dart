@@ -1,3 +1,4 @@
+import 'package:f_logs/f_logs.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class _ProviderWidgetState<T extends ChangeNotifier?>
     super.initState();
     if (widget.onInitState != null) {
       widget.onInitState!(widget.model);
-      print("[DEBUG] _ProviderWidgetState onInitState");
+      FLog.debug(text: "[Provider Widget] _ProviderWidgetState onInitState");
     }
   }
 

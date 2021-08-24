@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart';
+
 import '../models/hive_models/user_model.dart';
 import '../utils/hive_box.dart';
 import '../utils/http_widget.dart';
@@ -51,15 +53,15 @@ class UserViewModel extends ChangeNotifier {
     AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     if (authViewModel.uuid == null) {
       await setUserModel(null);
-      print("[UserViewModel] user not logged in, setUserModel to null");
+      FLog.warning(text: "[UserViewModel] user not logged in, setUserModel to null");
       return Future.value(false);
     }
     NetworkException? exception = await _updateUser(uuid: authViewModel.uuid);
     if (exception != null) {
-      print("[UserViewModel] Exception: $exception");
+      FLog.error(text: "[UserViewModel] Exception: $exception");
       return Future.value(false);
     }
-    print("[UserViewModel] updated ${userModel.userName} as my username");
+    FLog.info(text: "[UserViewModel] updated ${userModel.userName} as my username");
     return Future.value(true);
   }
 

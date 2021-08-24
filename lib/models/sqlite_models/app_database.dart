@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:f_logs/f_logs.dart';
+
 import '../sub_models/comment_model.dart';
 import '../sub_models/mark_color_model.dart';
 import './primitive_list_converter.dart';
@@ -38,9 +40,9 @@ class AppDatabase extends _$AppDatabase {
   // TODO: implement migration
   MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (Migrator m, int from, int to) async {
-          print("[Moor] Start Migration");
+          FLog.info(text: "[Moor] Start Migration");
           await deleteEverything();
-          print("[Moor] Finish Migration");
+          FLog.info(text: "[Moor] Finish Migration");
         },
         beforeOpen: (OpeningDetails details) async {
           // initiate custom serialize (between Map<String, dynamic> and String) for generated code to work

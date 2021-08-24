@@ -19,7 +19,7 @@ class SettingTab extends StatelessWidget {
       height: 60,
       width: double.infinity,
       child: TextButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
           child: Row(

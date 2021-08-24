@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:f_logs/f_logs.dart' hide AppDatabase;
 
 import 'view_models/http_sync_view_model.dart';
 
@@ -29,11 +30,11 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   if (isTimeout) {
     // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
-    print("[BackgroundFetch] Headless task timed-out: $taskId");
+    FLog.warning(text: "[BackgroundFetch] Headless task timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
   }
-  print('[BackgroundFetch] Headless event received.');
+  FLog.info(text: "[BackgroundFetch] Headless event received.");
   // Do your work here...
   BackgroundFetch.finish(taskId);
 }
@@ -68,27 +69,27 @@ class _MyAppState extends State<MyApp> {
 
     int status = await BackgroundFetch.configure(backgroundFetchConfig,
         (String taskId) async {
-      print("[BackgroundFetch] Event received: $taskId");
+      FLog.info(text: "[BackgroundFetch] Event received: $taskId");
 
       NetworkException? exception =
           await Provider.of<VocabListViewModel>(context, listen: false)
               .refreshVocab(context);
       if (exception == null)
-        print("[BackgroundFetch] Refresh Vocab Success");
+        FLog.info(text: "[BackgroundFetch] Refresh Vocab Success");
       else
-        print("[BackgroundFetch] Refresh Vocab Failed");
+        FLog.warning(text: "[BackgroundFetch] Refresh Vocab Failed");
 
       // IMPORTANT:  You must signal completion of your task or the OS can punish your app
       // for taking too long in the background.
       BackgroundFetch.finish(taskId);
     }, (String taskId) async {
-      print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
+      FLog.warning(text: "[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
       // This task has exceeded its allowed running-time.
       // You must stop what you're doing and immediately .finish(taskId)
       BackgroundFetch.finish(taskId);
     });
 
-    print('[BackgroundFetch] configure success: $status');
+    FLog.info(text: "[BackgroundFetch] configure success: $status");
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -123,20 +124,20 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: Center(
             child: Column(
-              children: [
-                // TODO: costomization
-                PhysicalModel(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(80.0),
-                  clipBehavior: Clip.antiAlias,
-                  child: LinearProgressIndicator(
-                    backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
-                    value: 0.5,
-                    valueColor: AlwaysStoppedAnimation(Colors.amber),
-                  ),
-                )
-              ],
-            )),
+          children: [
+            // TODO: costomization
+            PhysicalModel(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(80.0),
+              clipBehavior: Clip.antiAlias,
+              child: LinearProgressIndicator(
+                backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
+                value: 0.5,
+                valueColor: AlwaysStoppedAnimation(Colors.amber),
+              ),
+            )
+          ],
+        )),
       ),
     );
 
@@ -146,7 +147,7 @@ class _MyAppState extends State<MyApp> {
             init(), // init has to run before MultiProvider because Hive.openBox is async
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            print("[Init] initializing");
+            FLog.info(text: "[Init] initializing");
             return emptyApp;
           }
           // getting initialized data
@@ -205,8 +206,7 @@ class _MyAppState extends State<MyApp> {
                   onUnknownRoute: (_) {
                     throw Exception("UnknownRoute");
                   },
-                )
-            ),
+                )),
           );
         });
   }

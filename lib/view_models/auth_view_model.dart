@@ -1,3 +1,5 @@
+import 'package:f_logs/f_logs.dart' hide AppDatabase;
+
 import '../models/sqlite_models/app_database.dart';
 import '../utils/hive_box.dart';
 import '../utils/http_widget.dart';
@@ -50,7 +52,7 @@ class AuthViewModel extends ChangeNotifier {
   /// interface
   Future<String?> loginWithUsernameIfNeeded(String? userName, String? password) async {
     assert(userName != null && password != null);
-    print("[AuthViewModel] try login with userName=$userName and password=$password");
+    FLog.info(text: "[AuthViewModel] try login with userName=$userName and password=$password");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
     NetworkException? exception = await _loginHttp(userName: userName, password: password);
     if (exception == null) return Future.value();
@@ -65,7 +67,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<String?> createUser(String? userName, String? password, String? email) async {
     assert(userName != null && password != null && email != null);
-    print("[AuthViewModel] create user with userName=$userName, password=$password, and email=$email");
+    FLog.info(text: "[AuthViewModel] create user with userName=$userName, password=$password, and email=$email");
     if (isLoggedIn) return Future.value("[Warning] You have already logged in");
     NetworkException? exception = await _createAccountHttp(userName: userName, password: password, email: email);
     if (exception != null) return Future.value(exception.message);
@@ -74,7 +76,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<String?> updateAccessTokenHttp() async {
     if (uuid == null || refreshToken == null) return Future.value("[AuthViewModel] there is no refresh token or uuid");
-    print("[AuthViewModel] detected refresh token, trying to login using that");
+    FLog.info(text: "[AuthViewModel] detected refresh token, trying to login using that");
     NetworkException? exception = await _refreshAccessTokenHttp(uuid: uuid, refreshToken: refreshToken);
     if (exception != null) return Future.value(exception.message);
     return Future.value();
@@ -149,19 +151,19 @@ class AuthViewModel extends ChangeNotifier {
   Future<void> _updateWith({String? accessToken, String? refreshToken, String? wxToken, String? uuid}) async {
     if (accessToken != null) {
       await _box.put(boxAccessTokenKey, accessToken);
-      print("[Box] put $accessToken");
+      FLog.info(text: "[Box] put $accessToken");
     }
     if (refreshToken != null) {
       await _box.put(boxRefreshTokenKey, refreshToken);
-      print("[Box] put $refreshToken");
+      FLog.info(text: "[Box] put $refreshToken");
     }
     if (wxToken != null) {
       await _box.put(boxWxTokenKey, wxToken);
-      print("[Box] put $wxToken");
+      FLog.info(text: "[Box] put $wxToken");
     }
     if (uuid != null) {
       await _box.put(boxUuidKey, uuid);
-      print("[Box] put $uuid");
+      FLog.info(text: "[Box] put $uuid");
     }
     notifyListeners();
     return Future.value();
