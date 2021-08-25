@@ -135,8 +135,8 @@ class _DebugScreenState extends State<DebugScreen> {
                           SnackBarManager.showSnackBar(
                               context, "Delete Success!");
                         },
-                        onLongPress: () {
-                          FLog.clearLogs();
+                        onLongPress: () async {
+                          await FLog.clearLogs();
                           setState(() {});
                         },
                         icon: Icon(Icons.delete_forever),

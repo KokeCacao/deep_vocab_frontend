@@ -13,6 +13,7 @@ import '../utils/snack_bar_manager.dart';
 class LoginScreen extends StatefulWidget {
   final FocusNode _userNameNode = FocusNode();
   final FocusNode _emailNode = FocusNode();
+  final FocusNode _passwordTestNode = FocusNode();
   final FocusNode _passwordNode = FocusNode();
   final FocusNode _verificationNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
   final _usernameFieldKey = GlobalKey<FormFieldState>();
   final _emailFieldKey = GlobalKey<FormFieldState>();
   final _passwordFieldKey = GlobalKey<FormFieldState>();
+  final _passwordTestFieldKey = GlobalKey<FormFieldState>();
   final _verificationFieldKey = GlobalKey<FormFieldState>();
 
   @override
@@ -37,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _email;
   String? _password;
   String? _verification;
+  String? _tmp_password;
 
   @override
   void initState() {
@@ -57,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     void submit() async {
       // stop submit if the current field is wrong
+      _passwordVisible = false;
       if (_login) {
         switch (_index) {
           case 0:
@@ -118,11 +122,19 @@ class _LoginScreenState extends State<LoginScreen> {
           case 2:
             if (!widget._passwordFieldKey.currentState!.validate()) return;
             FocusScope.of(context).unfocus();
+            _index++;
+            setState(() {});
+            widget._passwordTestNode.requestFocus();
+            return;
+          case 3:
+            if (!widget._passwordTestFieldKey.currentState!.validate()) return;
+            FocusScope.of(context).unfocus();
 
             // send request for email verification
             if (!widget._usernameFieldKey.currentState!.validate()) return;
             if (!widget._emailFieldKey.currentState!.validate()) return;
             if (!widget._passwordFieldKey.currentState!.validate()) return;
+            if (!widget._passwordTestFieldKey.currentState!.validate()) return;
             widget._formKey.currentState!.save();
 
             SnackBarManager.showPersistentSnackBar(context,
@@ -146,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
             } else
               SnackBarManager.showSnackBar(context, errorMessage);
             return;
-          case 3:
+          case 4:
             if (!widget._verificationFieldKey.currentState!.validate()) return;
 
             // start submit
@@ -220,6 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
     TextFormField passwordField = TextFormField(
       key: widget._passwordFieldKey,
       obscureText: !_passwordVisible,
+      // controller: TextEditingController(), // for getting temporary value
       decoration: InputDecoration(
           labelText: "Password",
           suffixIcon: IconButton(
@@ -244,6 +257,34 @@ class _LoginScreenState extends State<LoginScreen> {
       onSaved: (value) {
         _password = sha256.convert(utf8.encode(value!)).toString();
       },
+      onChanged: (value) {
+        _tmp_password = value;
+      },
+    );
+
+    TextFormField passwordTestField = TextFormField(
+      key: widget._passwordTestFieldKey,
+      obscureText: !_passwordVisible,
+      decoration: InputDecoration(
+          labelText: "Repeat Password",
+          suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: () {
+              _passwordVisible = !_passwordVisible;
+              setState(() {});
+            },
+          )),
+      textInputAction: TextInputAction.next,
+      focusNode: widget._passwordTestNode,
+      validator: (value) {
+        if (_tmp_password != value) return "Password does not match";
+        return null;
+      },
+      onSaved: (value) {
+        _password = sha256.convert(utf8.encode(value!)).toString();
+      },
     );
 
     TextFormField verificationField = TextFormField(
@@ -258,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
       focusNode: widget._verificationNode,
       validator: (value) {
         if (value!.isEmpty) return "Please enter your verification code";
-        if (value.length != 6) return "Wrong number of digits";
+        if (value.length != 6) return "Verification code should be 6 digits";
         return null;
       },
       onSaved: (value) {
@@ -303,7 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 usernameField,
                                 emailField,
                                 passwordField,
-                                verificationField
+                                passwordTestField,
+                                verificationField,
                               ],
                       ),
                       Row(
@@ -338,7 +380,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                               _login
                                   ? (_index == 1 ? "Login" : "Next")
-                                  : (_index == 2 ? "Create Account" : "Next"),
+                                  : (_index == 3 ? "Send Email" : "Next"),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
