@@ -1,20 +1,22 @@
 import 'package:provider/provider.dart';
+import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '/utils/constants.dart';
 import '/view_models/http_sync_view_model.dart';
 import '/screens/learning_screen.dart';
 import '/screens/user_screen.dart';
-import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 import 'explore_screen.dart';
 import 'stats_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   int pageIndex;
+  void Function(BuildContext context, Duration timeStamp)? initCallback;
 
-  NavigationScreen({this.pageIndex = 0}); // TODO: temporary value. should be 0
+  NavigationScreen(
+      {this.pageIndex = 0,
+      this.initCallback}); // TODO: temporary value. should be 0
 
   @override
   State<StatefulWidget> createState() {
@@ -46,6 +48,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
       },
     ];
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (widget.initCallback != null) widget.initCallback!(context, timeStamp);
+    });
   }
 
   @override

@@ -1,9 +1,15 @@
 import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'widgets/init_callback.dart';
 import 'package:graphql/client.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+import 'package:f_logs/f_logs.dart' hide AppDatabase, Constants;
 
+import 'utils/util.dart';
+import 'widgets/init_callback.dart';
 import './controllers/vocab_state_controller.dart';
 import './models/sqlite_models/app_database.dart';
 import './utils/hive_box.dart';
@@ -13,11 +19,6 @@ import './view_models/auth_view_model.dart';
 import './view_models/settings_view_model.dart';
 import './view_models/user_view_model.dart';
 import './view_models/vocab_list_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
-import 'package:f_logs/f_logs.dart' hide AppDatabase;
 
 import 'view_models/http_sync_view_model.dart';
 
@@ -201,7 +202,11 @@ class _MyAppState extends State<MyApp> {
                         padding:
                             EdgeInsets.symmetric(vertical: 0, horizontal: 4),
                       )),
-                  home: NavigationScreen(),
+                  home: NavigationScreen(
+                    // show version alert
+                    initCallback: (BuildContext context, Duration duration) =>
+                        Util.checkForUpdate(context),
+                  ),
                   onGenerateRoute: RouteTable.onGenerateRoute,
                   onUnknownRoute: (_) {
                     throw Exception("UnknownRoute");

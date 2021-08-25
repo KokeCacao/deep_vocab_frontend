@@ -7,6 +7,7 @@ import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sembast/sembast.dart';
 
 class DebugScreen extends StatefulWidget {
@@ -48,6 +49,18 @@ class _DebugScreenState extends State<DebugScreen> {
             onPressed: Navigator.of(context).maybePop,
           ),
           middle: Text("Logs"),
+          trailing: IconButton(
+              onPressed: () async {
+                PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                showAboutDialog(
+                    context: context,
+                    applicationName: packageInfo.appName,
+                    applicationVersion:
+                        "v${packageInfo.version} (build: ${packageInfo.buildNumber})",
+                    applicationLegalese:
+                        "Build Signature: ${packageInfo.buildSignature}");
+              },
+              icon: Icon(Icons.info)),
           backgroundColor: Colors.transparent,
           border: Border(bottom: BorderSide(color: Colors.transparent)),
         ),
@@ -93,16 +106,19 @@ class _DebugScreenState extends State<DebugScreen> {
                           File f = await FLog.exportLogs();
                           NetworkException? e = await upload(f);
                           if (e == null)
-                            SnackBarManager.showSnackBar(context, "Upload Success!");
+                            SnackBarManager.showSnackBar(
+                                context, "Upload Success!");
                           else
-                            SnackBarManager.showSnackBar(context, "Upload Failed!");
+                            SnackBarManager.showSnackBar(
+                                context, "Upload Failed!");
                         },
                         icon: Icon(Icons.cloud_upload),
                         label: Text("Upload")),
                     ElevatedButton.icon(
                         onPressed: () {
                           setState(() {});
-                          SnackBarManager.showSnackBar(context, "Refresh Success!");
+                          SnackBarManager.showSnackBar(
+                              context, "Refresh Success!");
                         },
                         icon: Icon(Icons.refresh),
                         label: Text("Refresh")),
@@ -116,7 +132,8 @@ class _DebugScreenState extends State<DebugScreen> {
                                     1000 * 60 * 60)
                           ]);
                           setState(() {});
-                          SnackBarManager.showSnackBar(context, "Delete Success!");
+                          SnackBarManager.showSnackBar(
+                              context, "Delete Success!");
                         },
                         onLongPress: () {
                           FLog.clearLogs();

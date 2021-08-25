@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '/models/hive_models/user_model.dart';
 import '/view_models/auth_view_model.dart';
 import '/view_models/user_view_model.dart';
@@ -6,9 +10,7 @@ import '/widgets/user_screen/avatar_info.dart';
 import '/widgets/separator.dart';
 import '/widgets/user_screen/setting_tab.dart';
 import '/widgets/user_screen/xp_bar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import '/utils/util.dart';
 
 class UserScreen extends StatelessWidget {
   final int _maxXp = 100;
@@ -54,14 +56,17 @@ class UserScreen extends StatelessWidget {
         AvatarCard(
           avatarInfo: _avatarInfo,
           onPressed: () {
-            AuthViewModel authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-            if (authViewModel.isNotLoggedIn) Navigator.of(context).pushNamed("/login_screen");
-            else authViewModel.logout(); // TODO: other logout button
+            AuthViewModel authViewModel =
+                Provider.of<AuthViewModel>(context, listen: false);
+            if (authViewModel.isNotLoggedIn)
+              Navigator.of(context).pushNamed("/login_screen");
+            else
+              authViewModel.logout(); // TODO: other logout button
           },
         ),
         Separator(),
         SettingTab(
-          // TODO: 开启/关闭 词表单词标记
+            // TODO: 开启/关闭 词表单词标记
             textFront: "学习设置",
             icon: Icons.settings,
             textBack: "",
@@ -94,12 +99,12 @@ class UserScreen extends StatelessWidget {
             textBack: "",
             onPressed: () {}),
         SettingTab(
-            textFront: "调教开发者",
-            icon: Icons.developer_mode,
-            textBack: "我也是学生党哦",
-            onPressed: () {
-              Navigator.of(context).pushNamed("/debug_screen");
-            }),
+          textFront: "调教开发者",
+          icon: Icons.developer_mode,
+          textBack: "我也是学生党哦",
+          onLongPressed: () => Navigator.of(context).pushNamed("/debug_screen"),
+          onPressed: () => Util.checkForUpdate(context),
+        ),
         Separator(),
       ],
     );

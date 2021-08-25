@@ -125,6 +125,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: add log upload feature
             :bug: fix accepting graphql arguments
 2021/08/24: :arrow_up: upgrade snackbar system
+            :sparkles: add update checks
 ```
 </details>
 
@@ -137,7 +138,9 @@ adjust grpahql mutation to create and update sequentially
 
 3. lag detected when doing vocab add request by sliding (due to listening to database changes)
 
-4. do not mix mutation and query in front end, start using types and variable (especially fix backend `String` to `UUID`)
+4. do not mix mutation and query in front end, start using types and variable (especially fix backend `String` to `UUID`). Try using https://github.com/comigor/artemis
+
+5. sync time zone: https://pub.dev/packages/timezone
 
 
 ```

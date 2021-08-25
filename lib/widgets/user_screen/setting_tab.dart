@@ -6,8 +6,9 @@ class SettingTab extends StatelessWidget {
   final IconData? icon;
   final String? textBack;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPressed;
 
-  SettingTab({this.textFront, this.icon, this.textBack, this.onPressed});
+  SettingTab({this.textFront, this.icon, this.textBack, this.onPressed, this.onLongPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class SettingTab extends StatelessWidget {
       width: double.infinity,
       child: TextButton(
         onPressed: onPressed,
+        onLongPress: onLongPressed,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
           child: Row(
