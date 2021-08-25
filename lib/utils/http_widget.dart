@@ -123,19 +123,77 @@ class HttpWidget extends Object {
 
   static Future<Map<String, dynamic>?> graphQLQuery(
       {required BuildContext context,
-      required String queryString,
-      required String operationName,
-      required String queryName,
-      required Map<String, dynamic> variables,
-      required Map<String, dynamic>? Function() onDuplicate,
-      required Map<String, dynamic>? Function(
-              String errorMessage, Map<String, dynamic>? response)
-          onFail,
-      Map<String, dynamic>? Function(Map<String, dynamic> response)? onSuccess,
-      bool autoRefreshToken = true}) async {
+        required String queryString,
+        required String operation,
+        required String queryName,
+        required Map<String, dynamic> variables,
+        required Map<String, dynamic>? Function() onDuplicate,
+        required Map<String, dynamic>? Function(
+            String errorMessage, Map<String, dynamic>? response)
+        onFail,
+        Map<String, dynamic>? Function(Map<String, dynamic> response)? onSuccess,
+        bool autoRefreshToken = true}) async {
+    QueryOptions options = QueryOptions(
+        document: gql(queryString),
+        operationName: operation,
+        variables: variables);
+
+    int hash = options.asRequest.hashCode;
+
+    // don't send another request if there is one processing
+    if (HiveBox.containKey(HiveBox.REQUEST_BOX, hash)) {
+      FLog.warning(text: "[HttpWidget] duplicate request detected: $hash");
+      return onDuplicate();
+    }
+
+    // send request
+    HiveBox.put(HiveBox.REQUEST_BOX, hash, hash);
+    QueryResult response = await graphQLClient!.query(options);
+    HiveBox.deleteFrom(HiveBox.REQUEST_BOX, hash);
+
+    FLog.info(
+        text:
+        "[HttpWidget] Response data=${response.data}; error=${response.exception.toString()};");
+
+    // process request
+    Map<String, dynamic>? result = response.data;
+    if (result == null) {
+      return onFail("[HttpWidget] Response has no data field", result);
+    } else if (response.hasException || result.containsKey("errorMessage")) {
+      String exception = response.exception!.graphqlErrors.length > 0
+          ? response.exception!.graphqlErrors[0].message
+          : response.exception.toString();
+      if (result.containsKey("errorMessage"))
+        exception += " " + result["errorMessage"];
+      FLog.error(
+          text: "[HttpWidget] Exception: ${exception.replaceAll("\n", "; ")}");
+      return onFail(exception, result);
+    } else {
+      if (response.data![queryName] == null)
+        return onFail(
+            "[HttpWidget] Response has no corresponding field", result);
+      else if (onSuccess != null)
+        return onSuccess(result);
+      else
+        return Future.value(result[queryName]);
+    }
+  }
+
+  static Future<Map<String, dynamic>?> graphQLMutation2(
+      {required BuildContext context,
+        required String queryString,
+        required String operation,
+        required String queryName,
+        required Map<String, dynamic> variables,
+        required Map<String, dynamic>? Function() onDuplicate,
+        required Map<String, dynamic>? Function(
+            String errorMessage, Map<String, dynamic>? response)
+        onFail,
+        Map<String, dynamic>? Function(Map<String, dynamic> response)? onSuccess,
+        bool autoRefreshToken = true}) async {
     MutationOptions options = MutationOptions(
         document: gql(queryString),
-        operationName: operationName,
+        operationName: operation,
         variables: variables);
 
     int hash = options.asRequest.hashCode;
@@ -153,7 +211,7 @@ class HttpWidget extends Object {
 
     FLog.info(
         text:
-            "[HttpWidget] Response data=${response.data}; error=${response.exception.toString()};");
+        "[HttpWidget] Response data=${response.data}; error=${response.exception.toString()};");
 
     // process request
     Map<String, dynamic>? result = response.data;
@@ -169,7 +227,7 @@ class HttpWidget extends Object {
           text: "[HttpWidget] Exception: ${exception.replaceAll("\n", "; ")}");
       return onFail(exception, result);
     } else {
-      if (response.data![queryName] == null)
+      if (result[queryName] == null)
         return onFail(
             "[HttpWidget] Response has no corresponding field", result);
       else if (onSuccess != null)
@@ -273,6 +331,7 @@ class HttpWidget extends Object {
   /// onFail inputs with error message
   /// if onFail, onSuccess are defined, graphQLMutation() returns what those function returns
   /// if onFail, onSuccess are both undefined, graphQLMutation() returns variable, s.t. variable["data"] may result an error
+  @Deprecated("use graphQLMutation2 instead")
   static Future<Map<String, dynamic>?> graphQLMutation(
       {required BuildContext context,
       required String data,

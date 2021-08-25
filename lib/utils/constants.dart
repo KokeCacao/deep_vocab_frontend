@@ -16,6 +16,31 @@ class Constants {
     }
   }''';
 
+  /// Request Email Verification Mutation
+  static const String REQUEST_EMAIL_VERIFICATION_MUTATION_OPERATION =
+      "requestEmailVerificationMutation";
+  static const String REQUEST_EMAIL_VERIFICATION_MUTATION_NAME = "createUser";
+  static const String REQUEST_EMAIL_VERIFICATION_MUTATION = '''
+  mutation $REQUEST_EMAIL_VERIFICATION_MUTATION_OPERATION(\$userName: String!, \$password: String!, \$email: String!) {
+    $REQUEST_EMAIL_VERIFICATION_MUTATION_NAME(userName: \$userName, password: \$password, email: \$email) {
+      uuid
+      accessToken
+      refreshToken
+    }
+  }''';
+
+  /// Create User Mutation
+  static const String CREATE_USER_MUTATION_OPERATION = "createUserMutation";
+  static const String CREATE_USER_MUTATION_NAME = "createUser";
+  static const String CREATE_USER_MUTATION = '''
+  mutation $CREATE_USER_MUTATION_OPERATION(\$userName: String!, \$password: String!, \$email: String!, \$emailVerification: String!) {
+    $CREATE_USER_MUTATION_NAME(userName: \$userName, password: \$password, email: \$email, emailVerification: \$emailVerification) {
+      uuid
+      accessToken
+      refreshToken
+    }
+  }''';
+
   /// Update Query
   static const String UPDATE_QUERY_OPERATION = "updateQuery";
   static const String UPDATE_QUERY_NAME = "update";
@@ -30,5 +55,4 @@ class Constants {
       breaking
     }
   }''';
-
 }

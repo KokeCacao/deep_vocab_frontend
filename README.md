@@ -126,6 +126,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: fix accepting graphql arguments
 2021/08/24: :arrow_up: upgrade snackbar system
             :sparkles: add update checks
+2021/08/25: :sparkles: email verification when registeration
 ```
 </details>
 
@@ -142,13 +143,14 @@ adjust grpahql mutation to create and update sequentially
 
 5. sync time zone: https://pub.dev/packages/timezone
 
+6. error message should be more clear, not just throw error
+
 
 ```
 
 ## TODO 后端 (for v0.0.1 milestone)
 - [ ] Add: Documentation
 - [ ] Add: Allow user modify password, if success, try logout user
-- [ ] Add: [Large] remind user to update app when there is new
 
 ## TODO 美术 (for v0.0.1 milestone)
 - [ ] Add: better avatar
@@ -162,7 +164,6 @@ CHECK YOUR EMAIL
 - [ ] Add: xp system by active time
 - [ ] Add: filter by star/pin
 - [ ] Add: [Large] app notification
-- [ ] Add: [Large] remind user to update app when there is new
 - [ ] Add: [Large] password changing by email and email verification
 - [ ] Add: [Large] wechat login / binding
 

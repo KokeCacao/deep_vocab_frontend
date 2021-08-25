@@ -23,7 +23,7 @@ class Util {
     Map<String, dynamic>? map = await HttpWidget.graphQLQuery(
         context: context,
         queryString: Constants.UPDATE_QUERY,
-        operationName: Constants.UPDATE_QUERY_OPERATION,
+        operation: Constants.UPDATE_QUERY_OPERATION,
         queryName: Constants.UPDATE_QUERY_NAME,
         onDuplicate: () => null,
         onFail: (exception, map) => null,

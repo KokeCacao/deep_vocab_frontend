@@ -1,22 +1,26 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deep_vocab/utils/snack_bar_manager.dart';
-import '../view_models/auth_view_model.dart';
-import '../widgets/separator.dart';
+import 'package:f_logs/f_logs.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
+import '../view_models/auth_view_model.dart';
+import '../widgets/separator.dart';
+import '../utils/snack_bar_manager.dart';
+
 class LoginScreen extends StatefulWidget {
   final FocusNode _userNameNode = FocusNode();
   final FocusNode _emailNode = FocusNode();
   final FocusNode _passwordNode = FocusNode();
+  final FocusNode _verificationNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final _usernameFieldKey = GlobalKey<FormFieldState>();
   final _emailFieldKey = GlobalKey<FormFieldState>();
   final _passwordFieldKey = GlobalKey<FormFieldState>();
+  final _verificationFieldKey = GlobalKey<FormFieldState>();
 
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _userName;
   String? _email;
   String? _password;
+  String? _verification;
 
   @override
   void initState() {
@@ -52,65 +57,128 @@ class _LoginScreenState extends State<LoginScreen> {
 
     void submit() async {
       // stop submit if the current field is wrong
-      switch (_index) {
-        case 0:
-          if (!widget._usernameFieldKey.currentState!.validate()) return;
-          break;
-        case 1:
-          if (_login
-              ? !widget._passwordFieldKey.currentState!.validate()
-              : !widget._emailFieldKey.currentState!.validate()) return;
-          break;
-        case 2:
-          if (!widget._passwordFieldKey.currentState!.validate()) return;
-          break;
-      }
-
-      // stop submit if it is not the last field
-      int maxStack = _login ? 1 : 2;
-      if (_index != maxStack) {
-        FocusScope.of(context)
-            .unfocus(); // stop user from editing previous field
-        _index++;
+      if (_login) {
         switch (_index) {
           case 0:
-            widget._userNameNode.requestFocus();
-            break;
-          case 1:
-            _login
-                ? widget._passwordNode.requestFocus()
-                : widget._emailNode.requestFocus();
-            break;
-          case 2:
+            if (!widget._usernameFieldKey.currentState!.validate()) return;
+            // stop user from editing previous field
+            FocusScope.of(context).unfocus();
+            _index++;
+            setState(() {});
             widget._passwordNode.requestFocus();
-            break;
+            return;
+          case 1:
+            if (!widget._passwordFieldKey.currentState!.validate()) return;
+
+            // start submit
+            if (!widget._formKey.currentState!.validate()) return;
+            widget._formKey.currentState!.save();
+
+            SnackBarManager.showPersistentSnackBar(
+                context, "    Signing In ...");
+
+            AuthViewModel authViewModel =
+                Provider.of<AuthViewModel>(context, listen: false);
+
+            String? errorMessage = await authViewModel
+                .loginWithUsernameIfNeeded(_userName, _password);
+
+            SnackBarManager.hideCurrentSnackBar(context);
+
+            if (errorMessage == null) {
+              Navigator.of(context).pop();
+              // TODO: the below two lines of code should not needed because we use ProxyProvider
+              // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
+              // userViewModel.updateIfNeeded();
+            } else
+              SnackBarManager.showSnackBar(context, errorMessage);
+            return;
+          default:
+            FLog.severe(
+                text: "[LoginScreen] Reached Unsupported Index when login");
+            return;
         }
-        setState(() {});
-        return;
+      } else {
+        switch (_index) {
+          case 0:
+            if (!widget._usernameFieldKey.currentState!.validate()) return;
+            // stop user from editing previous field
+            FocusScope.of(context).unfocus();
+            _index++;
+            setState(() {});
+            widget._emailNode.requestFocus();
+            return;
+          case 1:
+            if (!widget._emailFieldKey.currentState!.validate()) return;
+            FocusScope.of(context).unfocus();
+            _index++;
+            setState(() {});
+            widget._passwordNode.requestFocus();
+            return;
+          case 2:
+            if (!widget._passwordFieldKey.currentState!.validate()) return;
+            FocusScope.of(context).unfocus();
+
+            // send request for email verification
+            if (!widget._usernameFieldKey.currentState!.validate()) return;
+            if (!widget._emailFieldKey.currentState!.validate()) return;
+            if (!widget._passwordFieldKey.currentState!.validate()) return;
+            widget._formKey.currentState!.save();
+
+            SnackBarManager.showPersistentSnackBar(context,
+                "    We are sending the verification code to your email  ...");
+
+            AuthViewModel authViewModel =
+                Provider.of<AuthViewModel>(context, listen: false);
+
+            String? errorMessage = await authViewModel.requestEmailVerification(
+                _userName!, _password!, _email!);
+
+            SnackBarManager.hideCurrentSnackBar(context);
+
+            if (errorMessage == null) {
+              _index++;
+              setState(() {});
+              widget._verificationNode.requestFocus();
+              SnackBarManager.showSnackBar(
+                  context, "Please check your Email for Verification Code");
+              return;
+            } else
+              SnackBarManager.showSnackBar(context, errorMessage);
+            return;
+          case 3:
+            if (!widget._verificationFieldKey.currentState!.validate()) return;
+
+            // start submit
+            if (!widget._formKey.currentState!.validate()) return;
+            widget._formKey.currentState!.save();
+
+            SnackBarManager.showPersistentSnackBar(
+                context, "    Creating Account ...");
+
+            AuthViewModel authViewModel =
+                Provider.of<AuthViewModel>(context, listen: false);
+
+            String? errorMessage =
+                await authViewModel.createUser(_userName!, _password!, _email!, _verification!);
+
+            SnackBarManager.hideCurrentSnackBar(context);
+
+            if (errorMessage == null) {
+              Navigator.of(context).pop();
+              // TODO: the below two lines of code should not needed because we use ProxyProvider
+              // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
+              // userViewModel.updateIfNeeded();
+            } else
+              SnackBarManager.showSnackBar(context, errorMessage);
+            return;
+          default:
+            FLog.severe(
+                text:
+                    "[LoginScreen] Reached Unsupported Index when registering");
+            return;
+        }
       }
-
-      // start submit
-      if (!widget._formKey.currentState!.validate()) return;
-      widget._formKey.currentState!.save();
-
-      SnackBarManager.showPersistentSnackBar(context, _login ? "    Signing In ..." : "    Creating Account ...");
-
-      AuthViewModel authViewModel =
-          Provider.of<AuthViewModel>(context, listen: false);
-
-      String? errorMessage = _login
-          ? await authViewModel.loginWithUsernameIfNeeded(_userName, _password)
-          : await authViewModel.createUser(_userName, _password, _email);
-
-      SnackBarManager.hideCurrentSnackBar(context);
-
-      if (errorMessage == null) {
-        Navigator.of(context).pop();
-        // TODO: the below two lines of code should not needed because we use ProxyProvider
-        // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
-        // userViewModel.updateIfNeeded();
-      } else
-        SnackBarManager.showSnackBar(context, errorMessage);
     }
 
     void switchLogin() {
@@ -163,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
               setState(() {});
             },
           )),
-      textInputAction: TextInputAction.done,
+      textInputAction: TextInputAction.next,
       focusNode: widget._passwordNode,
       validator: (value) {
         if (value!.isEmpty) return "Please enter your password";
@@ -175,6 +243,26 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       onSaved: (value) {
         _password = sha256.convert(utf8.encode(value!)).toString();
+      },
+    );
+
+    TextFormField verificationField = TextFormField(
+      key: widget._verificationFieldKey,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+      ],
+      decoration:
+          InputDecoration(labelText: "Verification Code From Your Email"),
+      textInputAction: TextInputAction.done,
+      focusNode: widget._verificationNode,
+      validator: (value) {
+        if (value!.isEmpty) return "Please enter your verification code";
+        if (value.length != 6) return "Wrong number of digits";
+        return null;
+      },
+      onSaved: (value) {
+        _verification = value;
       },
       onFieldSubmitted: (string) => submit(),
     );
@@ -209,16 +297,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       // TODO: advanced validation on email(email format) and password(safety), and maybe on username to prevent special characters
                       IndexedStack(
                         index: _index,
-                        children: [
-                          usernameField,
-                          _login ? passwordField : emailField,
-                          _login
-                              ? Separator(
-                                  height: 0,
-                                  color: Colors.transparent,
-                                )
-                              : passwordField,
-                        ],
+                        children: _login
+                            ? [usernameField, passwordField]
+                            : [
+                                usernameField,
+                                emailField,
+                                passwordField,
+                                verificationField
+                              ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -17,7 +17,7 @@ class SnackBarManager {
           maxLines: 1,
         ),
       ),
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 3),
     ));
     FLog.info(text: "[SnackBarManager] $text");
   }
