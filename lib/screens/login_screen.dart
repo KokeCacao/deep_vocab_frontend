@@ -1,7 +1,8 @@
-import 'package:f_logs/f_logs.dart';
+import 'package:f_logs/f_logs.dart' hide Constants;
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -9,6 +10,13 @@ import 'dart:convert';
 import '../view_models/auth_view_model.dart';
 import '../widgets/separator.dart';
 import '../utils/snack_bar_manager.dart';
+import '../utils/constants.dart';
+
+enum LoginScreenEnum {
+  login,
+  register,
+  recover,
+}
 
 class LoginScreen extends StatefulWidget {
   final FocusNode _userNameNode = FocusNode();
@@ -22,7 +30,6 @@ class LoginScreen extends StatefulWidget {
   final _emailFieldKey = GlobalKey<FormFieldState>();
   final _passwordFieldKey = GlobalKey<FormFieldState>();
   final _passwordTestFieldKey = GlobalKey<FormFieldState>();
-  final _verificationFieldKey = GlobalKey<FormFieldState>();
 
   @override
   State<StatefulWidget> createState() {
@@ -32,14 +39,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late bool _passwordVisible;
-  bool _login = true;
+  LoginScreenEnum _state = LoginScreenEnum.register;
   int _index = 0;
 
   String? _userName;
   String? _email;
   String? _password;
   String? _verification;
-  String? _tmp_password;
+  String? _tmpPassword;
 
   @override
   void initState() {
@@ -49,6 +56,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ModalRoute? _ = ModalRoute.of(context);
+    if (_ != null) {
+      final Map<String, dynamic>? arguments = _.settings.arguments as Map<String, dynamic>?;
+      if (arguments != null) {
+        if (arguments.containsKey("index")) _index = arguments["index"];
+        if (arguments.containsKey("state")) _state = arguments["state"];
+      }
+    }
+
     void onBack() {
       if (_index == 0) {
         Navigator.of(context).maybePop();
@@ -58,145 +74,257 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
+    void switchToLogin() {
+      _state = LoginScreenEnum.login;
+      _index = 0;
+      widget._userNameNode.requestFocus();
+      setState(() {});
+    }
+
+    void switchToRegister() {
+      _state = LoginScreenEnum.register;
+      _index = 0;
+      widget._userNameNode.requestFocus();
+      setState(() {});
+    }
+
+    void switchToRecover() {
+      _state = LoginScreenEnum.recover;
+      _index = 0;
+      widget._emailNode.requestFocus();
+      setState(() {});
+    }
+
     void submit() async {
       // stop submit if the current field is wrong
       _passwordVisible = false;
-      if (_login) {
-        switch (_index) {
-          case 0:
-            if (!widget._usernameFieldKey.currentState!.validate()) return;
-            // stop user from editing previous field
-            FocusScope.of(context).unfocus();
-            _index++;
-            setState(() {});
-            widget._passwordNode.requestFocus();
-            return;
-          case 1:
-            if (!widget._passwordFieldKey.currentState!.validate()) return;
+      switch (_state) {
+        case LoginScreenEnum.login:
+          {
+            switch (_index) {
+              case 0:
+                if (!widget._usernameFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                _index++;
+                setState(() {});
+                widget._passwordNode.requestFocus();
+                return;
+              case 1:
+                if (!widget._formKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                widget._formKey.currentState!.save();
 
-            // start submit
-            if (!widget._formKey.currentState!.validate()) return;
-            widget._formKey.currentState!.save();
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Signing In ...");
 
-            SnackBarManager.showPersistentSnackBar(
-                context, "    Signing In ...");
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
 
-            AuthViewModel authViewModel =
-                Provider.of<AuthViewModel>(context, listen: false);
+                String? errorMessage = await authViewModel
+                    .loginWithUsernameIfNeeded(_userName, _password);
 
-            String? errorMessage = await authViewModel
-                .loginWithUsernameIfNeeded(_userName, _password);
+                SnackBarManager.hideCurrentSnackBar(context);
 
-            SnackBarManager.hideCurrentSnackBar(context);
+                if (errorMessage == null) {
+                  Navigator.of(context).pop();
+                  // TODO: the below two lines of code should not needed because we use ProxyProvider
+                  // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
+                  // userViewModel.updateIfNeeded();
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              default:
+                FLog.severe(
+                    text: "[LoginScreen] Reached Unsupported Index when login");
+                return;
+            }
+          }
+        case LoginScreenEnum.register:
+          {
+            switch (_index) {
+              case 0:
+                if (!widget._usernameFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                _index++;
+                setState(() {});
+                widget._emailNode.requestFocus();
+                return;
+              case 1:
+                if (!widget._emailFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                _index++;
+                setState(() {});
+                widget._passwordNode.requestFocus();
+                return;
+              case 2:
+                if (!widget._passwordFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                _index++;
+                setState(() {});
+                widget._passwordTestNode.requestFocus();
+                return;
+              case 3:
+                if (!widget._passwordTestFieldKey.currentState!.validate())
+                  return;
+                FocusScope.of(context).unfocus();
 
-            if (errorMessage == null) {
-              Navigator.of(context).pop();
-              // TODO: the below two lines of code should not needed because we use ProxyProvider
-              // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
-              // userViewModel.updateIfNeeded();
-            } else
-              SnackBarManager.showSnackBar(context, errorMessage);
-            return;
-          default:
-            FLog.severe(
-                text: "[LoginScreen] Reached Unsupported Index when login");
-            return;
-        }
-      } else {
-        switch (_index) {
-          case 0:
-            if (!widget._usernameFieldKey.currentState!.validate()) return;
-            // stop user from editing previous field
-            FocusScope.of(context).unfocus();
-            _index++;
-            setState(() {});
-            widget._emailNode.requestFocus();
-            return;
-          case 1:
-            if (!widget._emailFieldKey.currentState!.validate()) return;
-            FocusScope.of(context).unfocus();
-            _index++;
-            setState(() {});
-            widget._passwordNode.requestFocus();
-            return;
-          case 2:
-            if (!widget._passwordFieldKey.currentState!.validate()) return;
-            FocusScope.of(context).unfocus();
-            _index++;
-            setState(() {});
-            widget._passwordTestNode.requestFocus();
-            return;
-          case 3:
-            if (!widget._passwordTestFieldKey.currentState!.validate()) return;
-            FocusScope.of(context).unfocus();
+                // send request for email verification
+                if (!widget._usernameFieldKey.currentState!.validate()) return;
+                if (!widget._emailFieldKey.currentState!.validate()) return;
+                if (!widget._passwordFieldKey.currentState!.validate()) return;
+                if (!widget._passwordTestFieldKey.currentState!.validate())
+                  return;
+                widget._formKey.currentState!.save();
 
-            // send request for email verification
-            if (!widget._usernameFieldKey.currentState!.validate()) return;
-            if (!widget._emailFieldKey.currentState!.validate()) return;
-            if (!widget._passwordFieldKey.currentState!.validate()) return;
-            if (!widget._passwordTestFieldKey.currentState!.validate()) return;
-            widget._formKey.currentState!.save();
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Sending verification code  ...");
 
-            SnackBarManager.showPersistentSnackBar(context,
-                "    We are sending the verification code to your email  ...");
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
 
-            AuthViewModel authViewModel =
-                Provider.of<AuthViewModel>(context, listen: false);
+                String? errorMessage = await authViewModel
+                    .requestEmailVerification(_userName!, _password!, _email!);
 
-            String? errorMessage = await authViewModel.requestEmailVerification(
-                _userName!, _password!, _email!);
+                SnackBarManager.hideCurrentSnackBar(context);
 
-            SnackBarManager.hideCurrentSnackBar(context);
+                if (errorMessage == null) {
+                  _index++;
+                  setState(() {});
+                  widget._verificationNode.requestFocus();
+                  SnackBarManager.showSnackBar(
+                      context, "Please check your Email for Verification Code");
+                  return;
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              case 4:
+                // no need to validate verification code because
+                // it already validated before calling this function
+                if (!widget._formKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                widget._formKey.currentState!.save();
 
-            if (errorMessage == null) {
-              _index++;
-              setState(() {});
-              widget._verificationNode.requestFocus();
-              SnackBarManager.showSnackBar(
-                  context, "Please check your Email for Verification Code");
-              return;
-            } else
-              SnackBarManager.showSnackBar(context, errorMessage);
-            return;
-          case 4:
-            if (!widget._verificationFieldKey.currentState!.validate()) return;
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Creating Account ...");
 
-            // start submit
-            if (!widget._formKey.currentState!.validate()) return;
-            widget._formKey.currentState!.save();
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
 
-            SnackBarManager.showPersistentSnackBar(
-                context, "    Creating Account ...");
+                String? errorMessage = await authViewModel.createUser(
+                    _userName!, _password!, _email!, _verification!);
 
-            AuthViewModel authViewModel =
-                Provider.of<AuthViewModel>(context, listen: false);
+                SnackBarManager.hideCurrentSnackBar(context);
 
-            String? errorMessage =
-                await authViewModel.createUser(_userName!, _password!, _email!, _verification!);
+                if (errorMessage == null) {
+                  Navigator.of(context).pop();
+                  // TODO: the below two lines of code should not needed because we use ProxyProvider
+                  // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
+                  // userViewModel.updateIfNeeded();
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              default:
+                FLog.severe(
+                    text:
+                        "[LoginScreen] Reached Unsupported Index when registering");
+                return;
+            }
+          }
+        case LoginScreenEnum.recover:
+          {
+            switch (_index) {
+              case 0:
+                if (!widget._emailFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                widget._formKey.currentState!.save();
 
-            SnackBarManager.hideCurrentSnackBar(context);
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Sending verification code  ...");
 
-            if (errorMessage == null) {
-              Navigator.of(context).pop();
-              // TODO: the below two lines of code should not needed because we use ProxyProvider
-              // UserViewModel userViewModel = Provider.of<UserViewModel>(context, listen: false);
-              // userViewModel.updateIfNeeded();
-            } else
-              SnackBarManager.showSnackBar(context, errorMessage);
-            return;
-          default:
-            FLog.severe(
-                text:
-                    "[LoginScreen] Reached Unsupported Index when registering");
-            return;
-        }
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
+
+                String? errorMessage = await authViewModel
+                    .requestEmailVerification("", "", _email!);
+
+                SnackBarManager.hideCurrentSnackBar(context);
+
+                if (errorMessage == null) {
+                  _index++;
+                  setState(() {});
+                  widget._verificationNode.requestFocus();
+                  SnackBarManager.showSnackBar(
+                      context, "Please check your Email for Verification Code");
+                  return;
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              case 1:
+                // no need to validate verification code because
+                // it already validated before calling this function
+                if (!widget._emailFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                widget._formKey.currentState!.save();
+
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Creating Account ...");
+
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
+
+                String? errorMessage = await authViewModel.createUser(
+                    "", "", _email!, _verification!);
+
+                SnackBarManager.hideCurrentSnackBar(context);
+
+                if (errorMessage == null) {
+                  _index++;
+                  setState(() {});
+                  widget._passwordNode.requestFocus();
+                  SnackBarManager.showSnackBar(
+                      context, "Now Type your new password");
+                  return;
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              case 2:
+                if (!widget._passwordFieldKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                _index++;
+                setState(() {});
+                widget._passwordTestNode.requestFocus();
+                return;
+              case 3:
+                // no need to validate verification code because
+                // it already validated before calling this function
+                if (!widget._formKey.currentState!.validate()) return;
+                FocusScope.of(context).unfocus();
+                widget._formKey.currentState!.save();
+
+                SnackBarManager.showPersistentSnackBar(
+                    context, "    Resetting Password ...");
+
+                AuthViewModel authViewModel =
+                    Provider.of<AuthViewModel>(context, listen: false);
+
+                String? errorMessage = await authViewModel.createUser(
+                    "", _password!, _email!, _verification!);
+
+                SnackBarManager.hideCurrentSnackBar(context);
+
+                if (errorMessage == null) {
+                  Navigator.of(context).pop();
+                } else
+                  SnackBarManager.showSnackBar(context, errorMessage);
+                return;
+              default:
+                FLog.severe(
+                    text:
+                        "[LoginScreen] Reached Unsupported Index when recovering");
+                return;
+            }
+          }
       }
-    }
-
-    void switchLogin() {
-      _login = !_login;
-      _index = 0;
-      setState(() {});
     }
 
     TextFormField usernameField = TextFormField(
@@ -205,9 +333,11 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       focusNode: widget._userNameNode,
       validator: (value) {
-        if (value!.isEmpty) return "Please enter your username";
-        if (value.length > 64)
-          return "Username needs to be shorter than 64 characters";
+        if (value == null || value.isEmpty) return "Please enter your username";
+        if (value.length < 4 || value.length > 64)
+          return "Username is between [4, 64] characters";
+        if (!RegExp(Constants.REGEXP_USERNAME, unicode: true).hasMatch(value))
+          return "Invalid characters";
         return null;
       },
       onSaved: (value) {
@@ -221,8 +351,13 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       focusNode: widget._emailNode,
       validator: (value) {
-        if (value!.isEmpty) return "Please enter your email address";
-        return null;
+        if (value == null || value.isEmpty)
+          return "Please enter your email address";
+        if (value.length < 4 || value.length > 64)
+          return "Email is between [4, 64] characters";
+        if (RegExp(Constants.REGEXP_EMAIL, unicode: true).hasMatch(value))
+          return null;
+        return "Invalid email";
       },
       onSaved: (value) {
         _email = value;
@@ -232,7 +367,6 @@ class _LoginScreenState extends State<LoginScreen> {
     TextFormField passwordField = TextFormField(
       key: widget._passwordFieldKey,
       obscureText: !_passwordVisible,
-      // controller: TextEditingController(), // for getting temporary value
       decoration: InputDecoration(
           labelText: "Password",
           suffixIcon: IconButton(
@@ -248,17 +382,17 @@ class _LoginScreenState extends State<LoginScreen> {
       focusNode: widget._passwordNode,
       validator: (value) {
         if (value!.isEmpty) return "Please enter your password";
-        if (value.length < 6 && value.length > 64)
-          return "Password should be between 7 and 63 characters";
-        if (int.tryParse(value) != null)
-          return "Password should not be just numbers";
+        if (value.length < 6 || value.length > 64)
+          return "Password is between [6, 64] characters";
+        if (!RegExp(Constants.REGEXP_PASSWORD).hasMatch(value))
+          return "Password should contain at least one letter and one number";
         return null;
       },
       onSaved: (value) {
         _password = sha256.convert(utf8.encode(value!)).toString();
       },
       onChanged: (value) {
-        _tmp_password = value;
+        _tmpPassword = value;
       },
     );
 
@@ -279,7 +413,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       focusNode: widget._passwordTestNode,
       validator: (value) {
-        if (_tmp_password != value) return "Password does not match";
+        if (_tmpPassword != value) return "Password does not match";
         return null;
       },
       onSaved: (value) {
@@ -287,26 +421,119 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
 
-    TextFormField verificationField = TextFormField(
-      key: widget._verificationFieldKey,
+    // TextFormField verificationField = TextFormField(
+    //   key: widget._verificationFieldKey,
+    //   keyboardType: TextInputType.number,
+    //   inputFormatters: <TextInputFormatter>[
+    //     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    //   ],
+    //   decoration:
+    //       InputDecoration(labelText: "Verification Code From Your Email"),
+    //   textInputAction: TextInputAction.done,
+    //   focusNode: widget._verificationNode,
+    //   validator: (value) {
+    //     if (value!.isEmpty) return "Please enter your verification code";
+    //     if (value.length != 6) return "Verification code should be 6 digits";
+    //     return null;
+    //   },
+    //   onSaved: (value) {
+    //     _verification = value;
+    //   },
+    //   onFieldSubmitted: (string) => submit(),
+    // );
+
+    String? pinCodeValidator(String? value) {
+      if (value == null || value.isEmpty)
+        return "Please enter verification code";
+      if (!RegExp(Constants.REGEXP_CODE).hasMatch(value))
+        return "Validation Code contains 6 digits";
+      return null;
+    }
+
+    PinCodeTextField verificationField = PinCodeTextField(
+      autoDisposeControllers: false, // don't dispose [FocusNode]
       keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-      ],
-      decoration:
-          InputDecoration(labelText: "Verification Code From Your Email"),
-      textInputAction: TextInputAction.done,
+      textInputAction: TextInputAction.next,
       focusNode: widget._verificationNode,
-      validator: (value) {
-        if (value!.isEmpty) return "Please enter your verification code";
-        if (value.length != 6) return "Verification code should be 6 digits";
-        return null;
-      },
+      validator: pinCodeValidator,
+      appContext: context,
+      length: 6,
+      obscureText: false,
+      textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      pastedTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      useHapticFeedback: false,
+      pinTheme: PinTheme(
+        shape: PinCodeFieldShape.box,
+        borderRadius: BorderRadius.circular(5),
+        fieldHeight: 50,
+        fieldWidth: 40,
+        activeColor: Colors.black,
+        selectedColor: Colors.black,
+        inactiveColor: Colors.black,
+        activeFillColor: Colors.black12,
+        selectedFillColor: Colors.transparent,
+        inactiveFillColor: Colors.transparent,
+      ),
+      animationType: AnimationType.slide,
+      animationDuration: Duration(milliseconds: 10),
+      backgroundColor: Colors.transparent,
+      cursorColor: Colors.black,
+      enableActiveFill: false,
+      onCompleted: (string) => {if (pinCodeValidator(string) == null) submit()},
       onSaved: (value) {
         _verification = value;
       },
-      onFieldSubmitted: (string) => submit(),
+      onChanged: (String value) {},
+      beforeTextPaste: (text) => pinCodeValidator(text) == null,
     );
+
+    List<Widget> getEnumRoute(LoginScreenEnum e) {
+      switch (e) {
+        case LoginScreenEnum.login:
+          return [usernameField, passwordField];
+        case LoginScreenEnum.register:
+          return [
+            usernameField,
+            emailField,
+            passwordField,
+            passwordTestField,
+            Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 10),
+                child: verificationField),
+          ];
+        case LoginScreenEnum.recover:
+          return [
+            emailField,
+            Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 10),
+                child: verificationField),
+            passwordField,
+            passwordTestField,
+          ];
+      }
+    }
+
+    String getEnumName(LoginScreenEnum e) {
+      switch (e) {
+        case LoginScreenEnum.login:
+          return "Login";
+        case LoginScreenEnum.register:
+          return "Register";
+        case LoginScreenEnum.recover:
+          return "Reset Password";
+      }
+    }
+
+    String getEnumButtonName(int index, LoginScreenEnum e) {
+      switch (e) {
+        case LoginScreenEnum.login:
+          return index == 1 ? "Login" : "Next";
+        case LoginScreenEnum.register:
+          return index == 3 ? "Send Email" : "Next";
+        case LoginScreenEnum.recover:
+          return "Next";
+      }
+    }
 
     return Scaffold(
         appBar: CupertinoNavigationBar(
@@ -331,45 +558,51 @@ class _LoginScreenState extends State<LoginScreen> {
                     shrinkWrap: true,
                     children: [
                       Text(
-                        _login ? "Login" : "Register",
+                        getEnumName(_state),
                         style: TextStyle(
                             fontSize: 32, fontWeight: FontWeight.bold),
                       ),
-                      // TODO: advanced validation on email(email format) and password(safety), and maybe on username to prevent special characters
                       IndexedStack(
                         index: _index,
-                        children: _login
-                            ? [usernameField, passwordField]
-                            : [
-                                usernameField,
-                                emailField,
-                                passwordField,
-                                passwordTestField,
-                                verificationField,
-                              ],
+                        children: getEnumRoute(_state),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                              _login
-                                  ? "Don't have an account? "
-                                  : "Already have an account? ",
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: Colors.blueGrey,
-                              )),
-                          TextButton(
-                              onPressed: switchLogin,
-                              child: Text(
-                                _login ? "Create Account" : "Log in",
-                                textAlign: TextAlign.left,
+                      if (_state != LoginScreenEnum.recover)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                _state == LoginScreenEnum.login
+                                    ? "Don't have an account? "
+                                    : "Already have an account? ",
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
-                                    color: Colors.blueGrey,
-                                    decoration: TextDecoration.underline),
-                              ))
-                        ],
-                      ),
+                                  color: Colors.blueGrey,
+                                )),
+                            TextButton(
+                                onPressed: _state == LoginScreenEnum.login
+                                    ? switchToRegister
+                                    : switchToLogin,
+                                child: Text(
+                                  _state == LoginScreenEnum.login
+                                      ? "Create Account"
+                                      : "Log in",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      decoration: TextDecoration.underline),
+                                ))
+                          ],
+                        ),
+                      if (_state != LoginScreenEnum.recover)
+                        TextButton(
+                            onPressed: switchToRecover,
+                            child: Text(
+                              "Forgot Password",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.blueGrey,
+                                  decoration: TextDecoration.underline),
+                            )),
                       Separator(
                         height: 20,
                         color: Colors.transparent,
@@ -377,10 +610,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Text(
-                              _login
-                                  ? (_index == 1 ? "Login" : "Next")
-                                  : (_index == 3 ? "Send Email" : "Next"),
+                          child: Text(getEnumButtonName(_index, _state),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

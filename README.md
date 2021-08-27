@@ -128,6 +128,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: add update checks
 2021/08/25: :sparkles: email verification when registeration
             :sparkles: add double password verification
+2021/08/27: :sparkles: finish changing password, new UI
 ```
 </details>
 
@@ -146,6 +147,16 @@ adjust grpahql mutation to create and update sequentially
 
 6. error message should be more clear, not just throw error
 
+7. limite rate of sending email from server side (can be solved by limit request/sec for ip)
+
+8. test that actually not sending multiple request
+
+9. set restriction on field using validate, only validate once when submit?
+
+
+ui too small
+
+10. https://github.com/adar2378/pin_code_fields/issues/204
 
 ```
 
@@ -164,6 +175,7 @@ CHECK YOUR EMAIL
 - [ ] Add: Dark Mode
 - [ ] Add: xp system by active time
 - [ ] Add: filter by star/pin
+- [ ] Add: [Large] search bar
 - [ ] Add: [Large] app notification
 - [ ] Add: [Large] password changing by email and email verification
 - [ ] Add: [Large] wechat login / binding

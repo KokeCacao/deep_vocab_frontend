@@ -55,4 +55,11 @@ class Constants {
       breaking
     }
   }''';
+
+  /// Regexp
+  // See: http://www.pcre.org/original/doc/html/pcrepattern.html
+  static const String REGEXP_USERNAME = r'^[\p{L}\p{M}\p{S}\p{N}\p{P}]{4,64}$';
+  static const String REGEXP_EMAIL = r"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
+  static const String REGEXP_PASSWORD = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,64}$";
+  static const String REGEXP_CODE = r'^[0-9]{6}$';
 }

@@ -11,6 +11,7 @@ import '/widgets/separator.dart';
 import '/widgets/user_screen/setting_tab.dart';
 import '/widgets/user_screen/xp_bar.dart';
 import '/utils/util.dart';
+import '../screens/account_screen.dart';
 
 class UserScreen extends StatelessWidget {
   final int _maxXp = 100;
@@ -61,7 +62,7 @@ class UserScreen extends StatelessWidget {
             if (authViewModel.isNotLoggedIn)
               Navigator.of(context).pushNamed("/login_screen");
             else
-              authViewModel.logout(); // TODO: other logout button
+              AccountScreen.showAccountScreen(context);
           },
         ),
         Separator(),
