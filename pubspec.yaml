@@ -51,6 +51,8 @@ dependencies:
   json_annotation: ^4.0.1 # for sqlite database and json serialization.
   fl_chart: ^0.36.2 # for charts graphing
   f_logs: ^2.0.0 # for print and save log
+  package_info_plus: ^1.0.6 # for getting app version and build version
+  pin_code_fields: ^7.3.0 # for login and email verification
 
   # See IOS setup guide: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-IOS.md
   # See Android setup guide: https://github.com/transistorsoft/flutter_background_fetch/blob/master/help/INSTALL-ANDROID.md
@@ -60,7 +62,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
   collection: ^1.15.0-nullsafety.4
-  package_info_plus: ^1.0.6
 
 dev_dependencies:
   flutter_test:
