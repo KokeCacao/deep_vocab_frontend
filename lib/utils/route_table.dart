@@ -14,14 +14,6 @@ class RouteTable extends Object {
         switch (route) {
           case '/':
             return NavigationScreen();
-          case '/learning_screen':
-            return NavigationScreen(pageIndex: 0);
-          case '/explore_screen':
-            return NavigationScreen(pageIndex: 1);
-          case '/stats_screen':
-            return NavigationScreen(pageIndex: 2);
-          case '/user_screen':
-            return NavigationScreen(pageIndex: 3);
           case '/login_screen':
             return LoginScreen();
           case '/debug_screen':

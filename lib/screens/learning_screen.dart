@@ -1,10 +1,11 @@
-import 'package:f_logs/f_logs.dart';
+import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
+import 'package:deep_vocab/widgets/learning_screen/progress_indicator.dart';
 
 import '../controllers/vocab_state_controller.dart';
-import '../view_models/vocab_list_view_model.dart';
 import '../view_models/http_sync_view_model.dart';
 import '../widgets/learning_screen/learning_navbar.dart';
-import '../widgets/learning_screen/vocab_list.dart';
+import '../widgets/learning_screen/vocab_list_with_header.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,17 +19,22 @@ class LearningScreen extends StatefulWidget {
 
 class _LearningScreenState extends State<LearningScreen>
     with SingleTickerProviderStateMixin {
-
   int _index = 0;
 
   Widget _buildList() {
     switch (_index) {
       case 0:
-        return VocabList.task(context);
+        return VocabListWithHeader.task(context);
       case 1:
-        return VocabList.memorized(context);
+        return VocabListWithHeader.memorized(context);
       case 2:
-        return VocabList.list(context);
+        return VocabListWithHeader.vocabList(context,
+            emptyWidget: Expanded(
+                child: CircularProgressBar(
+              progressTask:
+                  Provider.of<VocabListViewModel>(context, listen: false)
+                      .downloadVocab,
+            )));
       default:
         throw Exception("There is no $_index-th tab in GNav");
     }
@@ -66,27 +72,6 @@ class _LearningScreenState extends State<LearningScreen>
               // TODO: finish initializing a proper controller
               // controller: FSearchController(),
             ),
-            _index == 2
-                ? Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Barron3500"),
-                        ElevatedButton(
-                          onPressed: () async {
-                            bool success =
-                                await Provider.of<VocabListViewModel>(context,
-                                        listen: false)
-                                    .downloadVocab();
-                            if (success) FLog.info(text: "[LearningScreen] update vocab list Success!");
-                            else FLog.warning(text: "[LearningScreen] update vocab list Failed!");
-                          },
-                          child: Text("Download"),
-                        )
-                      ],
-                    ),
-                  )
-                : SizedBox.shrink(),
             _buildList(),
           ],
         ));

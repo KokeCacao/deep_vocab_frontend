@@ -129,6 +129,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2021/08/25: :sparkles: email verification when registeration
             :sparkles: add double password verification
 2021/08/27: :sparkles: finish changing password, new UI
+2021/09/22: :construction: IOS build success on 5e60538
+2021/09/26: :sparkles: added ThemeDataWrapper; change Navigation logic; Account UI; Progress Bar
 ```
 </details>
 

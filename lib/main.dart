@@ -8,10 +8,10 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:f_logs/f_logs.dart' hide AppDatabase, Constants;
 
-import 'utils/util.dart';
 import 'widgets/init_callback.dart';
 import './controllers/vocab_state_controller.dart';
 import './models/sqlite_models/app_database.dart';
+import './utils/theme_data_wrapper.dart';
 import './utils/hive_box.dart';
 import './utils/route_table.dart';
 import './screens/navigation_screen.dart';
@@ -181,37 +181,35 @@ class _MyAppState extends State<MyApp> {
               ),
               ChangeNotifierProvider<HttpSyncViewModel>(
                 create: (ctx) => HttpSyncViewModel(context: ctx),
-              )
+              ),
+              ChangeNotifierProvider<ThemeDataWrapper>(
+                  create: (ctx) => ThemeDataWrapper(context: ctx))
             ],
-            child: InitCallback(
-                callBack:
-                    initPlatformState, // schedule initPlatformState after build complete
-                temporary: emptyApp,
-                child: MaterialApp(
-                  title: "Deep Vocab",
-                  debugShowCheckedModeBanner: false, // disable debug banner
-                  theme: ThemeData(
-                      primarySwatch: Colors.blueGrey,
-                      visualDensity: VisualDensity.adaptivePlatformDensity,
-                      buttonTheme: ButtonThemeData(
-                        minWidth: 0,
-                        height: 0,
-                        textTheme: ButtonTextTheme.normal,
-                        layoutBehavior: ButtonBarLayoutBehavior.padded,
-                        alignedDropdown: false,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-                      )),
-                  home: NavigationScreen(
-                    // show version alert
-                    initCallback: (BuildContext context, Duration duration) =>
-                        Util.checkForUpdate(context),
-                  ),
-                  onGenerateRoute: RouteTable.onGenerateRoute,
-                  onUnknownRoute: (_) {
-                    throw Exception("UnknownRoute");
-                  },
-                )),
+            builder: (context, child) {
+
+              return Consumer<ThemeDataWrapper>(
+                builder: (BuildContext context, ThemeDataWrapper wrapper,
+                    Widget? child) {
+                  return InitCallback(
+                      callBack:
+                          initPlatformState, // schedule initPlatformState after build complete
+                      temporary: emptyApp,
+                      child: MaterialApp(
+                        title: "Deep Vocab",
+                        debugShowCheckedModeBanner:
+                            false, // disable debug banner
+                        theme: wrapper.themeData,
+                        home:
+                            child, // so that NavigationScreen() don't get rebuild after changing theme data
+                        onGenerateRoute: RouteTable.onGenerateRoute,
+                        onUnknownRoute: (_) {
+                          throw Exception("UnknownRoute");
+                        },
+                      ));
+                },
+                child: NavigationScreen(), // This way NavigationScreen() class won't rebuild so change dark mode will preserve state
+              );
+            },
           );
         });
   }

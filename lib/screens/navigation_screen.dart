@@ -1,3 +1,4 @@
+import 'package:deep_vocab/utils/util.dart';
 import 'package:provider/provider.dart';
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +12,13 @@ import 'explore_screen.dart';
 import 'stats_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
-  int pageIndex;
-  void Function(BuildContext context, Duration timeStamp)? initCallback;
 
-  NavigationScreen(
-      {this.pageIndex = 0,
-      this.initCallback}); // TODO: temporary value. should be 0
+  // This way NavigationScreen() class won't rebuild
+  // because of [child] property on [Consumer()], so change dark mode will preserve state
+  bool init = true;
+  int pageIndex = 0;
+
+  NavigationScreen(); // TODO: temporary value. should be 0
 
   @override
   State<StatefulWidget> createState() {
@@ -25,38 +27,12 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  late List<Map<String, Object>> _pages;
-
-  @override
-  void initState() {
-    _pages = [
-      {
-        'screen': LearningScreen(),
-        'appBar_title': Constants.LEARNING_SCREEN_NAME,
-      },
-      {
-        'screen': ExploreScreen(),
-        'appBar_title': Constants.EXPLORE_SCREEN_NAME,
-      },
-      {
-        'screen': StatsScreen(),
-        'appBar_title': Constants.STATS_SCREEN_NAME,
-      },
-      {
-        'screen': UserScreen(),
-        'appBar_title': Constants.USER_SCREEN_NAME,
-      },
-    ];
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (widget.initCallback != null) widget.initCallback!(context, timeStamp);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget _screen = _pages[widget.pageIndex]['screen'] as Widget;
-    String? _title = _pages[widget.pageIndex]['appBar_title'] as String?;
+    if (widget.init) {
+      Util.checkForUpdate(context);
+      widget.init = false;
+    }
 
     BottomNavigationBadge _badger = new BottomNavigationBadge(
         backgroundColor: Colors.red,
@@ -104,19 +80,36 @@ class _NavigationScreenState extends State<NavigationScreen> {
     // TODO: Hero animation
     // TODO: Sliver... SliverList, SliverGrid
     return Scaffold(
-      appBar: _title == ""
-          ? null
-          : AppBar(
-              title: Text(_title!),
-            ),
+      appBar: null,
 //      drawer: Drawer(),
-      body: SafeArea(child: _screen),
       bottomNavigationBar: BottomNavigationBar(
           fixedColor: Colors.black87,
           type: BottomNavigationBarType.fixed,
           currentIndex: widget.pageIndex,
           onTap: _setPages,
           items: _navItem),
+      body: SafeArea(
+          child: Stack(
+        children: [
+          // [Offstage] is used to keep state of every tab
+          Offstage(
+            offstage: widget.pageIndex != 0,
+            child: LearningScreen(),
+          ),
+          Offstage(
+            offstage: widget.pageIndex != 1,
+            child: ExploreScreen(),
+          ),
+          Offstage(
+            offstage: widget.pageIndex != 2,
+            child: StatsScreen(),
+          ),
+          Offstage(
+            offstage: widget.pageIndex != 3,
+            child: UserScreen(),
+          ),
+        ],
+      )),
     );
   }
 

@@ -18,6 +18,9 @@ class AccountScreen {
     showNoTransitionDialog(
         context: context,
         builder: (BuildContext context) {
+          const EdgeInsetsGeometry padding =
+              EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+
           return SlidingUpPanel(
               color: Colors.white70,
               backdropEnabled: true,
@@ -39,8 +42,7 @@ class AccountScreen {
                       controller: scrollController,
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: padding,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             clipBehavior: Clip.antiAlias,
@@ -49,8 +51,8 @@ class AccountScreen {
                                 icon: Icons.timer,
                                 textBack: "",
                                 onPressed: () {
-                                  Navigator.of(context).pushNamed(
-                                      "/login_screen", arguments: {
+                                  Navigator.of(context)
+                                      .pushNamed("/login_screen", arguments: {
                                     "index": 0,
                                     "state": LoginScreenEnum.recover,
                                   });
@@ -58,8 +60,7 @@ class AccountScreen {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: padding,
                           child: ElevatedButton(
                             child: Text("Logout"),
                             style:
@@ -68,8 +69,10 @@ class AccountScreen {
                               AuthViewModel authViewModel =
                                   Provider.of<AuthViewModel>(context,
                                       listen: false);
-                              if (authViewModel.isLoggedIn)
+                              if (authViewModel.isLoggedIn) {
                                 authViewModel.logout();
+                                panelController.close();
+                              }
                             },
                           ),
                         ),
