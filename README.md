@@ -133,6 +133,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2021/09/26: :sparkles: added ThemeDataWrapper; change Navigation logic; Account UI; Progress Bar
             :sparkles: change AndroidManifest.xml
             :construction: increment build 1->2
+            :sparkles: remove debug flag (send actual email) backend, add graphene-file-upload
+            :construction: increment build 2->3; Switch to release server
 ```
 </details>
 
