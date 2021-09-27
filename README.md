@@ -136,6 +136,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: remove debug flag (send actual email) backend, add graphene-file-upload
             :construction: increment build 2->3; Switch to release server
             :sparkles: add permission handler; change deep_vocab to Deep Vocab
+            :construction: increment build 3->4
 ```
 </details>
 
