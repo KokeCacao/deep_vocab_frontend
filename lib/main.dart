@@ -5,6 +5,7 @@ import 'package:graphql/client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:f_logs/f_logs.dart' hide AppDatabase, Constants;
 
@@ -91,6 +92,23 @@ class _MyAppState extends State<MyApp> {
     });
 
     FLog.info(text: "[BackgroundFetch] configure success: $status");
+
+    // Config Permission
+    if (await Permission.storage.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+    } else if (await Permission.storage.isPermanentlyDenied) {
+      openAppSettings();
+    }
+    if (await Permission.notification.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+    } else if (await Permission.notification.isPermanentlyDenied) {
+      openAppSettings();
+    }
+    if (await Permission.photos.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+    } else if (await Permission.photos.isPermanentlyDenied) {
+      openAppSettings();
+    }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

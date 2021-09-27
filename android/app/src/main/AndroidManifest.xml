@@ -24,7 +24,7 @@
     <application
         tools:replace="android:label"
         android:name="io.flutter.app.FlutterApplication"
-        android:label="deep_vocab"
+        android:label="Deep Vocab"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

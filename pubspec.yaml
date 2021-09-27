@@ -45,6 +45,8 @@ dependencies:
   sliding_up_panel: ^2.0.0+1 # for sliding up panel
   moor: ^4.3.2 # for sqlite database
   sqlite3_flutter_libs: ^0.5.0 # for sqlite database
+  permission_handler: ^8.1.6 # for IOS (and maybe android) permission
+
   # Version 4.0.1 does not include Null Safety, don't use version above 4.0
   # Version ^4.0.1 for `json_annotation` and ^4.1.0 for `json_serializable recommended
   # See: https://stackoverflow.com/questions/66477445/generator-cannot-target-libraries-that-have-not-been-migrated-to-null-safety
