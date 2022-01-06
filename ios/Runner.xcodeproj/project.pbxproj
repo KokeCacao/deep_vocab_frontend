@@ -162,6 +162,7 @@
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
+/* See: https://stackoverflow.com/questions/61123794/codemagic-automatic-app-signing-fails-for-ios */
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
@@ -171,6 +172,7 @@
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
+						DevelopmentTeam = 3VTUU97W95;
 						SystemCapabilities = {
 							com.apple.AutoFillCredentialProvider = {
 								enabled = 1;
