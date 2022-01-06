@@ -201,6 +201,18 @@ CHECK YOUR EMAIL
 - [ ] Fix: box lose data?
 - [ ] Fix: optimization: https://segmentfault.com/a/1190000019462984
 - [ ] Fix: solve green rectangle https://github.com/flutter/flutter/issues/16810
+- [ ] Optimize: download need text indication
+- [ ] Optimize: make hide vocab bigger
+- [ ] Optimize: make vocabs bigger (or adjustable)
+- [ ] Optimize: 注册时 actually 引导到注册
+- [ ] Optimize: must contain one letter 省略号看不到
+- [ ] Optimize: 邮件验证码加到标题
+- [ ] Optimize: 更改密码 不要调到 register
+- [ ] Optimize: 背了以后需要反馈 选中了哪个需要反馈
+- [ ] Bug: why sharing vocab data.
+- [ ] Optimize: add special character to password
+
+
 
 ## Inspirations
 [[UI]](https://zhuanlan.zhihu.com/p/38045611), [[UI]](https://zhuanlan.zhihu.com/p/69265395)
