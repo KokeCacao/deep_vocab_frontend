@@ -92,5 +92,9 @@
     <!-- Permission options added by Koke_Cacao -->
     <key>PermissionGroupNotification</key>
     <string>Deep Vocab would like to send you notifications</string>
+
+    <!-- Encryption Regulation by Koke_Cacao -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
