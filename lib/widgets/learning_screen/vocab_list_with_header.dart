@@ -129,18 +129,16 @@ class VocabListWithHeaderState extends State<VocabListWithHeader> {
               setState(() {});
             },
           ),
-          if (randomList.length == 0 && widget.emptyWidget != null)
-            widget.emptyWidget!
-          else
-            VocabList(
-              refreshable: true,
-              itemCount: randomList.length,
-              onRefresh: widget.onRefresh,
-              onTwoLevel: widget.onTwoLevel,
-              itemBuilder: (context, i) => DismissibleVocabRow(
-                vocab: randomList[i],
-              ),
-            )
+          VocabList(
+            refreshable: true,
+            itemCount: randomList.length,
+            onRefresh: widget.onRefresh,
+            onTwoLevel: widget.onTwoLevel,
+            itemBuilder: (context, i) => DismissibleVocabRow(
+              vocab: randomList[i],
+            ),
+            emptyWidget: widget.emptyWidget,
+          )
         ],
       ),
     );

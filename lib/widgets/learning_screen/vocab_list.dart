@@ -22,15 +22,16 @@ class VocabList extends StatelessWidget {
   final void Function(RefreshController controller)? onRefresh;
   final void Function(RefreshController controller)? onTwoLevel;
   final Widget Function(BuildContext context, int index) itemBuilder;
+  final Widget? emptyWidget;
 
-  VocabList({Key? key, this.refreshable = true, required this.itemCount, required this.onRefresh, this.onTwoLevel, required this.itemBuilder})
+  VocabList({Key? key, this.refreshable = true, required this.itemCount, required this.onRefresh, this.onTwoLevel, required this.itemBuilder, this.emptyWidget})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     RefreshController? _refreshController = refreshable ? RefreshController(initialRefresh: false) : null;
 
-    Widget result = ListView.builder(
+    Widget result = itemCount == 0 ? (emptyWidget == null ? SizedBox.shrink() : emptyWidget!) : ListView.builder(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       itemCount: itemCount,
