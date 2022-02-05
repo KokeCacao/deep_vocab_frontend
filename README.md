@@ -145,6 +145,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2022/02/05: :bug: maybe fixed IOS FocusNode issue when login
             :sparkles: add label to progress indicator
             :bug: fix unable to refresh when there is no vocab
+            :bug: test logs in iOS
 ```
 </details>
 

@@ -77,7 +77,7 @@ class _DebugScreenState extends State<DebugScreen> {
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.connectionState != ConnectionState.done)
-                            return SizedBox.shrink();
+                            return CircularProgressIndicator();
                           List<Log> logs = snapshot.data;
                           List<String> strings = logs.map((e) {
                             String s =

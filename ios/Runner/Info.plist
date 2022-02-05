@@ -80,8 +80,11 @@
     <string>motion</string> -->
 
     <!-- Permission options for the `photos` group -->
-		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>Deep Vocab would like to save photos to your gallery</string>
+    <!-- Permission options added by Koke_Cacao: for FLOG -->
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Deep Vocab would like to save photos to your gallery</string>
+
+    <!-- Permission options added by Koke_Cacao: for FLOG -->
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Deep Vocab would like to save photos to your gallery</string>
 
