@@ -77,22 +77,31 @@ class _LoginScreenState extends State<LoginScreen> {
     void switchToLogin() {
       _state = LoginScreenEnum.login;
       _index = 0;
-      widget._userNameNode.requestFocus();
+      // Not: setState(() {}); should come before requestFocus()
+      // Otherwise IOS system might focus and then immediately de-focus
+      // causing TextField un-focusable
       setState(() {});
+      widget._userNameNode.requestFocus();
     }
 
     void switchToRegister() {
       _state = LoginScreenEnum.register;
       _index = 0;
-      widget._userNameNode.requestFocus();
+      // Not: setState(() {}); should come before requestFocus()
+      // Otherwise IOS system might focus and then immediately de-focus
+      // causing TextField un-focusable
       setState(() {});
+      widget._userNameNode.requestFocus();
     }
 
     void switchToRecover() {
       _state = LoginScreenEnum.recover;
       _index = 0;
-      widget._emailNode.requestFocus();
+      // Not: setState(() {}); should come before requestFocus()
+      // Otherwise IOS system might focus and then immediately de-focus
+      // causing TextField un-focusable
       setState(() {});
+      widget._emailNode.requestFocus();
     }
 
     void submit() async {

@@ -24,9 +24,19 @@ class _LearningScreenState extends State<LearningScreen>
   Widget _buildList() {
     switch (_index) {
       case 0:
-        return VocabListWithHeader.task(context);
+        return VocabListWithHeader.task(context,
+            emptyWidget: Expanded(
+              child: Center(
+                child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+              ),
+            ));
       case 1:
-        return VocabListWithHeader.memorized(context);
+        return VocabListWithHeader.memorized(context,
+            emptyWidget: Expanded(
+              child: Center(
+                child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+              ),
+            ));
       case 2:
         return VocabListWithHeader.vocabList(context,
             emptyWidget: Expanded(

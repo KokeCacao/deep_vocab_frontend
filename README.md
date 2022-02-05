@@ -137,6 +137,12 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :construction: increment build 2->3; Switch to release server
             :sparkles: add permission handler; change deep_vocab to Deep Vocab
             :construction: increment build 3->4
+2022/01/07: :sparkles: implement SSL / TSL
+2022/01/15: :sparkles: add backdoor command to create user
+            :sparkles: validate found password
+            :sparkles: reserve UI space for empty vocab list
+2022/01/29: :sparkles: add progress indicator
+2022/02/05: :bug: maybe fixed IOS FocusNode issue when login
 ```
 </details>
 

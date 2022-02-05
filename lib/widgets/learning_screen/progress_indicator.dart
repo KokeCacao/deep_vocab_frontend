@@ -32,11 +32,14 @@ class CircularProgressBarState extends State<CircularProgressBar> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (widget.total != 0)
-          CircularProgressIndicator(
-            value: widget.count / widget.total,
-            // semanticsLabel: widget.label,
-            // semanticsValue: "${widget.count} / ${widget.total}",
-          )
+          if (widget.count != 0)
+            CircularProgressIndicator(
+              value: widget.count / widget.total,
+              // semanticsLabel: widget.label,
+              // semanticsValue: "${widget.count} / ${widget.total}",
+            )
+          else
+            CircularProgressIndicator()
         else
           ElevatedButton(
             onPressed: () async {
