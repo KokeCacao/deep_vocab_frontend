@@ -33,13 +33,19 @@ class CircularProgressBarState extends State<CircularProgressBar> {
       children: [
         if (widget.total != 0)
           if (widget.count != 0)
-            CircularProgressIndicator(
-              value: widget.count / widget.total,
-              // semanticsLabel: widget.label,
-              // semanticsValue: "${widget.count} / ${widget.total}",
-            )
+            Column(children: [
+              CircularProgressIndicator(
+                value: widget.count / widget.total,
+                // semanticsLabel: widget.label,
+                // semanticsValue: "${widget.count} / ${widget.total}",
+              ),
+              Text("${widget.count}/${widget.total}"),
+            ],)
           else
-            CircularProgressIndicator()
+            Column(children: [
+              CircularProgressIndicator(),
+              Text("The server is preparing your data, please wait..."),
+            ],)
         else
           ElevatedButton(
             onPressed: () async {
