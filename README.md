@@ -151,6 +151,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :arrow_up: migrate to v2 AndroidManifest.xml
             :bug: bottom navigation badge deprecate `old.title`
             :arrow_up: MinimumOSVersion change from 8.0 to 9.0 in bottom navigation badge
+            :arrow_up: package dependency upgraded
 
 ```
 </details>
