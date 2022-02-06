@@ -152,6 +152,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: bottom navigation badge deprecate `old.title`
             :arrow_up: MinimumOSVersion change from 8.0 to 9.0 in bottom navigation badge
             :arrow_up: package dependency upgraded
+            :arrow_up: upgrade Flutter to 2.10.0 from 2.2.3 in /opt/flutter
 
 ```
 </details>
