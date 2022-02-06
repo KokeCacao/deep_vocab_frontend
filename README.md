@@ -147,6 +147,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: fix unable to refresh when there is no vocab
             :bug: test logs in iOS
 2022/02/06: :sparkles: dark mode for everything except vocabpenel, login, logout, dev_screen
+            :arrow_up: bump up build version
+
 ```
 </details>
 
