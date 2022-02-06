@@ -20,7 +20,7 @@
 buildscript {
     ext.kotlin_version = '1.5.20'
     ext {
-        compileSdkVersion   = 30 // lower means more support for more old device
+        compileSdkVersion   = 31 // lower means more support for more old device
         targetSdkVersion    = 28 // what version you have tested on, if not specified, default to minSdkVersion
         appCompatVersion    = "1.1.0" // AppCompat is a library to add additional unsupported feature to old device below compileSdkVersion
     }

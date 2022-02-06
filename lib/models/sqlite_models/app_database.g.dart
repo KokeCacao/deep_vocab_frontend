@@ -555,179 +555,86 @@ class $VocabSqliteTableTable extends VocabSqliteTable
   final String? _alias;
   $VocabSqliteTableTable(this._db, [this._alias]);
   final VerificationMeta _vocabIdMeta = const VerificationMeta('vocabId');
-  @override
-  late final GeneratedTextColumn vocabId = _constructVocabId();
-  GeneratedTextColumn _constructVocabId() {
-    return GeneratedTextColumn(
-      'vocab_id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> vocabId = GeneratedColumn<String?>(
+      'vocab_id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _editionMeta = const VerificationMeta('edition');
-  @override
-  late final GeneratedDateTimeColumn edition = _constructEdition();
-  GeneratedDateTimeColumn _constructEdition() {
-    return GeneratedDateTimeColumn(
-      'edition',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<DateTime?> edition = GeneratedColumn<DateTime?>(
+      'edition', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _listIdsMeta = const VerificationMeta('listIds');
-  @override
-  late final GeneratedTextColumn listIds = _constructListIds();
-  GeneratedTextColumn _constructListIds() {
-    return GeneratedTextColumn(
-      'list_ids',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<int>, String?> listIds =
+      GeneratedColumn<String?>('list_ids', aliasedName, false,
+              typeName: 'TEXT', requiredDuringInsert: true)
+          .withConverter<List<int>>($VocabSqliteTableTable.$converter0);
   final VerificationMeta _vocabMeta = const VerificationMeta('vocab');
-  @override
-  late final GeneratedTextColumn vocab = _constructVocab();
-  GeneratedTextColumn _constructVocab() {
-    return GeneratedTextColumn(
-      'vocab',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> vocab = GeneratedColumn<String?>(
+      'vocab', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  @override
-  late final GeneratedIntColumn type = _constructType();
-  GeneratedIntColumn _constructType() {
-    return GeneratedIntColumn(
-      'type',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<VocabType?, int?> type =
+      GeneratedColumn<int?>('type', aliasedName, true,
+              typeName: 'INTEGER', requiredDuringInsert: false)
+          .withConverter<VocabType?>($VocabSqliteTableTable.$converter1);
   final VerificationMeta _mainTranslationMeta =
       const VerificationMeta('mainTranslation');
-  @override
-  late final GeneratedTextColumn mainTranslation = _constructMainTranslation();
-  GeneratedTextColumn _constructMainTranslation() {
-    return GeneratedTextColumn(
-      'main_translation',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumn<String?> mainTranslation =
+      GeneratedColumn<String?>('main_translation', aliasedName, true,
+          typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _otherTranslationMeta =
       const VerificationMeta('otherTranslation');
-  @override
-  late final GeneratedTextColumn otherTranslation =
-      _constructOtherTranslation();
-  GeneratedTextColumn _constructOtherTranslation() {
-    return GeneratedTextColumn(
-      'other_translation',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<String>, String?>
+      otherTranslation = GeneratedColumn<String?>(
+              'other_translation', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<String>>($VocabSqliteTableTable.$converter2);
   final VerificationMeta _mainSoundMeta = const VerificationMeta('mainSound');
-  @override
-  late final GeneratedTextColumn mainSound = _constructMainSound();
-  GeneratedTextColumn _constructMainSound() {
-    return GeneratedTextColumn(
-      'main_sound',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumn<String?> mainSound = GeneratedColumn<String?>(
+      'main_sound', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _otherSoundMeta = const VerificationMeta('otherSound');
-  @override
-  late final GeneratedTextColumn otherSound = _constructOtherSound();
-  GeneratedTextColumn _constructOtherSound() {
-    return GeneratedTextColumn(
-      'other_sound',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<String>, String?>
+      otherSound = GeneratedColumn<String?>('other_sound', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<String>>($VocabSqliteTableTable.$converter3);
   final VerificationMeta _englishTranslationMeta =
       const VerificationMeta('englishTranslation');
-  @override
-  late final GeneratedTextColumn englishTranslation =
-      _constructEnglishTranslation();
-  GeneratedTextColumn _constructEnglishTranslation() {
-    return GeneratedTextColumn(
-      'english_translation',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumn<String?> englishTranslation =
+      GeneratedColumn<String?>('english_translation', aliasedName, true,
+          typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _commentsMeta = const VerificationMeta('comments');
-  @override
-  late final GeneratedTextColumn comments = _constructComments();
-  GeneratedTextColumn _constructComments() {
-    return GeneratedTextColumn(
-      'comments',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<CommentModel?>, String?>
+      comments = GeneratedColumn<String?>('comments', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<CommentModel?>>(
+              $VocabSqliteTableTable.$converter4);
   final VerificationMeta _confusingWordsMeta =
       const VerificationMeta('confusingWords');
-  @override
-  late final GeneratedTextColumn confusingWords = _constructConfusingWords();
-  GeneratedTextColumn _constructConfusingWords() {
-    return GeneratedTextColumn(
-      'confusing_words',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<String>, String?>
+      confusingWords = GeneratedColumn<String?>(
+              'confusing_words', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<String>>($VocabSqliteTableTable.$converter5);
   final VerificationMeta _memTipsMeta = const VerificationMeta('memTips');
-  @override
-  late final GeneratedTextColumn memTips = _constructMemTips();
-  GeneratedTextColumn _constructMemTips() {
-    return GeneratedTextColumn(
-      'mem_tips',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumn<String?> memTips = GeneratedColumn<String?>(
+      'mem_tips', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _exampleSentencesMeta =
       const VerificationMeta('exampleSentences');
-  @override
-  late final GeneratedTextColumn exampleSentences =
-      _constructExampleSentences();
-  GeneratedTextColumn _constructExampleSentences() {
-    return GeneratedTextColumn(
-      'example_sentences',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<String>, String?>
+      exampleSentences = GeneratedColumn<String?>(
+              'example_sentences', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<String>>($VocabSqliteTableTable.$converter6);
   final VerificationMeta _userVocabSqliteTableVocabIdMeta =
       const VerificationMeta('userVocabSqliteTableVocabId');
-  @override
-  late final GeneratedTextColumn userVocabSqliteTableVocabId =
-      _constructUserVocabSqliteTableVocabId();
-  GeneratedTextColumn _constructUserVocabSqliteTableVocabId() {
-    return GeneratedTextColumn(
-        'user_vocab_sqlite_table_vocab_id', $tableName, true,
-        $customConstraints:
-            'NULL REFERENCES user_vocab_sqlite_table(vocab_id)');
-  }
-
+  late final GeneratedColumn<String?> userVocabSqliteTableVocabId =
+      GeneratedColumn<String?>(
+          'user_vocab_sqlite_table_vocab_id', aliasedName, true,
+          typeName: 'TEXT',
+          requiredDuringInsert: false,
+          $customConstraints:
+              'NULL REFERENCES user_vocab_sqlite_table(vocab_id)');
   @override
   List<GeneratedColumn> get $columns => [
         vocabId,
@@ -747,11 +654,9 @@ class $VocabSqliteTableTable extends VocabSqliteTable
         userVocabSqliteTableVocabId
       ];
   @override
-  $VocabSqliteTableTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'vocab_sqlite_table';
   @override
-  String get $tableName => _alias ?? 'vocab_sqlite_table';
-  @override
-  final String actualTableName = 'vocab_sqlite_table';
+  String get actualTableName => 'vocab_sqlite_table';
   @override
   VerificationContext validateIntegrity(
       Insertable<VocabSqliteTableData> instance,
@@ -1220,104 +1125,75 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
   final String? _alias;
   $UserVocabSqliteTableTable(this._db, [this._alias]);
   final VerificationMeta _vocabIdMeta = const VerificationMeta('vocabId');
-  @override
-  late final GeneratedTextColumn vocabId = _constructVocabId();
-  GeneratedTextColumn _constructVocabId() {
-    return GeneratedTextColumn(
-      'vocab_id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> vocabId = GeneratedColumn<String?>(
+      'vocab_id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _nthWordMeta = const VerificationMeta('nthWord');
-  @override
-  late final GeneratedIntColumn nthWord = _constructNthWord();
-  GeneratedIntColumn _constructNthWord() {
-    return GeneratedIntColumn('nth_word', $tableName, false,
-        defaultValue: Constant(0));
-  }
-
+  late final GeneratedColumn<int?> nthWord = GeneratedColumn<int?>(
+      'nth_word', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultValue: Constant(0));
   final VerificationMeta _nthAppearMeta = const VerificationMeta('nthAppear');
-  @override
-  late final GeneratedIntColumn nthAppear = _constructNthAppear();
-  GeneratedIntColumn _constructNthAppear() {
-    return GeneratedIntColumn('nth_appear', $tableName, false,
-        defaultValue: Constant(0));
-  }
-
+  late final GeneratedColumn<int?> nthAppear = GeneratedColumn<int?>(
+      'nth_appear', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultValue: Constant(0));
   final VerificationMeta _markColorsMeta = const VerificationMeta('markColors');
-  @override
-  late final GeneratedTextColumn markColors = _constructMarkColors();
-  GeneratedTextColumn _constructMarkColors() {
-    return GeneratedTextColumn(
-      'mark_colors',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<MarkColorModel?>, String?>
+      markColors = GeneratedColumn<String?>('mark_colors', aliasedName, true,
+              typeName: 'TEXT', requiredDuringInsert: false)
+          .withConverter<List<MarkColorModel?>>(
+              $UserVocabSqliteTableTable.$converter0);
   final VerificationMeta _editedMeaningMeta =
       const VerificationMeta('editedMeaning');
-  @override
-  late final GeneratedTextColumn editedMeaning = _constructEditedMeaning();
-  GeneratedTextColumn _constructEditedMeaning() {
-    return GeneratedTextColumn(
-      'edited_meaning',
-      $tableName,
-      true,
-    );
-  }
-
+  late final GeneratedColumn<String?> editedMeaning = GeneratedColumn<String?>(
+      'edited_meaning', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
   final VerificationMeta _bookMarkedMeta = const VerificationMeta('bookMarked');
-  @override
-  late final GeneratedBoolColumn bookMarked = _constructBookMarked();
-  GeneratedBoolColumn _constructBookMarked() {
-    return GeneratedBoolColumn('book_marked', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> bookMarked = GeneratedColumn<bool?>(
+      'book_marked', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (book_marked IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _questionMarkMeta =
       const VerificationMeta('questionMark');
-  @override
-  late final GeneratedBoolColumn questionMark = _constructQuestionMark();
-  GeneratedBoolColumn _constructQuestionMark() {
-    return GeneratedBoolColumn('question_mark', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> questionMark = GeneratedColumn<bool?>(
+      'question_mark', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (question_mark IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _starMarkMeta = const VerificationMeta('starMark');
-  @override
-  late final GeneratedBoolColumn starMark = _constructStarMark();
-  GeneratedBoolColumn _constructStarMark() {
-    return GeneratedBoolColumn('star_mark', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> starMark = GeneratedColumn<bool?>(
+      'star_mark', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (star_mark IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _pinMarkMeta = const VerificationMeta('pinMark');
-  @override
-  late final GeneratedBoolColumn pinMark = _constructPinMark();
-  GeneratedBoolColumn _constructPinMark() {
-    return GeneratedBoolColumn('pin_mark', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> pinMark = GeneratedColumn<bool?>(
+      'pin_mark', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (pin_mark IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _addedMarkMeta = const VerificationMeta('addedMark');
-  @override
-  late final GeneratedBoolColumn addedMark = _constructAddedMark();
-  GeneratedBoolColumn _constructAddedMark() {
-    return GeneratedBoolColumn('added_mark', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> addedMark = GeneratedColumn<bool?>(
+      'added_mark', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (added_mark IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _pushedMarkMeta = const VerificationMeta('pushedMark');
-  @override
-  late final GeneratedBoolColumn pushedMark = _constructPushedMark();
-  GeneratedBoolColumn _constructPushedMark() {
-    return GeneratedBoolColumn('pushed_mark', $tableName, true,
-        defaultValue: Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> pushedMark = GeneratedColumn<bool?>(
+      'pushed_mark', aliasedName, true,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (pushed_mark IN (0, 1))',
+      defaultValue: Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         vocabId,
@@ -1333,11 +1209,9 @@ class $UserVocabSqliteTableTable extends UserVocabSqliteTable
         pushedMark
       ];
   @override
-  $UserVocabSqliteTableTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'user_vocab_sqlite_table';
   @override
-  String get $tableName => _alias ?? 'user_vocab_sqlite_table';
-  @override
-  final String actualTableName = 'user_vocab_sqlite_table';
+  String get actualTableName => 'user_vocab_sqlite_table';
   @override
   VerificationContext validateIntegrity(
       Insertable<UserVocabSqliteTableData> instance,

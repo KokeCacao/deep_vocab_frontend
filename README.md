@@ -155,6 +155,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :arrow_up: upgrade Flutter to 2.10.0 from 2.2.3 in /opt/flutter
             :bug: resolve dependency issue related to Moor: https://forums.raywenderlich.com/t/ch-15-problem-using-moor-generator/155792
             :bug: fix fl_chart update bug
+            :bug: regenerate app_database.g
+            :bug: bump up compileSdkVersion from 30 to 31 since 30 is unsupported
 
 ```
 </details>
