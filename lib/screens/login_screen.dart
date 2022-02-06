@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
+import '../utils/theme_data_wrapper.dart';
 import '../view_models/auth_view_model.dart';
 import '../widgets/separator.dart';
 import '../utils/snack_bar_manager.dart';
@@ -81,7 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
       setState(() {});
-      widget._userNameNode.requestFocus();
+      // widget._userNameNode.requestFocus();
+      // remove focus
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
     }
 
     void switchToRegister() {
@@ -91,7 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
       setState(() {});
-      widget._userNameNode.requestFocus();
+      // widget._userNameNode.requestFocus();
+      // remove focus
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
     }
 
     void switchToRecover() {
@@ -101,7 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
       setState(() {});
-      widget._emailNode.requestFocus();
+      // widget._emailNode.requestFocus();
+      // remove focus
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
     }
 
     void submit() async {
@@ -379,6 +389,9 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
           labelText: "Password",
           suffixIcon: IconButton(
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
+            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
+            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
             icon: Icon(
               _passwordVisible ? Icons.visibility : Icons.visibility_off,
             ),
@@ -411,6 +424,9 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
           labelText: "Repeat Password",
           suffixIcon: IconButton(
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
+            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
+            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
             icon: Icon(
               _passwordVisible ? Icons.visibility : Icons.visibility_off,
             ),

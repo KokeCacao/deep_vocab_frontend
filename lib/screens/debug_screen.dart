@@ -8,7 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+
+import '../utils/theme_data_wrapper.dart';
 
 class DebugScreen extends StatefulWidget {
   @override
@@ -48,8 +51,16 @@ class _DebugScreenState extends State<DebugScreen> {
             padding: EdgeInsets.zero,
             onPressed: Navigator.of(context).maybePop,
           ),
-          middle: Text("Logs"),
+          middle: Text(
+            "Logs",
+            style: TextStyle(
+                color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .textColor),
+          ),
           trailing: IconButton(
+              color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
+              focusColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
+              hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
               onPressed: () async {
                 PackageInfo packageInfo = await PackageInfo.fromPlatform();
                 showAboutDialog(
@@ -78,24 +89,28 @@ class _DebugScreenState extends State<DebugScreen> {
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.connectionState != ConnectionState.done)
                             return CircularProgressIndicator();
-                          List<Log> logs = snapshot.data;
-                          List<String> strings = logs.map((e) {
-                            String s =
-                                "[${e.logLevel}] (${e.timestamp}) ${e.className}/${e.methodName} ${e.text}";
-                            if (e.logLevel == LogLevel.FATAL ||
-                                e.logLevel == LogLevel.FATAL)
-                              s = s + " ${e.stacktrace}";
-                            return s;
-                          }).toList();
+                          try {
+                            List<Log> logs = snapshot.data;
+                            List<String> strings = logs.map((e) {
+                              String s =
+                                  "[${e.logLevel}] (${e.timestamp}) ${e.className}/${e.methodName} ${e.text}";
+                              if (e.logLevel == LogLevel.FATAL ||
+                                  e.logLevel == LogLevel.FATAL)
+                                s = s + " ${e.stacktrace}";
+                              return s;
+                            }).toList();
 
-                          return ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: strings.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return Text(strings[i]);
-                            },
-                          );
+                            return ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: strings.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                return Text(strings[i]);
+                              },
+                            );
+                          } catch (e) {
+                            return Text("Error");
+                          }
                         })),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

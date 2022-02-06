@@ -157,6 +157,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: fix fl_chart update bug
             :bug: regenerate app_database.g
             :bug: bump up compileSdkVersion from 30 to 31 since 30 is unsupported
+            :bug: fixed bugs in v0.1.0-7, bump up version
 
 ```
 </details>

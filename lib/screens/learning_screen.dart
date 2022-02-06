@@ -25,26 +25,23 @@ class _LearningScreenState extends State<LearningScreen>
     switch (_index) {
       case 0:
         return VocabListWithHeader.task(context,
-            emptyWidget: Expanded(
-              child: Center(
+            emptyWidget: Center(
                 child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
               ),
-            ));
+            );
       case 1:
         return VocabListWithHeader.memorized(context,
-            emptyWidget: Expanded(
-              child: Center(
+            emptyWidget: Center(
                 child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
               ),
-            ));
+            );
       case 2:
         return VocabListWithHeader.vocabList(context,
-            emptyWidget: Expanded(
-                child: CircularProgressBar(
+            emptyWidget: CircularProgressBar(
               progressTask:
                   Provider.of<VocabListViewModel>(context, listen: false)
                       .downloadVocab,
-            )));
+            ));
       default:
         throw Exception("There is no $_index-th tab in GNav");
     }
