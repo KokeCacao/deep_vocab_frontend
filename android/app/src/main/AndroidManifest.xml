@@ -21,11 +21,16 @@
          In most cases you can leave this as-is, but you if you want to provide
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
+    <!--  Koke_Cacao: migrated as https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects  -->
     <application
         tools:replace="android:label"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="Deep Vocab"
         android:icon="@mipmap/ic_launcher">
+        <!--    Koke_Cacao: migrated    -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
