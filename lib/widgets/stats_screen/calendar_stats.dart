@@ -100,7 +100,7 @@ class _CalendarStatsState extends State<CalendarStats> {
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => TextStyle(
+          getTextStyles: (context, value) => TextStyle(
               color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor, fontWeight: FontWeight.bold, fontSize: 14),
           margin: 16,
           getTitles: (double value) {

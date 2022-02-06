@@ -72,7 +72,7 @@ class _VocabStatsState extends State<VocabStats> {
               86400000, // a day // TODO: using interval might be bad as data get large
           showTitles: true,
           reservedSize: 22,
-          getTextStyles: (value) => const TextStyle(
+          getTextStyles: (context, value) => const TextStyle(
               color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16),
           getTitles: (value) => DateFormat.Md()
               .format(DateTime.fromMillisecondsSinceEpoch(value.toInt())),
@@ -81,7 +81,7 @@ class _VocabStatsState extends State<VocabStats> {
         leftTitles: SideTitles(
           interval: 20,
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
+          getTextStyles: (context, value) => const TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.bold,
             fontSize: 15,
@@ -93,7 +93,7 @@ class _VocabStatsState extends State<VocabStats> {
         rightTitles: SideTitles(
           interval: 20,
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
+          getTextStyles: (context, value) => const TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.bold,
             fontSize: 15,
