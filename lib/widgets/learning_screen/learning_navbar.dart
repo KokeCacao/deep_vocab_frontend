@@ -1,6 +1,8 @@
+import '../../utils/theme_data_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class LearningNavbar extends StatelessWidget {
   final Function(int index)? onTabChange;
@@ -56,14 +58,44 @@ class LearningNavbar extends StatelessWidget {
               GButton(
                 icon: Icons.alarm,
                 text: "任务",
+                backgroundColor:
+                    Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .tab,
+                iconColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .highlightTextColor,
+                rippleColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                iconActiveColor:
+                    Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .textColor,
               ),
               GButton(
                 icon: Icons.thumb_up,
                 text: "已背",
+                backgroundColor:
+                Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .tab,
+                iconColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .highlightTextColor,
+                rippleColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                iconActiveColor:
+                Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .textColor,
               ),
               GButton(
                 icon: Icons.book,
                 text: "词表",
+                backgroundColor:
+                Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .tab,
+                iconColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .highlightTextColor,
+                rippleColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                iconActiveColor:
+                Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .textColor,
               ),
             ])
       ],

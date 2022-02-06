@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import '../../utils/theme_data_wrapper.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CalendarStatsModel {
   int black;
@@ -63,7 +65,7 @@ class _CalendarStatsState extends State<CalendarStats> {
         touchTooltipData: BarTouchTooltipData(
             tooltipPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
             tooltipMargin: 4,
-            tooltipBgColor: Colors.blueGrey,
+            tooltipBgColor: Provider.of<ThemeDataWrapper>(context, listen: false).tab,
             getTooltipItem: (BarChartGroupData groupData, int groupIndex,
                 BarChartRodData rodData, int rodIndex) {
               int index = groupData.x.toInt();
@@ -76,7 +78,7 @@ class _CalendarStatsState extends State<CalendarStats> {
               return BarTooltipItem(
                 date[index],
                 TextStyle(
-                  color: Colors.white60,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 9,
                 ),
@@ -84,7 +86,7 @@ class _CalendarStatsState extends State<CalendarStats> {
                   TextSpan(
                     text: "共 ${rodData.y.toInt().toString()} 单词",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -98,8 +100,8 @@ class _CalendarStatsState extends State<CalendarStats> {
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
-              color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14),
+          getTextStyles: (value) => TextStyle(
+              color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor, fontWeight: FontWeight.bold, fontSize: 14),
           margin: 16,
           getTitles: (double value) {
             switch (value.toInt()) {
@@ -157,7 +159,7 @@ class _CalendarStatsState extends State<CalendarStats> {
                 Text(
                   widget.mainText,
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
@@ -167,7 +169,7 @@ class _CalendarStatsState extends State<CalendarStats> {
                 Text(
                   "${DateFormat.MMMMd().format(widget.date)} ~ ${DateFormat.MMMMd().format(widget.date.add(const Duration(days: 6)))}",
                   style: TextStyle(
-                      color: Colors.black45,
+                      color: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
@@ -190,7 +192,7 @@ class _CalendarStatsState extends State<CalendarStats> {
               child: IconButton(
                 icon: Icon(
                   Icons.refresh,
-                  color: Colors.blueGrey,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
                 ),
                 onPressed: () {},
               ),
@@ -217,23 +219,23 @@ class _CalendarStatsState extends State<CalendarStats> {
       barRods: [
         BarChartRodData(
           y: calendarModel.sum.toDouble(),
-          colors: isTouched ? [Colors.yellow] : [barColor],
+          colors: isTouched ? [Provider.of<ThemeDataWrapper>(context, listen: false).yellow] : [barColor],
           rodStackItems: [
             BarChartRodStackItem(
-                runningSum, runningSum += calendarModel.green, Colors.green),
+                runningSum, runningSum += calendarModel.green, Provider.of<ThemeDataWrapper>(context, listen: false).green),
             BarChartRodStackItem(
-                runningSum, runningSum += calendarModel.yellow, Colors.yellow),
+                runningSum, runningSum += calendarModel.yellow, Provider.of<ThemeDataWrapper>(context, listen: false).yellow),
             BarChartRodStackItem(
-                runningSum, runningSum += calendarModel.red, Colors.red),
+                runningSum, runningSum += calendarModel.red, Provider.of<ThemeDataWrapper>(context, listen: false).red),
             BarChartRodStackItem(
-                runningSum, calendarModel.sum.toDouble(), Colors.black),
+                runningSum, calendarModel.sum.toDouble(), Provider.of<ThemeDataWrapper>(context, listen: false).black),
           ],
           width: isTouched ? width + 5 : width,
           backDrawRodData: BackgroundBarChartRodData(
             // background
             show: true,
             y: max(10, maxValue),
-            colors: [Colors.black12],
+            colors: [Provider.of<ThemeDataWrapper>(context, listen: false).tabtab],
           ),
         ),
       ],

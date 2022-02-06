@@ -1,3 +1,4 @@
+import 'package:deep_vocab/utils/theme_data_wrapper.dart';
 import 'package:deep_vocab/utils/util.dart';
 import 'package:provider/provider.dart';
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
@@ -35,36 +36,38 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
 
     BottomNavigationBadge _badger = new BottomNavigationBadge(
-        backgroundColor: Colors.red,
+        backgroundColor: Provider.of<ThemeDataWrapper>(context, listen: false).red,
         badgeShape: BottomNavigationBadgeShape.circle,
-        textColor: Colors.white,
+        textColor: Provider.of<ThemeDataWrapper>(context, listen: false).white,
         position: BottomNavigationBadgePosition.topRight,
         textSize: 8);
+
+    Color color = Provider.of<ThemeDataWrapper>(context, listen: false).textColor;
 
     List<BottomNavigationBarItem> _navItem = [
       BottomNavigationBarItem(
           icon: Icon(
             Icons.book,
-            color: Colors.black54,
+            color: color,
           ),
           label: Constants.NAVIGATION_LEARNING_LABEL),
       BottomNavigationBarItem(
         icon: Icon(
           Icons.explore,
-          color: Colors.black54,
+          color: color,
         ),
         label: Constants.NAVIGATION_EXPLORE_LABEL,
       ),
       BottomNavigationBarItem(
           icon: Icon(
             Icons.pie_chart,
-            color: Colors.black54,
+            color: color,
           ),
           label: Constants.NAVIGATION_STATS_LABEL),
       BottomNavigationBarItem(
           icon: Icon(
             Icons.account_circle,
-            color: Colors.black54,
+            color: color,
           ),
           label: Constants.NAVIGATION_USER_LABEL),
     ];
@@ -83,7 +86,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
       appBar: null,
 //      drawer: Drawer(),
       bottomNavigationBar: BottomNavigationBar(
-          fixedColor: Colors.black87,
+          backgroundColor: Provider.of<ThemeDataWrapper>(context, listen: false).background,
+          selectedItemColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
+          unselectedItemColor: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
           type: BottomNavigationBarType.fixed,
           currentIndex: widget.pageIndex,
           onTap: _setPages,

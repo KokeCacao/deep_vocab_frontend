@@ -1,5 +1,7 @@
+import '../../utils/theme_data_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingTab extends StatelessWidget {
   final String? textFront;
@@ -14,9 +16,9 @@ class SettingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white60,
+          color: Provider.of<ThemeDataWrapper>(context, listen: false).tab,
           border: BorderDirectional(
-              top: BorderSide(width: 1, color: Colors.black12))),
+              top: BorderSide(width: 1, color: Provider.of<ThemeDataWrapper>(context, listen: false).blackContrast))),
       height: 60,
       width: double.infinity,
       child: TextButton(
@@ -40,12 +42,12 @@ class SettingTab extends StatelessWidget {
                 children: [
                   Text(
                     "$textBack",
-                    style: TextStyle(color: Colors.black54),
+                    style: TextStyle(color: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor),
                   ),
                   Icon(
                     Icons.keyboard_arrow_right,
-                    color: Colors.black54,
-                  )
+                    color: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
+                  ),
                 ],
               )
             ],

@@ -1,6 +1,8 @@
+import '../../utils/theme_data_wrapper.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 
 import 'calendar_stats.dart';
 
@@ -99,35 +101,39 @@ class _PercentStatsState extends State<PercentStats> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
+              children: <Widget>[
                 Indicator(
-                  color: Colors.black,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).black,
                   text: '完全遗忘',
                   isSquare: true,
+                  textColor: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                 ),
                 SizedBox(
                   height: 4,
                 ),
                 Indicator(
-                  color: Colors.red,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).red,
                   text: '不知其意',
                   isSquare: true,
+                  textColor: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                 ),
                 SizedBox(
                   height: 4,
                 ),
                 Indicator(
-                  color: Colors.yellow,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).yellow,
                   text: '记忆混淆',
                   isSquare: true,
+                  textColor: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                 ),
                 SizedBox(
                   height: 4,
                 ),
                 Indicator(
-                  color: Colors.green,
+                  color: Provider.of<ThemeDataWrapper>(context, listen: false).green,
                   text: '记忆正确',
                   isSquare: true,
+                  textColor: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
                 ),
                 SizedBox(
                   height: 18,
@@ -150,47 +156,47 @@ class _PercentStatsState extends State<PercentStats> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Colors.black,
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).black,
             value: widget.calendarStatsModel.black.toDouble(),
             title: "${widget.calendarStatsModel.black}",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.white),
+                color: Provider.of<ThemeDataWrapper>(context, listen: false).white),
           );
         case 1:
           return PieChartSectionData(
-            color: Colors.red,
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).red,
             value: widget.calendarStatsModel.red.toDouble(),
             title: "${widget.calendarStatsModel.red}",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.white),
+                color: Provider.of<ThemeDataWrapper>(context, listen: false).white),
           );
         case 2:
           return PieChartSectionData(
-            color: Colors.yellow,
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).yellow,
             value: widget.calendarStatsModel.yellow.toDouble(),
             title: "${widget.calendarStatsModel.yellow}",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.white),
+                color: Provider.of<ThemeDataWrapper>(context, listen: false).white),
           );
         case 3:
           return PieChartSectionData(
-            color: Colors.green,
+            color: Provider.of<ThemeDataWrapper>(context, listen: false).green,
             value: widget.calendarStatsModel.green.toDouble(),
             title: "${widget.calendarStatsModel.green}",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.white),
+                color: Provider.of<ThemeDataWrapper>(context, listen: false).white),
           );
         default:
           throw Error();

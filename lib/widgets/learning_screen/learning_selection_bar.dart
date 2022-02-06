@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import '../../utils/theme_data_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LearningSelectionBar extends StatelessWidget {
   final bool? random;
@@ -60,7 +62,9 @@ class LearningSelectionBar extends StatelessWidget {
                 "程序猿吐槽: 编程好累, 还是上学好~",
                 minFontSize: 12,
                 maxFontSize: 16,
-                style: TextStyle(color: Colors.black38),
+                style: TextStyle(
+                    color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .fadeTextColor),
               ),
             ),
             Row(
@@ -71,7 +75,9 @@ class LearningSelectionBar extends StatelessWidget {
                   children: [
                     Text("乱序:",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Provider.of<ThemeDataWrapper>(context,
+                                  listen: false)
+                              .textColor,
 //                          fontWeight: FontWeight.bold,
                         )),
                     Switch(

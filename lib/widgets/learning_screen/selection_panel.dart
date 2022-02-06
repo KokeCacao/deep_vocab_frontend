@@ -1,3 +1,5 @@
+import '../../utils/theme_data_wrapper.dart';
+
 import '/controllers/vocab_state_controller.dart';
 import '/models/vocab_list_model.dart';
 import '/view_models/vocab_list_view_model.dart';
@@ -12,15 +14,19 @@ class SelectionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VocabStateController vocabStateController = Provider.of<VocabStateController>(context, listen: true);
-    int selectedCount = vocabStateController.getSelectedVocabIdLength(itemCount);
+    VocabStateController vocabStateController =
+        Provider.of<VocabStateController>(context, listen: true);
+    int selectedCount =
+        vocabStateController.getSelectedVocabIdLength(itemCount);
     if (selectedCount == 0) return SizedBox.shrink();
     return Container(
       margin: EdgeInsets.all(10),
       clipBehavior: Clip.antiAlias,
       alignment: Alignment.bottomRight,
       height: 40,
-      decoration: BoxDecoration(color: Colors.blueGrey[100], borderRadius: BorderRadius.all(Radius.circular(20))),
+      decoration: BoxDecoration(
+          color: Provider.of<ThemeDataWrapper>(context, listen: false).tabtab,
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       child: Align(
         alignment: Alignment.center,
         child: Flex(
@@ -32,36 +38,46 @@ class SelectionPanel extends StatelessWidget {
               child: Text(
                 "$selectedCount|$itemCount",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.blueGrey),
               ),
             ),
             Expanded(
                 child: Container(
               alignment: Alignment.center,
-              color: Colors.blueGrey[200],
+              color: Provider.of<ThemeDataWrapper>(context, listen: false).tab,
               height: double.infinity,
               child: GestureDetector(
-                onTap: () => selectedCount == itemCount ? vocabStateController.inverseSelect() : vocabStateController.allSelect(),
+                onTap: () => selectedCount == itemCount
+                    ? vocabStateController.inverseSelect()
+                    : vocabStateController.allSelect(),
                 child: selectedCount == itemCount
                     ? Text(
                         "反选",
                         textAlign: TextAlign.center,
                       )
-                    : Text("全选", textAlign: TextAlign.center),
+                    : Text("全选", textAlign: TextAlign.center,),
               ),
             )),
             Expanded(
                 child: Container(
               alignment: Alignment.center,
-              color: Colors.blueGrey[400],
+              color: Provider.of<ThemeDataWrapper>(context, listen: false).background,
               height: double.infinity,
               child: GestureDetector(
                 onTap: () async {
-                  VocabListModel vocabListModel = await Provider.of<VocabListViewModel>(context, listen: false).getFromDatabase(listId: 0);
-                  Set<String?> selectedIds = vocabStateController.getSelectedVocabId(vocabListModel.vocabs!.map((e) => e.vocabId).cast<String>().toSet());
+                  VocabListModel vocabListModel =
+                      await Provider.of<VocabListViewModel>(context,
+                              listen: false)
+                          .getFromDatabase(listId: 0);
+                  Set<String?> selectedIds = vocabStateController
+                      .getSelectedVocabId(vocabListModel.vocabs!
+                          .map((e) => e.vocabId)
+                          .cast<String>()
+                          .toSet());
                   // TODO: combine them into a single query, you can do that with graphql
                   for (String? selectedId in selectedIds)
-                    await Provider.of<VocabListViewModel>(context, listen: false).editUserVocab(vocabId: selectedId, addedMark: true);
+                    await Provider.of<VocabListViewModel>(context,
+                            listen: false)
+                        .editUserVocab(vocabId: selectedId, addedMark: true);
                   vocabStateController.noneSelect();
                 },
                 child: Text(

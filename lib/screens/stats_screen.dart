@@ -1,3 +1,4 @@
+import '../utils/theme_data_wrapper.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,8 +12,6 @@ import '../models/sub_models/mark_color_model.dart';
 import '../widgets/stats_screen/calendar_stats.dart';
 
 class StatsScreen extends StatefulWidget {
-
-  final Color cardColor = Colors.white70;
   final double cardElevation = 0;
   final int howManyDays = 7;
 
@@ -25,6 +24,8 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
+
+    final Color cardColor = Provider.of<ThemeDataWrapper>(context, listen: false).tab;
 
     return FutureBuilder(
       future: Provider.of<VocabListViewModel>(context, listen: false).getFromDatabase(addedMark: true),
@@ -88,7 +89,7 @@ class _StatsScreenState extends State<StatsScreen> {
               Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18)),
-                  color: widget.cardColor,
+                  color: cardColor,
                   elevation: widget.cardElevation,
                   child: CalendarStats(
                     calendarModels: calendarModels,
@@ -98,7 +99,7 @@ class _StatsScreenState extends State<StatsScreen> {
               Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18)),
-                  color: widget.cardColor,
+                  color: cardColor,
                   elevation: widget.cardElevation,
                   child: PercentStats(
                     calendarStatsModel: totalModel,
@@ -111,6 +112,10 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Widget getEmpty() {
+
+
+    final Color cardColor = Provider.of<ThemeDataWrapper>(context, listen: false).tab;
+
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -118,7 +123,7 @@ class _StatsScreenState extends State<StatsScreen> {
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
-              color: widget.cardColor,
+              color: cardColor,
               elevation: widget.cardElevation,
               child: CalendarStats(
                 calendarModels: [
@@ -136,7 +141,7 @@ class _StatsScreenState extends State<StatsScreen> {
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
-              color: widget.cardColor,
+              color: cardColor,
               elevation: widget.cardElevation,
               child: PercentStats(
                 calendarStatsModel:

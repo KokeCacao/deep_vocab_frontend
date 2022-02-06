@@ -54,95 +54,93 @@ class UserScreen extends StatelessWidget {
         EdgeInsets.symmetric(horizontal: 16, vertical: 5);
     BorderRadius borderRadius = BorderRadius.circular(16);
 
-    return Container(
-      color: Colors.black12,
-      child: ListView(
-        physics: ClampingScrollPhysics(),
-        shrinkWrap: false,
-        children: [
-          AvatarCard(
-            avatarInfo: _avatarInfo,
-            onPressed: () {
-              AuthViewModel authViewModel =
-                  Provider.of<AuthViewModel>(context, listen: false);
-              if (authViewModel.isNotLoggedIn)
-                Navigator.of(context).pushNamed("/login_screen");
-              else
-                AccountScreen.showAccountScreen(context);
-            },
-          ),
-          Padding(
-            padding: padding,
-            child: ClipRRect(
-                borderRadius: borderRadius,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    SettingTab(
-                        // TODO: 开启/关闭 词表单词标记
-                        textFront: "学习设置",
-                        icon: Icons.settings,
-                        textBack: "",
-                        onPressed: () {}),
-                    SettingTab(
-                        textFront: "深夜模式",
-                        icon: Icons.timelapse,
-                        textBack: "",
-                        onPressed:
-                            Provider.of<ThemeDataWrapper>(context, listen: false).nextTheme)
-                  ],
-                )),
-          ),
-          Padding(
-            padding: padding,
-            child: ClipRRect(
-                borderRadius: borderRadius,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    SettingTab(
-                        textFront: "提醒设置",
-                        icon: Icons.timer,
-                        textBack: "",
-                        onPressed: () {}),
-                    SettingTab(
-                        textFront: "显示设置",
-                        icon: Icons.palette,
-                        textBack: "",
-                        onPressed: () {}),
-                    SettingTab(
-                        textFront: "账号与安全",
-                        icon: Icons.security,
-                        textBack: "",
-                        onPressed: () {}),
-                  ],
-                )),
-          ),
-          Padding(
-            padding: padding,
-            child: ClipRRect(
-                borderRadius: borderRadius,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    SettingTab(
-                        textFront: "统计设置",
-                        icon: Icons.timeline,
-                        textBack: "",
-                        onPressed: () {}),
-                    SettingTab(
-                      textFront: "调教开发者",
-                      icon: Icons.developer_mode,
-                      textBack: "我也是学生党哦",
-                      onLongPressed: () =>
-                          Navigator.of(context).pushNamed("/debug_screen"),
-                      onPressed: () => Util.checkForUpdate(context),
-                    ),
-                  ],
-                )),
-          ),
-        ],
-      ),
+    return ListView(
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: false,
+      children: [
+        AvatarCard(
+          avatarInfo: _avatarInfo,
+          onPressed: () {
+            AuthViewModel authViewModel =
+                Provider.of<AuthViewModel>(context, listen: false);
+            if (authViewModel.isNotLoggedIn)
+              Navigator.of(context).pushNamed("/login_screen");
+            else
+              AccountScreen.showAccountScreen(context);
+          },
+        ),
+        Padding(
+          padding: padding,
+          child: ClipRRect(
+              borderRadius: borderRadius,
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  SettingTab(
+                      // TODO: 开启/关闭 词表单词标记
+                      textFront: "学习设置",
+                      icon: Icons.settings,
+                      textBack: "",
+                      onPressed: () {}),
+                  SettingTab(
+                      textFront: "深夜模式",
+                      icon: Icons.timelapse,
+                      textBack: "",
+                      onPressed:
+                          Provider.of<ThemeDataWrapper>(context, listen: false)
+                              .nextTheme)
+                ],
+              )),
+        ),
+        Padding(
+          padding: padding,
+          child: ClipRRect(
+              borderRadius: borderRadius,
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  SettingTab(
+                      textFront: "提醒设置",
+                      icon: Icons.timer,
+                      textBack: "",
+                      onPressed: () {}),
+                  SettingTab(
+                      textFront: "显示设置",
+                      icon: Icons.palette,
+                      textBack: "",
+                      onPressed: () {}),
+                  SettingTab(
+                      textFront: "账号与安全",
+                      icon: Icons.security,
+                      textBack: "",
+                      onPressed: () {}),
+                ],
+              )),
+        ),
+        Padding(
+          padding: padding,
+          child: ClipRRect(
+              borderRadius: borderRadius,
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  SettingTab(
+                      textFront: "统计设置",
+                      icon: Icons.timeline,
+                      textBack: "",
+                      onPressed: () {}),
+                  SettingTab(
+                    textFront: "调教开发者",
+                    icon: Icons.developer_mode,
+                    textBack: "我也是学生党哦",
+                    onLongPressed: () =>
+                        Navigator.of(context).pushNamed("/debug_screen"),
+                    onPressed: () => Util.checkForUpdate(context),
+                  ),
+                ],
+              )),
+        ),
+      ],
     );
   }
 }
