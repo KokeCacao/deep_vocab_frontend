@@ -43,7 +43,7 @@ dependencies:
   google_nav_bar: ^5.0.5 # for top tab bar
 #  fsearch: ^1.0.1 # for search bar
   sliding_up_panel: ^2.0.0+1 # for sliding up panel
-  moor: ^4.3.2 # for sqlite database
+  moor: ^4.4.0 # for sqlite database
   sqlite3_flutter_libs: ^0.5.0 # for sqlite database
   permission_handler: ^8.1.6 # for IOS (and maybe android) permission
 
@@ -65,12 +65,15 @@ dependencies:
   cupertino_icons: ^1.0.3
   collection: ^1.15.0-nullsafety.4
 
+dependency_overrides:
+  moor: '4.4.0'
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.0.4
   hive_generator: ^1.1.0 # for hive database code generation
-  moor_generator: ^4.3.1 # for moor database code generation
+  moor_generator: ^4.4.1 # for moor database code generation
   json_serializable: ^4.1.3 # for json code generation
   flutter_launcher_icons: "^0.9.1" # for app icon
 

@@ -239,13 +239,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.4"
-  drift:
-    dependency: transitive
-    description:
-      name: drift
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   equatable:
     dependency: transitive
     description:
@@ -547,7 +540,7 @@ packages:
       name: moor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.6.1+1"
+    version: "4.4.0"
   moor_generator:
     dependency: "direct dev"
     description:
