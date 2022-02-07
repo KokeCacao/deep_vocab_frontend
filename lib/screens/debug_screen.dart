@@ -109,7 +109,7 @@ class _DebugScreenState extends State<DebugScreen> {
                               },
                             );
                           } catch (e) {
-                            return Text("Error");
+                            return Text("Error: ${e.toString()}");
                           }
                         })),
                 Row(

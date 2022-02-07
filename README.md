@@ -159,6 +159,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: bump up compileSdkVersion from 30 to 31 since 30 is unsupported
             :bug: fixed bugs in v0.1.0-7, bump up version
             :sparkles: fixed non-allow download before login; add login UI
+            :sparkles: show login by default instead of register
 
 ```
 </details>

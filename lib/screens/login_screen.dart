@@ -40,7 +40,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late bool _passwordVisible;
-  LoginScreenEnum _state = LoginScreenEnum.register;
+  LoginScreenEnum _state = LoginScreenEnum.login; // show login by default
   int _index = 0;
 
   String? _userName;
