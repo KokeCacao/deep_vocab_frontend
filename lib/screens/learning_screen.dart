@@ -1,5 +1,6 @@
 import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/progress_indicator.dart';
+import 'package:deep_vocab/widgets/login_prompt_widget.dart';
 
 import '../controllers/vocab_state_controller.dart';
 import '../utils/theme_data_wrapper.dart';
@@ -25,30 +26,7 @@ class _LearningScreenState extends State<LearningScreen>
   Widget _buildList() {
     // TODO: implement a button that takes user to log in screen
     if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
-      return Expanded(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                color: Provider.of<ThemeDataWrapper>(context, listen: false)
-                    .textColor,
-                focusColor:
-                    Provider.of<ThemeDataWrapper>(context, listen: false)
-                        .highlightTextColor,
-                hoverColor:
-                    Provider.of<ThemeDataWrapper>(context, listen: false)
-                        .fadeTextColor,
-                icon: Icon(Icons.login),
-                onPressed: () {
-                  Navigator.of(context).pushNamed("/login_screen");
-                },
-              ),
-              Text("Please Log in first"),
-            ],
-          ),
-        ),
-      );
+      return LoginPrompt();
     switch (_index) {
       case 0:
         return VocabListWithHeader.task(

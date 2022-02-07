@@ -160,6 +160,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :bug: fixed bugs in v0.1.0-7, bump up version
             :sparkles: fixed non-allow download before login; add login UI
             :sparkles: show login by default instead of register
+            :sparkles: restructure login; prompt on stats screen
 
 ```
 </details>

@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/vocab_model.dart';
+import '../view_models/auth_view_model.dart';
 import '../view_models/vocab_list_view_model.dart';
 import '../models/vocab_list_model.dart';
+import '../widgets/login_prompt_widget.dart';
 import '../widgets/stats_screen/percent_stats.dart';
 import '../models/sub_models/mark_color_model.dart';
 import '../widgets/stats_screen/calendar_stats.dart';
@@ -24,6 +26,8 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
+
+    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn) return LoginPrompt();
 
     final Color cardColor = Provider.of<ThemeDataWrapper>(context, listen: false).tab;
 
