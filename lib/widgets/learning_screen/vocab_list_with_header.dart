@@ -32,12 +32,6 @@ class VocabListWithHeader extends StatefulWidget {
 
   static Widget task(BuildContext context,
       {bool random = false, Widget? emptyWidget}) {
-    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
-      // TODO: implement a button that takes user to log in screen
-      return Expanded(
-        child: Center(child: Text("Please Log in first")),
-      );
-
     void _onRefresh(RefreshController controller) async {
       NetworkException? exception =
           await Provider.of<VocabListViewModel>(context, listen: false)

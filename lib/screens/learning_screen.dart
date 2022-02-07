@@ -2,6 +2,8 @@ import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
 import 'package:deep_vocab/widgets/learning_screen/progress_indicator.dart';
 
 import '../controllers/vocab_state_controller.dart';
+import '../utils/theme_data_wrapper.dart';
+import '../view_models/auth_view_model.dart';
 import '../view_models/http_sync_view_model.dart';
 import '../widgets/learning_screen/learning_navbar.dart';
 import '../widgets/learning_screen/vocab_list_with_header.dart';
@@ -20,21 +22,50 @@ class LearningScreen extends StatefulWidget {
 class _LearningScreenState extends State<LearningScreen>
     with SingleTickerProviderStateMixin {
   int _index = 0;
-
   Widget _buildList() {
+    // TODO: implement a button that takes user to log in screen
+    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
+      return Expanded(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .textColor,
+                focusColor:
+                    Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .highlightTextColor,
+                hoverColor:
+                    Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .fadeTextColor,
+                icon: Icon(Icons.login),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/login_screen");
+                },
+              ),
+              Text("Please Log in first"),
+            ],
+          ),
+        ),
+      );
     switch (_index) {
       case 0:
-        return VocabListWithHeader.task(context,
-            emptyWidget: Center(
-                child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
-              ),
-            );
+        return VocabListWithHeader.task(
+          context,
+          emptyWidget: Center(
+            child: Text(
+                "You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+          ),
+        );
       case 1:
-        return VocabListWithHeader.memorized(context,
-            emptyWidget: Center(
-                child: Text("You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
-              ),
-            );
+        return VocabListWithHeader.memorized(
+          context,
+          emptyWidget: Center(
+            child: Text(
+                "You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+          ),
+        );
       case 2:
         return VocabListWithHeader.vocabList(context,
             emptyWidget: CircularProgressBar(
