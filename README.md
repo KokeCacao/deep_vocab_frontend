@@ -161,6 +161,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: fixed non-allow download before login; add login UI
             :sparkles: show login by default instead of register
             :sparkles: restructure login; prompt on stats screen
+2020/05/08: :bug: broaden password match
 
 ```
 </details>
@@ -194,38 +195,37 @@ ui too small
 ```
 
 ## TODO 后端 (for v0.0.1 milestone)
-- [ ] Add: Documentation
-- [ ] Add: Allow user modify password, if success, try logout user
+- [ ] Add: try logout user after password modification; allow password modification
+- [ ] Add: bug log report, custom support
 
 ## TODO 美术 (for v0.0.1 milestone)
 - [ ] Add: better avatar
 - [ ] Add: better download screen design
-- [ ] Fix: improve UI
+- [ ] Fix: better UI color
 
 ## TODO 前端 (for v0.0.1 milestone)
 CHECK YOUR EMAIL
-- [ ] Add: Documentation
-- [ ] Add: Dark Mode
-- [ ] Add: xp system by active time
+- [ ] Add: emoji support for normal texts
 - [ ] Add: filter by star/pin
 - [ ] Add: [Large] search bar
 - [ ] Add: [Large] app notification
-- [ ] Add: [Large] password changing by email and email verification
 - [ ] Add: [Large] wechat login / binding
+- [ ] Add: [Large] language system
 
 ## TODO (less important)
+- [ ] Add: present feedback from server (show error messages)
+- [ ] Add: xp system by active time
 - [ ] Fix: datetime should be consistent and use universal timestamp and convert to local time when appropriate. but user display should display according to local time zone (especially in stats)
 - [ ] Add: automatically direct user to download vocab when opening the learning tab
 - [ ] Add: Vocab count in [已完成] section
 - [ ] Add: Stats (something like App usage in IOS) (See: https://ft-interactive.github.io/visual-vocabulary/) (vocab/time, how-long-does-it-take-to-remember-1-vocab, )
-- [ ] Add: search bar
 - [ ] Add: notification for unsuccessful refresh due to internet connection
 - [ ] Fix: login screen button to always shown above keyboard
 - [ ] Fix: login screen scroll view wave animation
 - [ ] Add: global configuration
 - [ ] Fix: box lose data?
 - [ ] Fix: optimization: https://segmentfault.com/a/1190000019462984
-- [ ] Fix: solve green rectangle https://github.com/flutter/flutter/issues/16810
+<!-- - [ ] Fix: solve green rectangle https://github.com/flutter/flutter/issues/16810 -->
 - [ ] Optimize: download need text indication
 - [ ] Optimize: make hide vocab bigger
 - [ ] Optimize: make vocabs bigger (or adjustable)
