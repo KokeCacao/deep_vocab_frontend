@@ -24,9 +24,6 @@ class _LearningScreenState extends State<LearningScreen>
     with SingleTickerProviderStateMixin {
   int _index = 0;
   Widget _buildList() {
-    // TODO: implement a button that takes user to log in screen
-    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
-      return LoginPrompt();
     switch (_index) {
       case 0:
         return VocabListWithHeader.task(
@@ -68,26 +65,35 @@ class _LearningScreenState extends State<LearningScreen>
 
   @override
   Widget build(BuildContext context) {
+    LearningNavbar learningNav = LearningNavbar(
+      onTabChange: (index) {
+        _index = index;
+        Provider.of<VocabStateController>(context, listen: false)
+            .clear();
+        setState(() {});
+      },
+      selectedIndex: _index,
+      // TODO: more customize, see https://github.com/Fliggy-Mobile/fsearch/blob/master/README_CN.md
+      // TODO: add controller
+      // TODO: 提示显示记忆力最低的单词?
+      // TODO: finish initializing a proper controller
+      // controller: FSearchController(),
+    );
+    if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
+      return Column(
+        children: [
+          learningNav,
+          Flexible(child: LoginPrompt(),)
+        ],
+      );
     return Container(
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.topCenter,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LearningNavbar(
-              onTabChange: (index) {
-                _index = index;
-                Provider.of<VocabStateController>(context, listen: false)
-                    .clear();
-                setState(() {});
-              },
-              selectedIndex: _index,
-              // TODO: more customize, see https://github.com/Fliggy-Mobile/fsearch/blob/master/README_CN.md
-              // TODO: add controller
-              // TODO: 提示显示记忆力最低的单词?
-              // TODO: finish initializing a proper controller
-              // controller: FSearchController(),
-            ),
+            learningNav,
             _buildList(),
           ],
         ));
