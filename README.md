@@ -164,6 +164,8 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
 2020/05/08: :bug: broaden password match
 2020/05/11: :bug: fix login prompt in vocab list
             :sparkles: HapticFeedback
+            :sparkles: full nightmode implementation
+            :arrow_up: bump version to version: 0.1.0+9
 ```
 </details>
 
