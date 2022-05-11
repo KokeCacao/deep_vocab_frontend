@@ -32,6 +32,11 @@ class LoginScreen extends StatefulWidget {
   final _passwordFieldKey = GlobalKey<FormFieldState>();
   final _passwordTestFieldKey = GlobalKey<FormFieldState>();
 
+  LoginScreenEnum state; // show login by default
+  int index;
+
+  LoginScreen({this.state: LoginScreenEnum.login, this.index: 0});
+
   @override
   State<StatefulWidget> createState() {
     return _LoginScreenState();
@@ -40,8 +45,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late bool _passwordVisible;
-  LoginScreenEnum _state = LoginScreenEnum.login; // show login by default
-  int _index = 0;
 
   String? _userName;
   String? _email;
@@ -58,26 +61,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final ModalRoute? _ = ModalRoute.of(context);
-    if (_ != null) {
-      final Map<String, dynamic>? arguments = _.settings.arguments as Map<String, dynamic>?;
-      if (arguments != null) {
-        if (arguments.containsKey("index")) _index = arguments["index"];
-        if (arguments.containsKey("state")) _state = arguments["state"];
-      }
-    }
 
     void onBack() {
-      if (_index == 0) {
+      if (widget.index == 0) {
         Navigator.of(context).maybePop();
       } else {
-        _index--;
+        widget.index--;
         setState(() {});
       }
     }
 
     void switchToLogin() {
-      _state = LoginScreenEnum.login;
-      _index = 0;
+      widget.state = LoginScreenEnum.login;
+      widget.index = 0;
       // Not: setState(() {}); should come before requestFocus()
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
@@ -89,8 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void switchToRegister() {
-      _state = LoginScreenEnum.register;
-      _index = 0;
+      widget.state = LoginScreenEnum.register;
+      widget.index = 0;
       // Not: setState(() {}); should come before requestFocus()
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
@@ -102,8 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void switchToRecover() {
-      _state = LoginScreenEnum.recover;
-      _index = 0;
+      widget.state = LoginScreenEnum.recover;
+      widget.index = 0;
       // Not: setState(() {}); should come before requestFocus()
       // Otherwise IOS system might focus and then immediately de-focus
       // causing TextField un-focusable
@@ -117,14 +113,14 @@ class _LoginScreenState extends State<LoginScreen> {
     void submit() async {
       // stop submit if the current field is wrong
       _passwordVisible = false;
-      switch (_state) {
+      switch (widget.state) {
         case LoginScreenEnum.login:
           {
-            switch (_index) {
+            switch (widget.index) {
               case 0:
                 if (!widget._usernameFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
-                _index++;
+                widget.index++;
                 setState(() {});
                 widget._passwordNode.requestFocus();
                 return;
@@ -160,25 +156,25 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         case LoginScreenEnum.register:
           {
-            switch (_index) {
+            switch (widget.index) {
               case 0:
                 if (!widget._usernameFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
-                _index++;
+                widget.index++;
                 setState(() {});
                 widget._emailNode.requestFocus();
                 return;
               case 1:
                 if (!widget._emailFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
-                _index++;
+                widget.index++;
                 setState(() {});
                 widget._passwordNode.requestFocus();
                 return;
               case 2:
                 if (!widget._passwordFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
-                _index++;
+                widget.index++;
                 setState(() {});
                 widget._passwordTestNode.requestFocus();
                 return;
@@ -207,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SnackBarManager.hideCurrentSnackBar(context);
 
                 if (errorMessage == null) {
-                  _index++;
+                  widget.index++;
                   setState(() {});
                   widget._verificationNode.requestFocus();
                   SnackBarManager.showSnackBar(
@@ -251,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         case LoginScreenEnum.recover:
           {
-            switch (_index) {
+            switch (widget.index) {
               case 0:
                 if (!widget._emailFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
@@ -269,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SnackBarManager.hideCurrentSnackBar(context);
 
                 if (errorMessage == null) {
-                  _index++;
+                  widget.index++;
                   setState(() {});
                   widget._verificationNode.requestFocus();
                   SnackBarManager.showSnackBar(
@@ -297,7 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SnackBarManager.hideCurrentSnackBar(context);
 
                 if (errorMessage == null) {
-                  _index++;
+                  widget.index++;
                   setState(() {});
                   widget._passwordNode.requestFocus();
                   SnackBarManager.showSnackBar(
@@ -309,7 +305,7 @@ class _LoginScreenState extends State<LoginScreen> {
               case 2:
                 if (!widget._passwordFieldKey.currentState!.validate()) return;
                 FocusScope.of(context).unfocus();
-                _index++;
+                widget.index++;
                 setState(() {});
                 widget._passwordTestNode.requestFocus();
                 return;
@@ -583,20 +579,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     shrinkWrap: true,
                     children: [
                       Text(
-                        getEnumName(_state),
+                        getEnumName(widget.state),
                         style: TextStyle(
                             fontSize: 32, fontWeight: FontWeight.bold),
                       ),
                       IndexedStack(
-                        index: _index,
-                        children: getEnumRoute(_state),
+                        index: widget.index,
+                        children: getEnumRoute(widget.state),
                       ),
-                      if (_state != LoginScreenEnum.recover)
+                      if (widget.state != LoginScreenEnum.recover)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                                _state == LoginScreenEnum.login
+                                widget.state == LoginScreenEnum.login
                                     ? "Don't have an account? "
                                     : "Already have an account? ",
                                 textAlign: TextAlign.right,
@@ -604,11 +600,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.blueGrey,
                                 )),
                             TextButton(
-                                onPressed: _state == LoginScreenEnum.login
+                                onPressed: widget.state == LoginScreenEnum.login
                                     ? switchToRegister
                                     : switchToLogin,
                                 child: Text(
-                                  _state == LoginScreenEnum.login
+                                  widget.state == LoginScreenEnum.login
                                       ? "Create Account"
                                       : "Log in",
                                   textAlign: TextAlign.left,
@@ -618,7 +614,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ))
                           ],
                         ),
-                      if (_state != LoginScreenEnum.recover)
+                      if (widget.state != LoginScreenEnum.recover)
                         TextButton(
                             onPressed: switchToRecover,
                             child: Text(
@@ -635,7 +631,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Text(getEnumButtonName(_index, _state),
+                          child: Text(getEnumButtonName(widget.index, widget.state),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

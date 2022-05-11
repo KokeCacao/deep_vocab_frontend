@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import '../../utils/theme_data_wrapper.dart';
 import '../stats_screen/vocab_stats.dart';
 import '/models/sub_models/mark_color_model.dart';
 import '/models/vocab_model.dart';
@@ -28,7 +29,7 @@ class VocabPanel extends StatelessWidget {
         BorderRadius.vertical(top: Radius.circular(borderRadius));
 
     return SlidingUpPanel(
-      color: Colors.white70,
+      color: Provider.of<ThemeDataWrapper>(context, listen: false).layer,
       backdropEnabled: true,
       backdropOpacity: 0.4,
       defaultPanelState: PanelState.CLOSED, // first closed to show animation
@@ -80,7 +81,9 @@ class VocabPanel extends StatelessWidget {
                       ),
                       falseIcon: Icon(
                         Icons.push_pin_outlined,
-                        color: Colors.black54,
+                        color: Provider.of<ThemeDataWrapper>(context,
+                                listen: false)
+                            .contrast,
                       )),
                   Align(
                     alignment: Alignment.centerRight,
@@ -103,7 +106,11 @@ class VocabPanel extends StatelessWidget {
                           vocabModel!.vocab,
                           maxFontSize: 64,
                           minFontSize: 42,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Provider.of<ThemeDataWrapper>(context,
+                                      listen: false)
+                                  .textColor),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +123,10 @@ class VocabPanel extends StatelessWidget {
                               vocabModel!.mainTranslation ?? "",
                               maxFontSize: 32,
                               minFontSize: 16,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.bold,
+                                  color: Provider.of<ThemeDataWrapper>(context,
+                                      listen: false)
+                                      .textColor),
                             ),
                             Expanded(
                               child: Align(
@@ -137,7 +147,8 @@ class VocabPanel extends StatelessWidget {
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 5),
                 padding: EdgeInsets.all(10),
-                color: Colors.white60,
+                color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .layer2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -173,7 +184,8 @@ class VocabPanel extends StatelessWidget {
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 5),
                 padding: EdgeInsets.all(10),
-                color: Colors.white60,
+                color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .layer2,
                 child: Flex(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   direction: Axis.horizontal,
@@ -185,7 +197,10 @@ class VocabPanel extends StatelessWidget {
                           Text(
                             "联想空间",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,
+                                color: Provider.of<ThemeDataWrapper>(context,
+                                    listen: false)
+                                    .textColor),
                           ),
                           Separator(
                             color: Colors.transparent,
@@ -202,7 +217,10 @@ class VocabPanel extends StatelessWidget {
                           Text(
                             "混淆单词",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,
+                                color: Provider.of<ThemeDataWrapper>(context,
+                                    listen: false)
+                                    .textColor),
                           ),
                           Separator(
                             color: Colors.transparent,
@@ -223,7 +241,8 @@ class VocabPanel extends StatelessWidget {
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(vertical: 5),
                     padding: EdgeInsets.all(10),
-                    color: Colors.white60,
+                    color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                        .layer2,
                     child: VocabStats(
                       vocabStatsModels: vocabModel!.markColors!
                           .map((e) => VocabStatsModel(
@@ -237,14 +256,18 @@ class VocabPanel extends StatelessWidget {
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 5),
                 padding: EdgeInsets.all(10),
-                color: Colors.white60,
+                color: Provider.of<ThemeDataWrapper>(context, listen: false)
+                    .layer2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "吐槽空间",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold,
+                              color: Provider.of<ThemeDataWrapper>(context,
+                                  listen: false)
+                                  .textColor),
                     ),
                     Separator(
                       color: Colors.transparent,

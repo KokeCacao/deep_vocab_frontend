@@ -85,6 +85,10 @@ class ThemeDataWrapper extends ChangeNotifier {
     }
   }
 
+  ThemeStyle get theme {
+    return _theme;
+  }
+
   Color get boldFont {
     return daySwatch[600]!;
   }
@@ -113,8 +117,16 @@ class ThemeDataWrapper extends ChangeNotifier {
     return (_theme == ThemeStyle.day ? daySwatch[200] : nightSwatch[200])!;
   }
 
-  Color get blackContrast {
-    return (_theme == ThemeStyle.day ? Colors.black12 : Colors.white12);
+  Color get contrast {
+    return (_theme == ThemeStyle.day ? Colors.black26 : Colors.white24);
+  }
+
+  Color get layer {
+    return (_theme == ThemeStyle.day ? Colors.white60 : Colors.black26);
+  }
+
+  Color get layer2 {
+    return (_theme == ThemeStyle.day ? Colors.white70 : Colors.black45);
   }
 
   Color get highlightTextColor {
@@ -122,7 +134,7 @@ class ThemeDataWrapper extends ChangeNotifier {
   }
 
   Color get textColor {
-    return (_theme == ThemeStyle.day ? daySwatch[600] : nightSwatch[600])!;
+    return (_theme == ThemeStyle.day ? daySwatch[800] : nightSwatch[800])!;
   }
 
   Color get fadeTextColor {

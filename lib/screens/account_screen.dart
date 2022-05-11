@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../utils/theme_data_wrapper.dart';
 import '../view_models/auth_view_model.dart';
 import '../widgets/user_screen/setting_tab.dart';
 import '../widgets/learning_screen/no_transition_dialog.dart';
@@ -22,7 +23,7 @@ class AccountScreen {
               EdgeInsets.symmetric(horizontal: 20, vertical: 10);
 
           return SlidingUpPanel(
-              color: Colors.white70,
+              color: Provider.of<ThemeDataWrapper>(context, listen: false).layer,
               backdropEnabled: true,
               backdropOpacity: 0.4,
               defaultPanelState:
@@ -51,11 +52,11 @@ class AccountScreen {
                                 icon: Icons.timer,
                                 textBack: "",
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed("/login_screen", arguments: {
-                                    "index": 0,
-                                    "state": LoginScreenEnum.recover,
-                                  });
+                                  Navigator.pushNamed(context, "/login_screen",
+                                      arguments: <String, dynamic>{
+                                        "index": 0,
+                                        "state": LoginScreenEnum.recover,
+                                      });
                                 }),
                           ),
                         ),
@@ -63,8 +64,10 @@ class AccountScreen {
                           padding: padding,
                           child: ElevatedButton(
                             child: Text("Logout"),
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.red),
+                            style: ElevatedButton.styleFrom(
+                                primary: Provider.of<ThemeDataWrapper>(context,
+                                        listen: false)
+                                    .red),
                             onPressed: () {
                               AuthViewModel authViewModel =
                                   Provider.of<AuthViewModel>(context,

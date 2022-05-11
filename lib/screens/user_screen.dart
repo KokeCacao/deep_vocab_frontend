@@ -77,18 +77,23 @@ class UserScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SettingTab(
-                      // TODO: 开启/关闭 词表单词标记
-                      textFront: "学习设置",
-                      icon: Icons.settings,
-                      textBack: "",
-                      onPressed: () {}),
+                    // TODO: 开启/关闭 词表单词标记
+                    textFront: "学习设置",
+                    icon: Icons.settings,
+                    textBack: "",
+                    onPressed: () {}, // If onPressed is null, it will become gray
+                  ),
                   SettingTab(
-                      textFront: "深夜模式",
-                      icon: Icons.timelapse,
-                      textBack: "",
-                      onPressed:
-                          Provider.of<ThemeDataWrapper>(context, listen: false)
-                              .nextTheme)
+                    textFront: "深夜模式",
+                    icon: Icons.timelapse,
+                    textBack: "",
+                    onButton:
+                        Provider.of<ThemeDataWrapper>(context, listen: false)
+                            .nextTheme,
+                    buttonEnable: true,
+                    bottonValue: Provider.of<ThemeDataWrapper>(context, listen: false).theme == ThemeStyle.night,
+                    onPressed: () {}, // If onPressed is null, it will become gray
+                  )
                 ],
               )),
         ),
