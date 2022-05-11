@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
 import '../../utils/theme_data_wrapper.dart';
 import '../vocab_dialog/triangle_shape.dart';
 import '/controllers/vocab_state_controller.dart';
@@ -73,12 +74,13 @@ class VocabRowState extends State<VocabRow> {
           width: 1,
         )),
       ),
-      height: 40,
+      height: 50,
       width: double.infinity,
       child: Row(
         children: [
           DragTarget(onWillAccept: (dynamic _) {
             widget.checkBox = !widget.checkBox;
+            HapticFeedback.lightImpact();
             if (widget.checkBox)
               Provider.of<VocabStateController>(context, listen: false)
                   .selectedVocabIdAdd(widget.vocabId);
@@ -101,6 +103,7 @@ class VocabRowState extends State<VocabRow> {
                         value: widget.checkBox,
                         onChanged: (bool) {
                           widget.checkBox = bool!;
+                          HapticFeedback.lightImpact();
                           if (widget.checkBox)
                             Provider.of<VocabStateController>(context,
                                     listen: false)
@@ -204,27 +207,6 @@ class VocabRowState extends State<VocabRow> {
           IntrinsicWidth(
             child: Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Provider.of<ThemeDataWrapper>(context, listen: false).blue,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Provider.of<ThemeDataWrapper>(context, listen: false).blue,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(1),
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: Provider.of<ThemeDataWrapper>(context, listen: false).blue,
-                  ),
-                ),
                 Separator(
                   axis: Axis.vertical,
                   color: Colors.transparent,

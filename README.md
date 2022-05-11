@@ -163,6 +163,7 @@ Inspired by [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce
             :sparkles: restructure login; prompt on stats screen
 2020/05/08: :bug: broaden password match
 2020/05/11: :bug: fix login prompt in vocab list
+            :sparkles: HapticFeedback
 ```
 </details>
 

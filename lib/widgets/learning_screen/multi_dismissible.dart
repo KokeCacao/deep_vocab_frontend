@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum MultiDismissibleStatus {
   ON_IDLE,
@@ -54,7 +55,7 @@ class MultiDismissibleState extends State<MultiDismissible>
       _horizontalAnimationController.value +=
           (dragUpdateDetails.primaryDelta! / maxHorizontalSlide) / divisor;
     }
-
+    int oldLayerIndex = _layerIndex;
     // 0 === 0.15 === 0.3 === 0.5 === 0.7 === 0.85 === 1
     if (value < 0.15)
       _layerIndex = 1;
@@ -67,6 +68,10 @@ class MultiDismissibleState extends State<MultiDismissible>
       _layerIndex = 3;
     else // < 1
       _layerIndex = 4;
+
+    if (_layerIndex != oldLayerIndex){
+      HapticFeedback.lightImpact();
+    }
   }
 
   void _onDragEnd(DragEndDetails dragEndDetails) {
