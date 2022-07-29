@@ -91,8 +91,12 @@ class UserScreen extends StatelessWidget {
                         Provider.of<ThemeDataWrapper>(context, listen: false)
                             .nextTheme,
                     buttonEnable: true,
-                    bottonValue: Provider.of<ThemeDataWrapper>(context, listen: false).theme == ThemeStyle.night,
-                    onPressed: () {}, // If onPressed is null, it will become gray
+                    bottonValue:
+                        Provider.of<ThemeDataWrapper>(context, listen: false)
+                                .theme ==
+                            ThemeStyle.night,
+                    onPressed:
+                        () {}, // If onPressed is null, it will become gray
                   )
                 ],
               )),

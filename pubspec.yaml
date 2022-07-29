@@ -65,6 +65,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   collection: ^1.15.0-nullsafety.4
   awesome_notifications: ^0.6.21
+  showcaseview: ^1.1.7
 
 dependency_overrides:
   moor: '4.4.0'

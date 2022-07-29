@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:graphql/client.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:f_logs/f_logs.dart' hide AppDatabase, Constants;
 
+import './models/vocab_model.dart';
+import './utils/vocab_notification.dart';
 import 'widgets/init_callback.dart';
 import './controllers/vocab_state_controller.dart';
 import './models/sqlite_models/app_database.dart';
@@ -39,6 +42,7 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   FLog.info(text: "[BackgroundFetch] Headless event received.");
   // Do your work here...
   BackgroundFetch.finish(taskId);
+  return;
 }
 
 // learn more about shortcuts: https://medium.com/flutter-community/flutter-ide-shortcuts-for-faster-development-2ef45c51085b
@@ -73,22 +77,46 @@ class _MyAppState extends State<MyApp> {
         (String taskId) async {
       FLog.info(text: "[BackgroundFetch] Event received: $taskId");
 
-      NetworkException? exception =
-          await Provider.of<VocabListViewModel>(context, listen: false)
-              .refreshVocab(context);
-      if (exception == null)
+      NetworkException? exception;
+      try {
+        VocabListViewModel? vocabListViewModel =
+            Provider.of<VocabListViewModel>(context, listen: false);
+        exception = await vocabListViewModel.refreshVocab(context);
+      } catch (e) {
+        FLog.error(
+            text:
+                "VocabListViewModel not found."
+                    "This is likely a bug caused by hot reload."
+                    "If the but persists in production, we have a problem.");
+        BackgroundFetch.finish(taskId);
+        return;
+      }
+
+      if (exception == null) {
         FLog.info(text: "[BackgroundFetch] Refresh Vocab Success");
-      else
+
+        List<VocabModel>? vocabs =
+            (await Provider.of<VocabListViewModel>(context, listen: false)
+                    .getFromDatabase(pushedMark: true))
+                .vocabs;
+        if (vocabs != null && vocabs.length != 0) {
+          VocabModel vocab = vocabs[0];
+          VocabNotification.createNotification(
+              "${vocab.vocab}", vocab.vocabId.hashCode);
+        }
+      } else
         FLog.warning(text: "[BackgroundFetch] Refresh Vocab Failed");
 
       // IMPORTANT:  You must signal completion of your task or the OS can punish your app
       // for taking too long in the background.
       BackgroundFetch.finish(taskId);
+      return;
     }, (String taskId) async {
       FLog.warning(text: "[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
       // This task has exceeded its allowed running-time.
       // You must stop what you're doing and immediately .finish(taskId)
       BackgroundFetch.finish(taskId);
+      return;
     });
 
     FLog.info(text: "[BackgroundFetch] configure success: $status");
@@ -109,6 +137,14 @@ class _MyAppState extends State<MyApp> {
     } else if (await Permission.photos.isPermanentlyDenied) {
       openAppSettings();
     }
+
+    // Config Notification Permission
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // TODO: You must show some friendly dialog box before call it
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -131,6 +167,8 @@ class _MyAppState extends State<MyApp> {
           statusBarColor: Colors.white,
           statusBarIconBrightness: Brightness.dark));
     }
+
+    VocabNotification.initializeNotification();
 
     // extra wait
     await Future.delayed(Duration(seconds: 0));
@@ -170,7 +208,11 @@ class _MyAppState extends State<MyApp> {
             return emptyApp;
           }
           // getting initialized data
-          Map<String, dynamic> data = snapshot.data;
+          Map<String, dynamic>? data = snapshot.data;
+          if (data == null) {
+            FLog.error(text: "snapshot.data is null. This is likely a bug caused by hot reload.");
+            return emptyApp;
+          }
           AppDatabase appDatabase = data["AppDatabase"];
 
           return MultiProvider(
@@ -204,7 +246,6 @@ class _MyAppState extends State<MyApp> {
                   create: (ctx) => ThemeDataWrapper(context: ctx))
             ],
             builder: (context, child) {
-
               return Consumer<ThemeDataWrapper>(
                 builder: (BuildContext context, ThemeDataWrapper wrapper,
                     Widget? child) {
@@ -225,7 +266,8 @@ class _MyAppState extends State<MyApp> {
                         },
                       ));
                 },
-                child: NavigationScreen(), // This way NavigationScreen() class won't rebuild so change dark mode will preserve state
+                child:
+                    NavigationScreen(), // This way NavigationScreen() class won't rebuild so change dark mode will preserve state
               );
             },
           );
@@ -233,8 +275,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     Hive.close(); // tmp for testing
+    await VocabNotification.decomposeNotification();
     super.dispose();
   }
 }

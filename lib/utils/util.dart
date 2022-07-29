@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:deep_vocab/models/version_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'constants.dart';
@@ -16,6 +15,9 @@ class Util {
     return values
         .firstWhereOrNull((type) => type.toString().split('.').last == value);
   }
+
+  static int intUUID() =>
+      (DateTime.now().millisecondsSinceEpoch / 1000).round();
 
   static void checkForUpdate(BuildContext context) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
