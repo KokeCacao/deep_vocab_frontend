@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:deep_vocab/utils/util.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +52,7 @@ class VocabNotification {
     } catch (e) {
       FLog.error(
           text:
-              "You are likly trying to listen to event stream twice. It is normal for hot-reload.");
+              "You are likely trying to listen to event stream twice. It is normal for hot-reload.");
     }
   }
 

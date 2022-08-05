@@ -1,9 +1,7 @@
-import 'package:deep_vocab/view_models/vocab_list_view_model.dart';
-import 'package:deep_vocab/widgets/learning_screen/progress_indicator.dart';
-import 'package:deep_vocab/widgets/login_prompt_widget.dart';
-
+import '../view_models/vocab_list_view_model.dart';
+import '../widgets/learning_screen/progress_indicator.dart';
+import '../widgets/login_prompt_widget.dart';
 import '../controllers/vocab_state_controller.dart';
-import '../utils/theme_data_wrapper.dart';
 import '../view_models/auth_view_model.dart';
 import '../view_models/http_sync_view_model.dart';
 import '../widgets/learning_screen/learning_navbar.dart';
@@ -30,7 +28,7 @@ class _LearningScreenState extends State<LearningScreen>
           context,
           emptyWidget: Center(
             child: Text(
-                "You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+                "Nothing is here (("),
           ),
         );
       case 1:
@@ -38,16 +36,17 @@ class _LearningScreenState extends State<LearningScreen>
           context,
           emptyWidget: Center(
             child: Text(
-                "You don't have any vocabs here yet.\nClick top right VocabBook to add some vocabs.\n(svg logo needed to add here)"),
+                "Nothing is here (("),
           ),
         );
       case 2:
         return VocabListWithHeader.vocabList(context,
-            emptyWidget: CircularProgressBar(
+            emptyWidget: Center(
+                child: CircularProgressBar(
               progressTask:
                   Provider.of<VocabListViewModel>(context, listen: false)
                       .downloadVocab,
-            ));
+            )));
       default:
         throw Exception("There is no $_index-th tab in GNav");
     }
@@ -68,8 +67,7 @@ class _LearningScreenState extends State<LearningScreen>
     LearningNavbar learningNav = LearningNavbar(
       onTabChange: (index) {
         _index = index;
-        Provider.of<VocabStateController>(context, listen: false)
-            .clear();
+        Provider.of<VocabStateController>(context, listen: false).clear();
         setState(() {});
       },
       selectedIndex: _index,
@@ -79,13 +77,17 @@ class _LearningScreenState extends State<LearningScreen>
       // TODO: finish initializing a proper controller
       // controller: FSearchController(),
     );
+
     if (Provider.of<AuthViewModel>(context, listen: false).isNotLoggedIn)
       return Column(
         children: [
           learningNav,
-          Flexible(child: LoginPrompt(),)
+          Flexible(
+            child: LoginPrompt(),
+          )
         ],
       );
+
     return Container(
         height: double.infinity,
         width: double.infinity,

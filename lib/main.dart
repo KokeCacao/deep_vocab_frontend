@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:f_logs/f_logs.dart' hide AppDatabase, Constants;
+import 'package:showcaseview/showcaseview.dart';
 
 import './models/vocab_model.dart';
 import './utils/vocab_notification.dart';
@@ -84,10 +85,9 @@ class _MyAppState extends State<MyApp> {
         exception = await vocabListViewModel.refreshVocab(context);
       } catch (e) {
         FLog.error(
-            text:
-                "VocabListViewModel not found."
-                    "This is likely a bug caused by hot reload."
-                    "If the but persists in production, we have a problem.");
+            text: "VocabListViewModel not found."
+                "This is likely a bug caused by hot reload."
+                "If the but persists in production, we have a problem.");
         BackgroundFetch.finish(taskId);
         return;
       }
@@ -210,7 +210,9 @@ class _MyAppState extends State<MyApp> {
           // getting initialized data
           Map<String, dynamic>? data = snapshot.data;
           if (data == null) {
-            FLog.error(text: "snapshot.data is null. This is likely a bug caused by hot reload.");
+            FLog.error(
+                text:
+                    "snapshot.data is null. This is likely a bug caused by hot reload.");
             return emptyApp;
           }
           AppDatabase appDatabase = data["AppDatabase"];
@@ -253,16 +255,25 @@ class _MyAppState extends State<MyApp> {
                       callBack:
                           initPlatformState, // schedule initPlatformState after build complete
                       temporary: emptyApp,
-                      child: MaterialApp(
-                        title: "Deep Vocab",
-                        debugShowCheckedModeBanner:
-                            false, // disable debug banner
-                        theme: wrapper.themeData,
-                        home:
-                            child, // so that NavigationScreen() don't get rebuild after changing theme data
-                        onGenerateRoute: RouteTable.onGenerateRoute,
-                        onUnknownRoute: (_) {
-                          throw Exception("UnknownRoute");
+                      child: ShowCaseWidget(
+                        builder: Builder(
+                          builder: (context) => MaterialApp(
+                            title: "Deep Vocab",
+                            debugShowCheckedModeBanner:
+                                false, // disable debug banner
+                            theme: wrapper.themeData,
+                            home:
+                                child, // so that NavigationScreen() don't get rebuild after changing theme data
+                            onGenerateRoute: RouteTable.onGenerateRoute,
+                            onUnknownRoute: (_) {
+                              throw Exception("UnknownRoute");
+                            },
+                          ),
+                        ),
+                        onComplete: (i, showcaseKey) {
+                          HiveBox.put(
+                              HiveBox.SHOWCASE_BOX, showcaseKey.toString(), true);
+                          return;
                         },
                       ));
                 },

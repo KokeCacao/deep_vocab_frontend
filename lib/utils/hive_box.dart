@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class HiveBox {
   static const String SINGLETON_BOX = "singleton"; // store singleton (see below)
   static const String REQUEST_BOX = "request"; // store temp json request
+  static const String SHOWCASE_BOX = "showcase"; // store whether showcase is stored
   static const String VOCAB_LIST_HEADER_BOX = "vocabListHeader"; // store Map<listId, VocabHeaderModel>
 
   // indexes in singleton
@@ -47,6 +48,8 @@ class HiveBox {
     FLog.info(text: "[HiveBox] initialize ${HiveBox.REQUEST_BOX} box (cleared)");
     await Hive.openBox<dynamic>(HiveBox.VOCAB_LIST_HEADER_BOX);
     FLog.info(text: "[HiveBox] initialize ${HiveBox.VOCAB_LIST_HEADER_BOX} box");
+    await Hive.openBox<dynamic>(HiveBox.SHOWCASE_BOX)..clear();
+    FLog.info(text: "[HiveBox] initialize ${HiveBox.SHOWCASE_BOX} box");
 
     FLog.info(text: "[HiveBox] Initialization successful");
 
