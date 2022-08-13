@@ -113,28 +113,26 @@ class VocabListWithHeaderState extends State<VocabListWithHeader> {
     List<VocabModel> randomList = widget.list!.sublist(0); // shallow copy
     if (widget.random) randomList.shuffle();
 
-    return Expanded(
-      child: Column(
-        children: [
-          LearningSelectionBar(
-            random: widget.random,
-            onChanged: (bool value) {
-              widget.random = !widget.random;
-              setState(() {});
-            },
+    return Column(
+      children: [
+        LearningSelectionBar(
+          random: widget.random,
+          onChanged: (bool value) {
+            widget.random = !widget.random;
+            setState(() {});
+          },
+        ),
+        VocabList(
+          refreshable: true,
+          itemCount: randomList.length,
+          onRefresh: widget.onRefresh,
+          onTwoLevel: widget.onTwoLevel,
+          itemBuilder: (context, i) => DismissibleVocabRow(
+            vocab: randomList[i],
           ),
-          VocabList(
-            refreshable: true,
-            itemCount: randomList.length,
-            onRefresh: widget.onRefresh,
-            onTwoLevel: widget.onTwoLevel,
-            itemBuilder: (context, i) => DismissibleVocabRow(
-              vocab: randomList[i],
-            ),
-            emptyWidget: widget.emptyWidget,
-          )
-        ],
-      ),
+          emptyWidget: widget.emptyWidget,
+        )
+      ],
     );
   }
 }

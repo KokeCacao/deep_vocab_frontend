@@ -14,6 +14,7 @@ import 'package:showcaseview/showcaseview.dart';
 import './models/vocab_model.dart';
 import './utils/vocab_notification.dart';
 import 'widgets/init_callback.dart';
+import 'widgets/learning_screen/search_bar.dart';
 import './controllers/vocab_state_controller.dart';
 import './models/sqlite_models/app_database.dart';
 import './utils/theme_data_wrapper.dart';
@@ -240,6 +241,9 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider<VocabStateController>(
                 // to store vocab states for a vocab list
                 create: (ctx) => VocabStateController(context: ctx),
+              ),
+              Provider<SearchBarController>(
+                create: (ctx) => SearchBarController(context: ctx),
               ),
               ChangeNotifierProvider<HttpSyncViewModel>(
                 create: (ctx) => HttpSyncViewModel(context: ctx),
