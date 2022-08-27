@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.1.0+10
+version: 0.1.0+11
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -52,7 +52,7 @@ dependencies:
   # See: https://stackoverflow.com/questions/66477445/generator-cannot-target-libraries-that-have-not-been-migrated-to-null-safety
   json_annotation: ^4.0.1 # for sqlite database and json serialization.
   fl_chart: ^0.36.2 # for charts graphing
-  f_logs: ^2.0.0 # for print and save log
+  f_logs: ^2.0.1 # for print and save log
   package_info_plus: ^1.0.6 # for getting app version and build version
   pin_code_fields: ^7.3.0 # for login and email verification
 
@@ -67,6 +67,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   showcaseview: ^1.1.7
   async: ^2.8.2
+  sign_in_with_apple: ^4.1.0
 
 dependency_overrides:
   moor: '4.4.0'

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:f_logs/f_logs.dart' hide Constants;
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:convert';
 
 import '../utils/theme_data_wrapper.dart';
@@ -385,9 +388,12 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
           labelText: "Password",
           suffixIcon: IconButton(
-            color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
-            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
-            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
+            color:
+                Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
+            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                .highlightTextColor,
+            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                .fadeTextColor,
             icon: Icon(
               _passwordVisible ? Icons.visibility : Icons.visibility_off,
             ),
@@ -420,9 +426,12 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
           labelText: "Repeat Password",
           suffixIcon: IconButton(
-            color: Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
-            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false).highlightTextColor,
-            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false).fadeTextColor,
+            color:
+                Provider.of<ThemeDataWrapper>(context, listen: false).textColor,
+            focusColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                .highlightTextColor,
+            hoverColor: Provider.of<ThemeDataWrapper>(context, listen: false)
+                .fadeTextColor,
             icon: Icon(
               _passwordVisible ? Icons.visibility : Icons.visibility_off,
             ),
@@ -624,6 +633,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.blueGrey,
                                   decoration: TextDecoration.underline),
                             )),
+                      if (widget.state == LoginScreenEnum.login && Platform.isIOS)
+                        SignInWithAppleButton(
+                          onPressed: () async {
+                            final available = await SignInWithApple.isAvailable();
+                            if (!available) return;
+                            final credential =
+                                await SignInWithApple.getAppleIDCredential(
+                              scopes: [
+                                AppleIDAuthorizationScopes.email,
+                                AppleIDAuthorizationScopes.fullName,
+                              ],
+                            );
+                            credential.
+                            print(credential);
+                            // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                            // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                          },
+                        ),
                       Separator(
                         height: 20,
                         color: Colors.transparent,
@@ -631,7 +658,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Text(getEnumButtonName(widget.index, widget.state),
+                          child: Text(
+                              getEnumButtonName(widget.index, widget.state),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
