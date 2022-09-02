@@ -636,25 +636,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (widget.state == LoginScreenEnum.login && Platform.isIOS)
                         SignInWithAppleButton(
                           onPressed: () async {
-                            final available = await SignInWithApple.isAvailable();
-                            if (!available) return;
-                            final credential =
-                                await SignInWithApple.getAppleIDCredential(
-                              scopes: [
-                                AppleIDAuthorizationScopes.email,
-                                AppleIDAuthorizationScopes.fullName,
-                              ],
-                            );
-                            FLog.info(text: credential.toString());
-                            FLog.info(text: credential.authorizationCode);
-                            FLog.info(text: credential.identityToken == null ? "No Identification Token" : credential.identityToken!);
-                            FLog.info(text: credential.email == null ? "No Email" : credential.email!);
-                            FLog.info(text: credential.familyName == null ? "No Family Name" : credential.familyName!);
-                            FLog.info(text: credential.givenName == null ? "No Given Name" : credential.givenName!);
-                            FLog.info(text: credential.state == null ? "No State" : credential.state!);
-                            FLog.info(text: credential.userIdentifier == null ? "No User Identifier" : credential.userIdentifier!);
-                            // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                            // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                            try {
+                              final available = await SignInWithApple.isAvailable();
+                              FLog.warning(text: "Sign in with Google is not available");
+                              if (!available) return;
+                              FLog.info(text: "Sign in with Google request is Fired.");
+                              final credential =
+                              await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                              );
+                              FLog.info(text: credential.toString());
+                              FLog.info(text: credential.authorizationCode);
+                              FLog.info(text: credential.identityToken == null ? "No Identification Token" : credential.identityToken!);
+                              FLog.info(text: credential.email == null ? "No Email" : credential.email!);
+                              FLog.info(text: credential.familyName == null ? "No Family Name" : credential.familyName!);
+                              FLog.info(text: credential.givenName == null ? "No Given Name" : credential.givenName!);
+                              FLog.info(text: credential.state == null ? "No State" : credential.state!);
+                              FLog.info(text: credential.userIdentifier == null ? "No User Identifier" : credential.userIdentifier!);
+                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                            } catch (e) {
+                              FLog.error(text: e.toString());
+                            }
                           },
                         ),
                       Separator(

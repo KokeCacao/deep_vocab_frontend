@@ -24,7 +24,7 @@ class AvatarCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
               child: AutoSizeText(
                 "我爱学习 学习使我快乐\n"
-                    "我一天不学很深难受\n",
+                    "我一天不学浑身难受\n",
                 minFontSize: 10,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
