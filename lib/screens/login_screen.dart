@@ -638,8 +638,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             try {
                               final available = await SignInWithApple.isAvailable();
-                              FLog.warning(text: "Sign in with Google is not available");
-                              if (!available) return;
+                              if (!available) {
+                                FLog.warning(text: "Sign in with Google is not available");
+                                return;
+                              }
                               FLog.info(text: "Sign in with Google request is Fired.");
                               final credential =
                               await SignInWithApple.getAppleIDCredential(
